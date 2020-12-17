@@ -1,0 +1,15 @@
+[submodule "rpc"]
+	path = rpc
+	url = https://github.com/open-amt-cloud-toolkit/rpc.git
+[submodule "docs"]
+	path = docs
+	url = https://github.com/open-amt-cloud-toolkit/docs.git
+[submodule "rps"]
+	path = rps
+	url = https://github.com/open-amt-cloud-toolkit/rps.git
+[submodule "ui-toolkit"]
+	path = ui-toolkit
+	url = https://github.com/open-amt-cloud-toolkit/ui-toolkit.git
+[submodule "mps"]
+	path = mps
+	url = https://github.com/open-amt-cloud-toolkit/mps.git
