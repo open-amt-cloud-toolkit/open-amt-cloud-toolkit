@@ -1,13 +1,15 @@
 [submodule "rpc"]
 	path = rpc
-	url = https://github.com/open-amt-cloud-toolkit/rpc.git#f5aa168acb85efcaa9d0f1c3c9eb41bdeb210f41
+	url = https://github.com/open-amt-cloud-toolkit/rpc.git
 [submodule "rps"]
 	path = rps
-	url = https://github.com/open-amt-cloud-toolkit/rps.git#9e07b1b0a3020025dfab00024c59f02b8e027b93
+	url = https://github.com/open-amt-cloud-toolkit/rps.git
 [submodule "ui-toolkit"]
 	path = ui-toolkit
-	url = https://github.com/open-amt-cloud-toolkit/ui-toolkit.git#897fbb4428b7d1d9f975e41b3994dd70b23f0a63	
+	url = https://github.com/open-amt-cloud-toolkit/ui-toolkit.git
 [submodule "mps"]
 	path = mps
-	url = https://github.com/open-amt-cloud-toolkit/mps.git#49e40571cfe4d3b19dfbdaf6f3ec14dc6a5e37e5
-	
+	url = https://github.com/open-amt-cloud-toolkit/mps.git
+[submodule "sample-web-ui"]
+	path = sample-web-ui
+	url = https://github.com/open-amt-cloud-toolkit/sample-web-ui.git
