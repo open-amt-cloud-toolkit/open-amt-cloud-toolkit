@@ -67,7 +67,7 @@ services:
           sleep 5;
         done;
         echo MPS Running!;
-        npm start;
+        node ./dist/Index.js;
       "
   mps:
     image: ${MPS_IMAGE}
