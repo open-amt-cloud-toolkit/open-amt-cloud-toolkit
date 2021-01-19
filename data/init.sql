@@ -52,4 +52,9 @@ CREATE TABLE IF NOT EXISTS domains(
       CONSTRAINT domainsuffix UNIQUE(domain_suffix)
     );
 
-    
+INSERT INTO public.networkconfigs(
+  network_profile_name, dhcp_enabled, static_ip_shared, ip_sync_enabled) 
+  values('dhcp_disabled', false, true, true);
+INSERT INTO public.networkconfigs(
+  network_profile_name, dhcp_enabled, static_ip_shared, ip_sync_enabled)  
+  values('dhcp_enabled', true, false, true);
