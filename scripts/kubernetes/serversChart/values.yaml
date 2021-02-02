@@ -7,8 +7,9 @@
 # Declare variables to be passed into your templates.
 
 images:
-  mps: "vprodemo/mps-microservice:brian_scaling_v30"
-  rps: "vprodemo/rps-microservice:brian_scaling_v30"
+  mps: "vprodemo/brian_mps:scale_v5"
+  rps: "vprodemo/brian_rps:scaling_v6"
+  ui: "vprodemo/brian_ui:scaling_v7"
   postgresdb: "postgres:10.4"
   pullSecret: "regcred"
 backenddb:
@@ -30,7 +31,7 @@ rpsSecretStoreNames:
   rpscerts: "rpscerts"
   vault: "vaultaccess"
 mps:
-  replicaCount: 1
+  replicaCount: 2
   https: "true"
   generateCerts: "false"
   logLevel: "silly"
@@ -61,8 +62,11 @@ mps:
   sessionEncryptionKey: "session-key.txt"
   networkAdaptor: "eth0"
   proxy: "8100"
+  distributedKvPort: "8500"
+  distributedKvName: "HashiCorpConsul"
+  webProxyPort: "8100"
 mps_web:
-  replicaCount: 1
+  replicaCount: 2
   serverDeploymentMode: "web"
   webPort: "3000"
   enableLogging: "true"
@@ -75,8 +79,14 @@ mps_web:
   mpsrediscreds: "mpsrediscreds"
   redisHost: "redis"
   redisPort: "6379"
-rps:
+  resourceGroupName: "NODE_RESOURCE_GROUP"
+ui:
   replicaCount: 1
+  port: "3001"
+  staticIPAddress: "STATIC_IP_UI"
+  resourceGroupName: "NODE_RESOURCE_GROUP"
+rps:
+  replicaCount: 2
   logLevel: "silly"
   https: "true"
   nodeEnv: "dev"

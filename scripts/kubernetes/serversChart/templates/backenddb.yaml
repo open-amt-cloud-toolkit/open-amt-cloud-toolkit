@@ -32,17 +32,28 @@ data:
       proxydetails text,
       CONSTRAINT configname UNIQUE(cira_config_name)
     );
+    CREATE TABLE IF NOT EXISTS networkconfigs(
+      network_profile_name varchar(40),
+      dhcp_enabled BOOLEAN,
+      static_ip_shared BOOLEAN,
+      ip_sync_enabled BOOLEAN,
+      CONSTRAINT networkprofilename UNIQUE(network_profile_name)
+    );
     CREATE TABLE IF NOT EXISTS profiles(
       profile_name varchar(40),
       activation varchar(20),
       amt_password varchar(40),
       configuration_script text,
       cira_config_name varchar(40) REFERENCES ciraconfigs(cira_config_name),
-      generate_random_password varchar(40),
+      generate_random_password BOOLEAN,
       random_password_characters varchar(100),
       random_password_length integer,
       creation_date timestamp,
       created_by varchar(40),
+      network_profile_name varchar(40) REFERENCES networkconfigs(network_profile_name),
+      mebx_password varchar(40),
+      generate_random_mebx_password BOOLEAN,
+      random_mebx_password_length integer,
       CONSTRAINT name UNIQUE(profile_name)
     );
     CREATE TABLE IF NOT EXISTS domains(
@@ -53,8 +64,15 @@ data:
       provisioning_cert_key text,
       creation_date timestamp,
       created_by varchar(40),
-      CONSTRAINT domainname UNIQUE(name)
+      CONSTRAINT domainname UNIQUE(name),
+      CONSTRAINT domainsuffix UNIQUE(domain_suffix)
     );
+    INSERT INTO public.networkconfigs(
+      network_profile_name, dhcp_enabled, static_ip_shared, ip_sync_enabled) 
+      values('dhcp_disabled', false, true, true);
+    INSERT INTO public.networkconfigs(
+      network_profile_name, dhcp_enabled, static_ip_shared, ip_sync_enabled)  
+      values('dhcp_enabled', true, false, true);
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim

@@ -5,6 +5,12 @@
 
 echo off
 
+helm repo update && (
+  echo helm repo update successful
+) || (
+  echo helm repo update failed
+)
+
 helm repo add hashicorp https://helm.releases.hashicorp.com && (
   echo helm repo added successful
 ) || (

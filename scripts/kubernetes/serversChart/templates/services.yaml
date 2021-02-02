@@ -21,7 +21,7 @@ apiVersion: v1
 kind: Service
 metadata:
   annotations:
-    service.beta.kubernetes.io/azure-load-balancer-resource-group: {{ .Values.mps.resourceGroupName }}
+    service.beta.kubernetes.io/azure-load-balancer-resource-group: {{ .Values.mps_web.resourceGroupName }}
   name: azure-mps-web-load-balancer
 spec:
   ports:
@@ -48,3 +48,18 @@ spec:
   type: LoadBalancer
   selector:
     app: azure-rcs
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    service.beta.kubernetes.io/azure-load-balancer-resource-group: {{ .Values.ui.resourceGroupName }}
+  name: azure-webui-load-balancer
+spec:
+  ports:
+  - port: {{ .Values.ui.port }}
+    name: ui
+  loadBalancerIP: {{ .Values.ui.staticIPAddress }}
+  type: LoadBalancer
+  selector:
+    app: azure-webui

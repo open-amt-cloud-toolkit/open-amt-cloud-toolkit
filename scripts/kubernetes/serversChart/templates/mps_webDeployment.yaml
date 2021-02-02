@@ -66,6 +66,12 @@ spec:
             value: "{{ .Values.mps.secretsPath }}"
           - name: "MPS_DEBUG_LEVEL"
             value: "{{ .Values.mps.debugLevel }}"
+          - name: "MPS_DISTRIBUTED_KV_PORT"
+            value: "{{ .Values.mps.distributedKvPort }}"
+          - name: "MPS_DISTRIBUTED_KV_NAME"
+            value: "{{ .Values.mps.distributedKvName }}"
+          - name: "MPS_WEB_PROXY_PORT"
+            value: "{{ .Values.mps.webProxyPort }}"
           - name: "MPS_DISTRIBUTED_KV_IP"
             valueFrom:
               fieldRef:
