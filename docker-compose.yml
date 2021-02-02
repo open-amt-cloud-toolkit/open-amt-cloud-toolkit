@@ -5,7 +5,7 @@
 version: '3.3'
 services: 
   webui:
-    image: samplewebui    
+    image: ${WEBUI_IMAGE}    
     networks:
       - openamtnetwork
     build:
