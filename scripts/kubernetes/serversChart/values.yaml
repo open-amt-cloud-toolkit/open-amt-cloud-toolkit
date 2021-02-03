@@ -82,7 +82,7 @@ mps_web:
   resourceGroupName: "NODE_RESOURCE_GROUP"
 ui:
   replicaCount: 1
-  port: "3001"
+  port: "80"
   staticIPAddress: "STATIC_IP_UI"
   resourceGroupName: "NODE_RESOURCE_GROUP"
 rps:
