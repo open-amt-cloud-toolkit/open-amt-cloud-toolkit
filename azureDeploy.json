@@ -314,6 +314,11 @@
             "name": "vault",
             "properties": {
               "image": "vault:latest",
+              "ports": [
+                {
+                  "port": 8200
+                }
+              ],
               "environmentVariables": [
                 {
                   "name": "VAULT_DEV_ROOT_TOKEN_ID",
@@ -387,6 +392,10 @@
             {
               "protocol": "tcp",
               "port": 8080
+            },
+            {
+              "protocol": "tcp",
+              "port": 8200
             },
             {
               "protocol": "tcp",
