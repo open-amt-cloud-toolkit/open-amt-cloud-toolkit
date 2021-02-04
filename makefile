@@ -15,13 +15,13 @@ MICROSERVICES= \
 .PHONY: $(MICROSERVICES)
 
 run-rps: 
-	(cd ./rps && npm run dev)
+	(cd ./rps && npm run devx)
 
 run-ui: 
 	(cd ./sample-web-ui && npm start)
 
 run-mps: 
-	(cd ./mps && npm run dev) 
+	(cd ./mps && npm run devx) 
 
 run:
 	echo "run each service in a separate terminal window (i.e. make run-ui)"
