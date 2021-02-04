@@ -4,8 +4,8 @@ build:
 	read -p "Enter IP Address:" ip; \
 	sed -i -e "s|\"common_name\": \".*|\"common_name\": \"$$ip\"\,|g" ./mps/.mpsrc -e "s|'localhost'|\'$$ip\'|g" ./sample-web-ui/src/app.config.js
 	cd ./mps && npm install
-	cd ../rps && npm install
-	cd ../sample-web-ui && npm install
+	cd ./rps && npm install
+	cd ./sample-web-ui && npm install
 
 MICROSERVICES= \
 	run-ui & \
@@ -15,10 +15,10 @@ MICROSERVICES= \
 .PHONY: $(MICROSERVICES)
 
 run-rps: 
-	(cd ../rps && npm run dev)
+	(cd ./rps && npm run dev)
 
 run-ui: 
-	(cd ../sample-web-ui && npm start)
+	(cd ./sample-web-ui && npm start)
 
 run-mps: 
 	(cd ./mps && npm run dev) 
