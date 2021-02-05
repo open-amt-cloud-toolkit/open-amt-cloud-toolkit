@@ -170,12 +170,12 @@
                   "value": "[parameters('rpsXAPIKey')]"
                 },
                 {
-                  "name": "RPS_MPS_USER",
-                  "value": "[parameters('mpsAdminUsername')]"
+                  "name": "RPS_USER",
+                  "value": "[parameters('mpsUsername')]"
                 },
                 {
-                  "name": "RPS_MPS_PASSWORD",
-                  "value": "[parameters('mpsAdminPassword')]"
+                  "name": "RPS_PASSWORD",
+                  "value": "[parameters('mpsPassword')]"
                 }
               ],
               "command": [
@@ -241,11 +241,11 @@
                   "value": "[parameters('mpsAdminPassword')]"
                 },
                 {
-                  "name": "MPS_USER",
+                  "name": "MPS_USERNAME",
                   "value": "[parameters('mpsUsername')]"
                 },
                 {
-                  "name": "MPS_PASSWORD",
+                  "name": "MPS_PASS",
                   "value": "[parameters('mpsPassword')]"
                 }
               ],
