@@ -24,8 +24,6 @@ set rpsapikey=APIKEYFORRPS123!
 set sessionEncryptionKey=sessionEncryptionKey
 set redisPassword=redisPassword!
 
-set servicePrincipal=
-set clientSecret=
 
 
 NET SESSION >nul 2>&1
@@ -41,7 +39,7 @@ del .env
 git checkout ./serversChart/values.yaml
 
 
-call launchcluster.bat %Resource_group% %aks_cluster% %region% %servicePrincipal% %clientSecret% && (
+call launchcluster.bat %Resource_group% %aks_cluster% %region% && (
   echo launchcluster was successful
 ) || (
   echo launchcluster failed

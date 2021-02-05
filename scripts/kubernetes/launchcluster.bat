@@ -6,35 +6,25 @@
 echo off
 
 if "" == "%~1" (
-echo usage: launchcluster.bat [resourceGroupName] [aksClusterName] [region] [servicePrincipal] [clientSecret]
+echo usage: launchcluster.bat [resourceGroupName] [aksClusterName] [region]
 EXIT /B 1
 )
 
 if "" == "%~2" (
-echo usage: launchcluster.bat [resourceGroupName] [aksClusterName] [region] [servicePrincipal] [clientSecret]
+echo usage: launchcluster.bat [resourceGroupName] [aksClusterName] [region]
 EXIT /B 1
 )
 
 if "" == "%~3" (
-echo usage: launchcluster.bat [resourceGroupName] [aksClusterName] [region] [servicePrincipal] [clientSecret]
+echo usage: launchcluster.bat [resourceGroupName] [aksClusterName] [region]
 EXIT /B 1
 )
 
-if "" == "%~4" (
-echo usage: launchcluster.bat [resourceGroupName] [aksClusterName] [region] [servicePrincipal] [clientSecret]
-EXIT /B 1
-)
 
-if "" == "%~5" (
-echo usage: launchcluster.bat [resourceGroupName] [aksClusterName] [region] [servicePrincipal] [clientSecret]
-EXIT /B 1
-)
 
 set myResourceGroup=%1
 set myAksCluster=%2
 set region=%3
-set servicePrincipal=%4
-set clientSecret=%5
 
 call az account show && (
   echo account is already logged in
@@ -56,7 +46,7 @@ call az group create --name %myResourceGroup% --location %region% && (
 )
 
 echo creating aks
-call az aks create --resource-group %myResourceGroup% --name %myAksCluster% --node-count 3 --enable-addons monitoring --service-principal %servicePrincipal% --client-secret %clientSecret% --generate-ssh-keys && (
+call az aks create --resource-group %myResourceGroup% --name %myAksCluster% --node-count 3 --generate-ssh-keys && (
   echo create aks was successful
 ) || (
   echo create aks failed
