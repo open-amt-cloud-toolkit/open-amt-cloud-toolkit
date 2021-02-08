@@ -16,6 +16,9 @@ services:
         RPS_WEB_PORT: ${RPS_WEB_PORT}
         MPS_SERVER: ${MPS_COMMON_NAME}
         MPS_WEB_PORT: ${MPS_WEB_PORT}
+        RPSXAPIKEY: ${RPS_XAPIKEY}
+        MPSXAPIKEY: ${MPS_XAPIKEY}
+        AUTH_MODE_ENABLED: ${MPS_AUTH_ENABLED}
     environment:
       NODE_ENV: production
     ports:
@@ -57,6 +60,10 @@ services:
       RPS_WEB_TLS_CERT_KEY: ${RPS_WEB_TLS_CERT_KEY}
       RPS_ROOT_CA_CERT: ${RPS_ROOT_CA_CERT}
       RPS_LOG_LEVEL: ${RPS_LOG_LEVEL}
+      RPS_CORS_ORIGIN: http://${MPS_COMMON_NAME}:3001
+      RPS_CORS_HEADERS: ${CORS_HEADERS}
+      RPS_CORS_METHODS: ${CORS_METHODS}
+      RPS_CORS_ALLOW_CREDENTIALS: ${CORS_ALLOW_CREDENTIALS}
     volumes:
       - private-volume:/rcs-microservice/private
     command: >
@@ -108,6 +115,9 @@ services:
       REACT_APP_RPS_WEB_PORT: ${RPS_WEB_PORT}
       REACT_APP_RPS_SERVER: ${MPS_COMMON_NAME}
       REACT_APP_MPS_SERVER: ${MPS_COMMON_NAME}
+      MPS_CORS_ORIGIN: http://${MPS_COMMON_NAME}:3001
+      MPS_CORS_HEADERS: ${CORS_HEADERS}
+      MPS_CORS_METHODS: ${CORS_METHODS}
       REACT_APP_MPSXAPIKEY: ${MPS_XAPIKEY}
       REACT_APP_RPSXAPIKEY: ${RPS_XAPIKEY}
     volumes:
