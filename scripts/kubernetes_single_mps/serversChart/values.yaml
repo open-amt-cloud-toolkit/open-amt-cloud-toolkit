@@ -7,7 +7,7 @@
 # Declare variables to be passed into your templates.
 
 images:
-  mps: "vprodemo/brian_mps:main_v2"
+  mps: "vprodemo/brian_mps:main_v4"
   rps: "vprodemo/brian_rps:scaling_v6"
   ui: "vprodemo/brian_ui:scaling_v7"
   postgresdb: "postgres:10.4"
@@ -36,7 +36,7 @@ mps:
   generateCerts: "false"
   logLevel: "silly"
   nodeEnv: "dev"
-  serverDeploymentMode: "mps"
+  serverDeploymentMode: "standalone"
   useAllowList: "false"
   mpsPort: "4433"
   mpsUser: "admin"

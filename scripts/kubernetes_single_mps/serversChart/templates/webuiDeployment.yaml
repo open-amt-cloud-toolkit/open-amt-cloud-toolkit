@@ -25,7 +25,7 @@ spec:
           - name: "NODE_ENV"
             value: "production"
           - name: "REACT_APP_MPS_SERVER"
-            value: "{{ .Values.mps_web.staticIPAddress }}"
+            value: "{{ .Values.mps.staticIPAddress }}"
           - name: "REACT_APP_RPS_SERVER"
             value: "{{ .Values.rps.staticIPAddress }}"
           - name: "REACT_APP_RPS_WEB_PORT"
