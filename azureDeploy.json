@@ -60,12 +60,20 @@
       }
     },
     "authEnabled": {
-      "defaultValue": "false",
+      "defaultValue": "true",
       "type": "string",
       "metadata": {
         "description": "For details on this property view the configuration documentation located under \"Microservices\" in the Open AMT Cloud Toolkit documentation on https://open-amt-cloud-toolkit.github.io/docs/"
       }
     },
+    "corsHeaders": {
+      "defaultValue": "Origin, X-Requested-With, Accept, X-MPS-API-Key,x-rps-api-key, Content-Type, csrf-token, authorization",
+      "type": "string",
+      "metadata": {
+        "description": "For details on this property view the configuration documentation located under \"Microservices\" in the Open AMT Cloud Toolkit documentation on https://open-amt-cloud-toolkit.github.io/docs/"
+      }
+    },
+    
     "useAllowlist": {
       "defaultValue": "false",
       "type": "string",
@@ -159,11 +167,11 @@
                 },
                 {
                   "name": "RPS_CORS_ORIGIN",
-                  "value": "*"
+                  "value": "[concat('https://',parameters('fqdn'), '.', parameters('location'),'.azurecontainer.io')]"
                 },
                 {
                   "name": "RPS_CORS_HEADERS",
-                  "value": "*"
+                  "value": "[parameters('corsHeaders')]"
                 },
                 {
                   "name": "RPS_XAPIKEY",
@@ -176,6 +184,10 @@
                 {
                   "name": "RPS_PASSWORD",
                   "value": "[parameters('mpsPassword')]"
+                },
+                {
+                  "name": "RPS_CORS_ALLOW_CREDENTIALS",
+                  "value": "true"
                 }
               ],
               "command": [
@@ -214,11 +226,11 @@
                 },
                 {
                   "name": "MPS_CORS_ORIGIN",
-                  "value": "*"
+                  "value": "[concat('https://',parameters('fqdn'), '.', parameters('location'),'.azurecontainer.io')]"
                 },
                 {
                   "name": "MPS_CORS_HEADERS",
-                  "value": "*"
+                  "value": "[parameters('corsHeaders')]"
                 },
                 {
                   "name": "MPS_AUTH_ENABLED",
@@ -290,7 +302,11 @@
                 {
                   "name": "REACT_APP_RPSXAPIKEY",
                   "value": "[parameters('rpsXAPIKey')]"
-                }
+                },
+                {
+                  "name": "REACT_APP_AUTH_MODE_ENABLED",
+                  "value": "[parameters('authEnabled')]"
+                }                
               ],
               "volumeMounts": [
                 {
