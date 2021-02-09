@@ -13,7 +13,7 @@ spec:
   - port: {{ .Values.mps.mpsPort }}
     name: mps
   - port: {{ .Values.mps_web.webPort}}
-    name: mps_web
+    name: mpsweb
   loadBalancerIP: {{ .Values.mps.staticIPAddress }}
   type: LoadBalancer
   selector:
