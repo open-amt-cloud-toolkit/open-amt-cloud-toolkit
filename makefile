@@ -2,7 +2,7 @@
 
 build:
 	read -p "Enter IP Address:" ip; \
-	sed -i -e "s|\"common_name\": \".*|\"common_name\": \"$$ip\"\,|g" ./mps/.mpsrc -e "s|'localhost'|\'$$ip\'|g" ./sample-web-ui/src/app.config.js -e "s|\"cors_origin\": \".*|\"cors_origin\": \"http://$$ip:3001\"\,|g" ./mps/.mpsrc 
+	sed -i -e "s|\"common_name\": \".*|\"common_name\": \"$$ip\"\,|g" ./mps/.mpsrc -e "s|'localhost'|\'$$ip\'|g" ./sample-web-ui/src/app.config.js -e "s|\"cors_origin\": \".*|\"cors_origin\": \"http://$$ip:3001\"\,|g" ./mps/.mpsrc -e "s|\"cors_origin\": \".*|\"cors_origin\": \"http://$$ip:3001\"\,|g" ./rps/.rpsrc 
 	cd ./mps && npm install
 	cd ./rps && npm install
 	cd ./sample-web-ui && npm install
