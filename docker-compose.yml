@@ -11,16 +11,12 @@ services:
     build:
       context: ./sample-web-ui
       dockerfile: ./Dockerfile
-      args:
-        RPS_SERVER: ${MPS_COMMON_NAME}
-        RPS_WEB_PORT: ${RPS_WEB_PORT}
-        MPS_SERVER: ${MPS_COMMON_NAME}
-        MPS_WEB_PORT: ${MPS_WEB_PORT}
-        RPSXAPIKEY: ${RPS_XAPIKEY}
-        MPSXAPIKEY: ${MPS_XAPIKEY}
-        AUTH_MODE_ENABLED: ${MPS_AUTH_ENABLED}
     environment:
       NODE_ENV: production
+      RPS_SERVER: https://${MPS_COMMON_NAME}:8081
+      MPS_SERVER: https://${MPS_COMMON_NAME}:3000
+      RPSXAPIKEY: ${RPS_XAPIKEY}
+      MPSXAPIKEY: ${MPS_XAPIKEY}
     ports:
       - 3001:80
   rps:
@@ -64,6 +60,7 @@ services:
       RPS_CORS_HEADERS: ${CORS_HEADERS}
       RPS_CORS_METHODS: ${CORS_METHODS}
       RPS_CORS_ALLOW_CREDENTIALS: ${CORS_ALLOW_CREDENTIALS}
+      RPS_MPS_SERVER: https://${MPS_COMMON_NAME}:${MPS_WEB_PORT}
     volumes:
       - private-volume:/rcs-microservice/private
     command: >
@@ -114,6 +111,8 @@ services:
       MPS_CORS_ORIGIN: http://${MPS_COMMON_NAME}:3001
       MPS_CORS_HEADERS: ${CORS_HEADERS}
       MPS_CORS_METHODS: ${CORS_METHODS}
+      MPS_CONNECTION_STRING: ${MPS_CONNECTION_STRING}
+      MPS_USE_DB: ${MPS_USE_DB}
     volumes:
       - private-volume:/mps-microservice/private
   rpsdb:
