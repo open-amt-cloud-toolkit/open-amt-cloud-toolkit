@@ -21,6 +21,10 @@ services:
         AUTH_MODE_ENABLED: ${MPS_AUTH_ENABLED}
     environment:
       NODE_ENV: production
+      RPS_SERVER: https://${MPS_COMMON_NAME}:8081
+      MPS_SERVER: https://${MPS_COMMON_NAME}:3000
+      RPSXAPIKEY: ${RPS_XAPIKEY}
+      MPSXAPIKEY: ${MPS_XAPIKEY}
     ports:
       - 3001:80
   rps:
