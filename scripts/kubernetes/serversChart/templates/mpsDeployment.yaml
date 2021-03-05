@@ -149,6 +149,8 @@ spec:
             value: "{{ .Values.mps_web.redisHost }}"
           - name: "MPS_REDIS_PORT"
             value: "{{ .Values.mps_web.redisPort }}"
+          - name: "MPS_REDIS_ENABLE"
+            value: "{{ .Values.mps_web.redisEnable }}"
         ports:
         - containerPort: {{ .Values.mps.mpsPort }}
           name: mps

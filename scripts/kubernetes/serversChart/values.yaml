@@ -7,7 +7,7 @@
 # Declare variables to be passed into your templates.
 
 images:
-  mps: "vprodemo/brian_mps:scale_v5"
+  mps: "vprodemo/brian_mps:scale_cira_v3"
   rps: "vprodemo/brian_rps:scaling_v6"
   ui: "vprodemo/brian_ui:scaling_v7"
   postgresdb: "postgres:10.4"
@@ -77,6 +77,7 @@ mps_web:
   staticIPAddress: "STATIC_IP_WEB"
   authEnabled: "false"
   mpsrediscreds: "mpsrediscreds"
+  redisEnable: "true"
   redisHost: "redis"
   redisPort: "6379"
   resourceGroupName: "NODE_RESOURCE_GROUP"
