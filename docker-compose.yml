@@ -17,6 +17,8 @@ services:
       MPS_SERVER: https://${MPS_COMMON_NAME}:3000
       RPSXAPIKEY: ${RPS_XAPIKEY}
       MPSXAPIKEY: ${MPS_XAPIKEY}
+    volumes:
+      - ./sample-web-ui/nginx.conf:/etc/nginx/conf.d/default.conf
     ports:
       - 3001:80
   rps:

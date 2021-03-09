@@ -7,7 +7,7 @@ CREATE DATABASE mpsdb;
 \connect mpsdb
 
 CREATE TABLE IF NOT EXISTS devices(
-      guid uuid,
+      guid uuid NOT NULL,
       tags text[],
       hostname varchar(256),
       CONSTRAINT device_guid UNIQUE(guid)
