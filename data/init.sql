@@ -38,6 +38,7 @@ CREATE TABLE IF NOT EXISTS profiles(
       mebx_password varchar(40),
       generate_random_mebx_password BOOLEAN,
       random_mebx_password_length integer,
+      tags text[],
       CONSTRAINT name UNIQUE(profile_name)
     );
 CREATE TABLE IF NOT EXISTS domains(
