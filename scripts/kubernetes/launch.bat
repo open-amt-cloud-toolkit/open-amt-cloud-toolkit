@@ -22,7 +22,7 @@ set mpsapikey=APIKEYFORMPS123!
 set mpspassword=Intel123!
 set rpsapikey=APIKEYFORRPS123!
 set sessionEncryptionKey=sessionEncryptionKey
-set redisPassword=cache@1234
+set redisPassword=G@ppm0ym
 
 
 

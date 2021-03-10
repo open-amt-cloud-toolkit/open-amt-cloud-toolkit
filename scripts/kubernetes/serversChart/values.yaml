@@ -7,7 +7,7 @@
 # Declare variables to be passed into your templates.
 
 images:
-  mps: "vprodemo/brian_mps:scale_cira_v3"
+  mps: "vprodemo/brian_mps:scale_cira_v4"
   rps: "vprodemo/brian_rps:scaling_v6"
   ui: "vprodemo/brian_ui:scaling_v7"
   postgresdb: "postgres:10.4"
@@ -66,7 +66,7 @@ mps:
   distributedKvName: "HashiCorpConsul"
   webProxyPort: "8100"
 mps_web:
-  replicaCount: 2
+  replicaCount: 1
   serverDeploymentMode: "web"
   webPort: "3000"
   enableLogging: "true"
