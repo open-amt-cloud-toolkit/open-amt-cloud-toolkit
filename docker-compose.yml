@@ -20,7 +20,7 @@ services:
     volumes:
       - ./sample-web-ui/nginx.conf:/etc/nginx/conf.d/default.conf
     ports:
-      - 3001:80
+      - ${WEBUI_PORT}:80
   rps:
     image: ${RPS_IMAGE}
     networks:
@@ -29,40 +29,20 @@ services:
       context: ./rps
       dockerfile: ./Dockerfile
     ports: 
-      - "${RPS_WEBSOCKETPORT}:${RPS_WEBSOCKETPORT}"
-      - "${RPS_WEB_PORT}:${RPS_WEB_PORT}"
+      - "${RPSWEBSOCKETPORT}:8080"
+      - "${RPSWEBPORT}:8081"
     depends_on: 
       - mps
+    env_file:
+      - .env
     environment: 
-      RPS_USE_VAULT: ${RPS_USE_VAULT}
-      RPS_NODE_ENV: ${RPS_NODE_ENV}
-      RPS_HTTPS: ${RPS_HTTPS}
-      RPS_USE_DB_PROFILES: ${RPS_USE_DB_PROFILES}
-      RPS_DB_HOST: ${RPS_DB_HOST}
-      RPS_DB_NAME: ${RPS_DB_NAME}
-      RPS_DB_PORT: ${RPS_DB_PORT}
-      RPS_DB_USER: ${RPS_DB_USER}
-      RPS_DB_PASSWORD: ${RPS_DB_PASSWORD}
-      RPS_WEBSOCKETTLS: ${RPS_WEBSOCKETTLS}
-      RPS_WEB_PORT: ${RPS_WEB_PORT}
-      RPS_WEBSOCKETPORT: ${RPS_WEBSOCKETPORT}
-      RPS_XAPIKEY: ${RPS_XAPIKEY}
-      RPS_VAULT_ADDRESS: ${RPS_VAULT_ADDRESS}
-      RPS_VAULT_TOKEN: ${RPS_VAULT_TOKEN}
-      RPS_SECRETS_PATH: ${RPS_SECRETS_PATH}
-      RPS_CREDENTIALS_PATH: ${RPS_CREDENTIALS_PATH}
       RPS_USER: ${RPS_MPS_USER}
       RPS_PASSWORD: ${RPS_MPS_PASSWORD}
-      RPS_AMT_USER: ${RPS_AMT_USER}
-      RPS_WEB_TLS_CERT: ${RPS_WEB_TLS_CERT}
-      RPS_WEB_TLS_CERT_KEY: ${RPS_WEB_TLS_CERT_KEY}
-      RPS_ROOT_CA_CERT: ${RPS_ROOT_CA_CERT}
-      RPS_LOG_LEVEL: ${RPS_LOG_LEVEL}
-      RPS_CORS_ORIGIN: http://${MPS_COMMON_NAME}:3001
+      RPS_CORS_ORIGIN: http://${MPS_COMMON_NAME}:${WEBUI_PORT}
       RPS_CORS_HEADERS: ${CORS_HEADERS}
       RPS_CORS_METHODS: ${CORS_METHODS}
       RPS_CORS_ALLOW_CREDENTIALS: ${CORS_ALLOW_CREDENTIALS}
-      RPS_MPS_SERVER: https://${MPS_COMMON_NAME}:${MPS_WEB_PORT}
+      RPS_MPS_SERVER: https://mps:3000
     volumes:
       - private-volume:/rcs-microservice/private
     command: >
@@ -83,41 +63,20 @@ services:
       context: ./mps
       dockerfile: ./Dockerfile
     ports: 
-      - "${MPS_WEB_PORT}:${MPS_WEB_PORT}"
-      - "${MPS_PORT}:${MPS_PORT}"
+      - "${MPSWEBPORT}:3000"
+      - "${MPSPORT}:4433"
+    env_file:
+      - .env
     environment: 
-      MPS_GENERATE_CERTS: ${MPS_GENERATE_CERTS}
-      MPS_COMMON_NAME: ${MPS_COMMON_NAME}
-      MPS_NODE_ENV: ${MPS_NODE_ENV}
-      MPS_USE_ALLOWLIST: ${MPS_USE_ALLOWLIST}
-      MPS_PORT: ${MPS_PORT}
-      MPS_WEB_PORT: ${MPS_WEB_PORT}
       MPS_USERNAME: ${MPS_USER}
       MPS_PASS: ${MPS_PASSWORD}
-      MPS_USE_GLOBAL_CREDENTIALS: ${MPS_USE_GLOBAL_CREDENTIALS}
-      MPS_ENABLE_LOGGING: ${MPS_ENABLE_LOGGING}
-      MPS_DEBUG: ${MPS_DEBUG}
-      MPS_USE_VAULT: ${MPS_USE_VAULT}
-      MPS_VAULT_ADDRESS: ${MPS_VAULT_ADDRESS}
-      MPS_VAULT_TOKEN: ${MPS_VAULT_TOKEN}
-      MPS_SECRETS_PATH: ${MPS_SECRETS_PATH}
-      MPS_WEB_ADMIN_USER: ${MPS_WEB_ADMIN_USER}
-      MPS_WEB_ADMIN_PASSWORD: ${MPS_WEB_ADMIN_PASSWORD}
-      MPS_HTTPS: ${MPS_HTTPS}
       MPS_MPSXAPIKEY: ${MPS_XAPIKEY}
-      MPS_LISTEN_ANY: ${MPS_LISTEN_ANY}
-      MPS_TLS_OFFLOAD: ${MPS_TLS_OFFLOAD}
-      MPS_SESSION_ENCRYPTION_KEY: ${MPS_SESSION_ENCRYPTION_KEY}
-      MPS_LOG_LEVEL: ${MPS_LOG_LEVEL}
-      MPS_AUTH_ENABLED: ${MPS_AUTH_ENABLED}
-      MPS_CORS_ORIGIN: http://${MPS_COMMON_NAME}:3001
+      MPS_CORS_ORIGIN: http://${MPS_COMMON_NAME}:${WEBUI_PORT}
       MPS_CORS_HEADERS: ${CORS_HEADERS}
       MPS_CORS_METHODS: ${CORS_METHODS}
-      MPS_CONNECTION_STRING: ${MPS_CONNECTION_STRING}
-      MPS_USE_DB: ${MPS_USE_DB}
     volumes:
       - private-volume:/mps-microservice/private
-  rpsdb:
+  db:
     image: postgres
     networks:
       - openamtnetwork
