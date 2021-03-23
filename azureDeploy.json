@@ -60,7 +60,7 @@
       }
     },
     "authEnabled": {
-      "defaultValue": "true",
+      "defaultValue": "false",
       "type": "string",
       "metadata": {
         "description": "For details on this property view the configuration documentation located under \"Microservices\" in the Open AMT Cloud Toolkit documentation on https://open-amt-cloud-toolkit.github.io/docs/"
@@ -73,7 +73,6 @@
         "description": "For details on this property view the configuration documentation located under \"Microservices\" in the Open AMT Cloud Toolkit documentation on https://open-amt-cloud-toolkit.github.io/docs/"
       }
     },
-    
     "useAllowlist": {
       "defaultValue": "false",
       "type": "string",
@@ -314,7 +313,7 @@
                 {
                   "name": "AUTH_MODE_ENABLED",
                   "value": "[parameters('authEnabled')]"
-                }                
+                }
               ],
               "volumeMounts": [
                 {
@@ -368,7 +367,7 @@
               "environmentVariables": [
                 {
                   "name": "POSTGRES_DB",
-                  "value": "postgresdb"
+                  "value": "rpsdb"
                 },
                 {
                   "name": "POSTGRES_USER",
