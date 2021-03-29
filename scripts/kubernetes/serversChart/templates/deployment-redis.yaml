@@ -1,0 +1,44 @@
+#/*********************************************************************
+# Copyright (c) Intel Corporation 2020
+# SPDX-License-Identifier: Apache-2.0
+#**********************************************************************/
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: azure-redis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: azure-redis
+  template:
+    metadata:
+      labels:
+        app: azure-redis
+    spec:
+      containers:
+      - name: azure-redis
+        image: redis
+        args: ["--requirepass", "$(REDIS_PASS)"]
+        ports:
+        - containerPort: 6379
+          name: redis
+        env:
+        - name: MASTER
+          value: "true"
+        - name: "REDIS_PASS"
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.mpsSecretStoreNames.mpsrediscreds }}
+              key: {{ .Values.mps_web.mpsrediscreds }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: azureredis
+spec:
+  selector:
+    app: azure-redis
+  ports:
+  - protocol: TCP
+    port: 6379

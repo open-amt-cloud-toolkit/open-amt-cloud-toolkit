@@ -1,0 +1,112 @@
+#/*********************************************************************
+# Copyright (c) Intel Corporation 2020
+# SPDX-License-Identifier: Apache-2.0
+#**********************************************************************/
+# Default values for installServersChart.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+images:
+  mps: "docker.io/vprodemo/brian_mps:scale_merge_v5"
+  rps: "docker.io/vprodemo/brian_rps:master_certs_v6"
+  ui: "docker.io/vprodemo/brian_ui:master_v4"
+  postgresdb: "postgres:10.4"
+  pullSecret: "regcred"
+backenddb:
+  dbName: "postgresdb"
+  dbUser: "postgresadmin"
+  dbPassword: "admin123"
+mpsSecretStoreNames:
+  web: "mpsweb"
+  api: "mpsapi"
+  certs: "mpscerts"
+  webcerts: "mpswebcerts"
+  vault: "vaultaccess"
+  creds: "mpscreds"
+  mpsrediscreds: "mpsrediscreds"
+  session: "session"
+rpsSecretStoreNames:
+  web: "rpsweb"
+  api: "rpsapi"
+  rpscerts: "rpscerts"
+  vault: "vaultaccess"
+mps:
+  replicaCount: 2
+  https: "true"
+  generateCerts: "false"
+  logLevel: "silly"
+  nodeEnv: "dev"
+  serverDeploymentMode: "mps"
+  useAllowList: "false"
+  mpsPort: "4433"
+  mpsUser: "admin"
+  useGlobalCredentials: "true"
+  enableLogging: "true"
+  debug: "true"
+  useVault: "true"
+  vaultAddr: "http://vault:8200"
+  secretsPath: "kv/data/rps/"
+  debugLevel: "5"
+  mpsPassword: "mpspassword"
+  apikeyKeyName: "x-api-key"
+  webcertpublic: "mpsweb_cert.crt"
+  webcertkey: "mpsweb_cert.key"
+  webcertca: "rootCA_mpsweb.crt"
+  mpscertpublic: "mps_cert.crt"
+  mpscertkey: "mps_cert.key"
+  mpscertca: "rootCA_mps.crt"
+  vaultkey: "vault-token.txt"
+  staticIPAddress: "STATIC_IP_MPS"
+  resourceGroupName: "NODE_RESOURCE_GROUP"
+  certFormat: "raw"
+  sessionEncryptionKey: "session-key.txt"
+  networkAdaptor: "eth0"
+  proxy: "8100"
+  distributedKvPort: "8500"
+  distributedKvName: "HashiCorpConsul"
+  webProxyPort: "8100"
+mps_web:
+  replicaCount: 2
+  serverDeploymentMode: "web"
+  webPort: "3000"
+  enableLogging: "true"
+  debug: "true"
+  debugLevel: "5"
+  webAdminUserKey: "adminusername"
+  webAdminPasswordKey: "adminuserpassword"
+  staticIPAddress: "STATIC_IP_WEB"
+  authEnabled: "false"
+  mpsrediscreds: "mpsrediscreds"
+  redisEnable: "true"
+  redisHost: "azureredis"
+  redisPort: "6379"
+  resourceGroupName: "NODE_RESOURCE_GROUP"
+ui:
+  replicaCount: 1
+  port: "80"
+  staticIPAddress: "STATIC_IP_UI"
+  resourceGroupName: "NODE_RESOURCE_GROUP"
+rps:
+  replicaCount: 2
+  logLevel: "silly"
+  https: "true"
+  nodeEnv: "dev"
+  useDBProfiles: "true"
+  dbHost: "postgres"
+  dbPort: "5432"
+  useVault: "true"
+  vaultAddr: "http://vault:8200"
+  secretsPath: "kv/data/rps/"
+  rpswsPort: 8080
+  rpswebPort: 8081
+  webAdminUserKey: "adminusername"
+  webAdminPasswordKey: "adminuserpassword"
+  apikeyKeyName: "x-api-key"
+  webcertpublic: "rps_cert.crt"
+  webcertkey: "rps_cert.key"
+  rootcacert: "rootCA_rps.crt"
+  vaultkey: "vault-token.txt"
+  webSocketTLS: "true"
+  useRawCerts: "true"
+  staticIPAddress: "STATIC_IP_RPS"
+  resourceGroupName: "NODE_RESOURCE_GROUP"
