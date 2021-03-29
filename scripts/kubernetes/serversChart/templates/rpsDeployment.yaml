@@ -27,7 +27,7 @@ spec:
       containers:
       - name: azure-rps
         image: {{ .Values.images.rps }}
-        command: ['/bin/bash', '-c', 'npm start']
+        command: ['/bin/bash', '-c', 'node ./dist/Index.js']
         env:          
           - name: "RPS_LOG_LEVEL"
             value: "{{ .Values.rps.logLevel }}"

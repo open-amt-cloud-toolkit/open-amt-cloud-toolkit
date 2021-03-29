@@ -7,9 +7,9 @@
 # Declare variables to be passed into your templates.
 
 images:
-  mps: "docker.io/vprodemo/brian_mps:scale_merge_v5"
-  rps: "docker.io/vprodemo/brian_rps:master_certs_v6"
-  ui: "docker.io/vprodemo/brian_ui:master_v4"
+  mps: "mps:latest"
+  rps: "rps:latest"
+  ui: "ui:latest"
   postgresdb: "postgres:10.4"
   pullSecret: "regcred"
 backenddb:

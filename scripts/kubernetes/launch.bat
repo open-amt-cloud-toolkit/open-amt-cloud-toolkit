@@ -36,9 +36,6 @@ IF %ERRORLEVEL% EQU 0 (
 
 del .env
 
-git checkout ./serversChart/values.yaml
-
-
 call launchcluster.bat %Resource_group% %aks_cluster% %region% && (
   echo launchcluster was successful
 ) || (
