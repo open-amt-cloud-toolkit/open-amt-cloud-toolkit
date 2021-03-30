@@ -71,13 +71,6 @@ call createsecrets.bat %adminusername% %adminpassword% %mpsapikey% %mpspassword%
   EXIT /B 1
 )
 
-node updatevalues.js && (
-  echo updated helm values file successful
-) || (
-  echo updated helm values file failed
-  EXIT /B 1
-)
-
 helm install openamtcloudstack ./serversChart && (
   echo deployment successful
 ) || (
