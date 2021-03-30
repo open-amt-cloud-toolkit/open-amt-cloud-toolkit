@@ -22,10 +22,6 @@ spec:
       - name: azure-mpswebserver
         image: {{ .Values.images.mps }}
         env:
-          - name: "REACT_APP_MPS_SERVER"
-            value: "{{ .Values.mps_web.staticIPAddress }}"
-          - name: "REACT_APP_RPS_SERVER"
-            value: "{{ .Values.rps.staticIPAddress }}"
           - name: "GENERATE_SOURCEMAP"
             value: "false"
           - name: "MPS_HTTPS"
@@ -42,8 +38,6 @@ spec:
             value: "{{ .Values.mps_web.staticIPAddress }}"
           - name: "MPS_STARTUP_MODE"
             value: "{{ .Values.mps_web.serverDeploymentMode }}"
-          - name: "MPS_USE_WHITELIST"
-            value: "{{ .Values.mps.useAllowList }}"
           - name: "MPS_USE_ALLOWLIST"
             value: "{{ .Values.mps.useAllowList }}"
           - name: "MPS_PORT"
