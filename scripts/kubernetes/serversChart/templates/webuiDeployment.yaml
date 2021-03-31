@@ -1,0 +1,43 @@
+#/*********************************************************************
+# Copyright (c) Intel Corporation 2020
+# SPDX-License-Identifier: Apache-2.0
+#**********************************************************************/
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: azure-webui
+spec:
+  replicas: {{ .Values.ui.replicaCount }}
+  selector:
+    matchLabels:
+      app: azure-webui
+  template:
+    metadata:
+      labels:
+        app: azure-webui
+    spec:
+      imagePullSecrets:
+        - name: {{ .Values.images.pullSecret }}
+      containers:
+      - name: azure-webui
+        image: {{ .Values.images.ui }}
+        env:
+          - name: "NODE_ENV"
+            value: "production"
+          - name: "MPS_SERVER"
+            value: "https://{{ .Values.mps_web.staticIPAddress }}:{{ .Values.mps_web.webPort }}"
+          - name: "RPS_SERVER"
+            value: "https://{{ .Values.rps.staticIPAddress }}:{{ .Values.rps.rpswebPort }}"
+          - name: "RPSXAPIKEY"
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.rpsSecretStoreNames.api }}
+                key: {{ .Values.rps.apikeyKeyName }}
+          - name: "MPSXAPIKEY"
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.mpsSecretStoreNames.api }}
+                key: {{ .Values.mps.apikeyKeyName }}
+        ports:
+        - containerPort: {{ .Values.ui.port }}
+          name: ui

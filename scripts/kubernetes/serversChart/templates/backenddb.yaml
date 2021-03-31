@@ -1,0 +1,147 @@
+#/*********************************************************************
+# Copyright (c) Intel Corporation 2020
+# SPDX-License-Identifier: Apache-2.0
+#**********************************************************************/
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-config
+  labels:
+    app: postgres
+data:
+  POSTGRES_DB: {{ .Values.backenddb.dbName }}
+  POSTGRES_USER: {{ .Values.backenddb.dbUser }}
+  POSTGRES_PASSWORD: {{ .Values.backenddb.dbPassword }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: init-db
+data:
+  init.sql: |
+    CREATE TABLE IF NOT EXISTS ciraconfigs(
+      cira_config_name varchar(40) NOT NULL,
+      mps_server_address varchar(256),
+      mps_port integer,
+      user_name varchar(40),
+      password varchar(63),
+      common_name varchar(256),
+      server_address_format integer, 
+      auth_method integer, 
+      mps_root_certificate text, 
+      proxydetails text,
+      CONSTRAINT configname UNIQUE(cira_config_name)
+    );
+    CREATE TABLE IF NOT EXISTS networkconfigs(
+      network_profile_name varchar(40) NOT NULL,
+      dhcp_enabled BOOLEAN NOT NULL,
+      static_ip_shared BOOLEAN NOT NULL,
+      ip_sync_enabled BOOLEAN NOT NULL,
+      CONSTRAINT networkprofilename UNIQUE(network_profile_name)
+    );
+    CREATE TABLE IF NOT EXISTS profiles(
+      profile_name varchar(40) NOT NULL,
+      activation varchar(20) NOT NULL,
+      amt_password varchar(40),
+      configuration_script text,
+      cira_config_name varchar(40) REFERENCES ciraconfigs(cira_config_name),
+      generate_random_password BOOLEAN NOT NULL,
+      random_password_characters varchar(100),
+      random_password_length integer,
+      creation_date timestamp,
+      created_by varchar(40),
+      network_profile_name varchar(40) REFERENCES networkconfigs(network_profile_name),
+      mebx_password varchar(40),
+      generate_random_mebx_password BOOLEAN NOT NULL,
+      random_mebx_password_length integer,
+      tags text[],
+      CONSTRAINT name UNIQUE(profile_name)
+    );
+    CREATE TABLE IF NOT EXISTS domains(
+      name varchar(40) NOT NULL,
+      domain_suffix varchar(40) NOT NULL,
+      provisioning_cert text,
+      provisioning_cert_storage_format varchar(40),
+      provisioning_cert_key text,
+      creation_date timestamp,
+      created_by varchar(40),
+      CONSTRAINT domainname UNIQUE(name),
+      CONSTRAINT domainsuffix UNIQUE(domain_suffix)
+    );
+    INSERT INTO public.networkconfigs(
+      network_profile_name, dhcp_enabled, static_ip_shared, ip_sync_enabled) 
+      values('dhcp_disabled', false, true, true);
+    INSERT INTO public.networkconfigs(
+      network_profile_name, dhcp_enabled, static_ip_shared, ip_sync_enabled)  
+      values('dhcp_enabled', true, false, true);
+  initMPS.sql: |
+    CREATE DATABASE mpsdb;
+    \connect mpsdb
+    CREATE TABLE IF NOT EXISTS devices(
+      guid uuid NOT NULL,
+      tags text[],
+      hostname varchar(256),
+      CONSTRAINT device_guid UNIQUE(guid));
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: rpsdata
+spec:
+  accessModes:
+  - ReadWriteOnce
+  storageClassName: managed-premium
+  resources:
+    requests:
+      storage: 5Gi
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: rpsdb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+        - name: backenddb
+          image: postgres:10.4
+          ports:
+            - containerPort: 5432
+          env:
+            - name: PGDATA
+              value: /var/lib/postgresql/data/db-files
+          envFrom:
+            - configMapRef:
+                name: postgres-config
+          volumeMounts:
+          - mountPath: "/var/lib/postgresql/data"
+            name: volume
+          - mountPath: "/docker-entrypoint-initdb.d"
+            name: initdb
+      volumes:
+        - name: volume
+          persistentVolumeClaim:
+            claimName: rpsdata
+        - name: initdb
+          configMap:
+              name: init-db
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+  labels:
+    app: postgres
+spec:
+  type: NodePort
+  ports:
+   - port: 5432
+  selector:
+   app: postgres
