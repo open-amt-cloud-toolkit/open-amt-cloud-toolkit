@@ -70,10 +70,3 @@ call createsecrets.bat %adminusername% %adminpassword% %mpsapikey% %mpspassword%
   echo createsecrets failed
   EXIT /B 1
 )
-
-helm install openamtcloudstack ./serversChart && (
-  echo deployment successful
-) || (
-  echo deployment failed
-  EXIT /B 1
-)
