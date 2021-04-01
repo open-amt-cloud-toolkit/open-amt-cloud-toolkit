@@ -52,6 +52,8 @@ spec:
             value: "{{ .Values.mps.enableLogging }}"
           - name: "MPS_DEBUG"
             value: "{{ .Values.mps.debug }}"
+          - name: "MPS_USE_DB"
+            value: "{{ .Values.mps.useDB }}"
           - name: "MPS_USE_VAULT"
             value: "{{ .Values.mps.useVault }}"
           - name: "MPS_VAULT_ADDRESS"

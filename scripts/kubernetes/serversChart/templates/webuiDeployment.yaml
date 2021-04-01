@@ -2,6 +2,16 @@
 # Copyright (c) Intel Corporation 2020
 # SPDX-License-Identifier: Apache-2.0
 #**********************************************************************/
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-config-file
+  labels:
+    app: nginx-conf 
+data:
+  nginx.conf: |-
+{{ .Files.Get "nginx/nginx.conf" | indent 4 }}
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -18,9 +28,20 @@ spec:
     spec:
       imagePullSecrets:
         - name: {{ .Values.images.pullSecret }}
+      volumes:
+      - name: nginx-conf
+        configMap:
+          name: nginx-config-file
+          items:
+          - key: nginx.conf
+            path: nginx.conf
       containers:
       - name: azure-webui
         image: {{ .Values.images.ui }}
+        volumeMounts:
+          - name: nginx-conf
+            mountPath: /etc/nginx/conf.d/default.conf
+            subPath: nginx.conf
         env:
           - name: "NODE_ENV"
             value: "production"

@@ -52,6 +52,8 @@ spec:
             value: "{{ .Values.mps.enableLogging }}"
           - name: "MPS_DEBUG"
             value: "{{ .Values.mps.debug }}"
+          - name: "MPS_USE_DB"
+            value: "{{ .Values.mps.useDB }}"
           - name: "MPS_USE_VAULT"
             value: "{{ .Values.mps.useVault }}"
           - name: "MPS_VAULT_ADDRESS"
@@ -70,6 +72,8 @@ spec:
             valueFrom:
               fieldRef:
                 fieldPath: status.hostIP
+          - name: "MPS_NETWORK_ADAPTOR"
+            value: "{{ .Values.mps.networkAdaptor }}"
           - name: "MPS_WEB_ADMIN_USER"
             valueFrom:
               secretKeyRef:

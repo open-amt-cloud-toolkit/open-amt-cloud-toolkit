@@ -43,6 +43,7 @@ mps:
   useGlobalCredentials: "true"
   enableLogging: "true"
   debug: "true"
+  useDB: "true"
   useVault: "true"
   vaultAddr: "http://vault:8200"
   secretsPath: "kv/data/rps/"
