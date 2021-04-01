@@ -54,6 +54,8 @@ spec:
             value: "{{ .Values.mps.debug }}"
           - name: "MPS_USE_DB"
             value: "{{ .Values.mps.useDB }}"
+          - name: "MPS_CONNECTION_STRING"
+            value: "postgresql://{{ .Values.backenddb.dbUser }}:{{ .Values.backenddb.dbPassword }}@{{ .Values.rps.dbHost }}:{{ .Values.rps.dbPort }}/mpsdb"
           - name: "MPS_USE_VAULT"
             value: "{{ .Values.mps.useVault }}"
           - name: "MPS_VAULT_ADDRESS"
@@ -147,6 +149,8 @@ spec:
             value: "{{ .Values.mps_web.redisPort }}"
           - name: "MPS_REDIS_ENABLE"
             value: "{{ .Values.mps_web.redisEnable }}"
+          - name: "MPS_CORS_ORIGIN"
+            value: "http://{{ .Values.ui.staticIPAddress }},https://{{ .Values.rps.staticIPAddress }}"
         ports:
         - containerPort: {{ .Values.mps.mpsPort }}
           name: mps
