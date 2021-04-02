@@ -13,7 +13,6 @@ images:
   postgresdb: "postgres:10.4"
   pullSecret: "regcred"
 backenddb:
-  dbName: "postgresdb"
   dbUser: "postgresadmin"
   dbPassword: "admin123"
 mpsSecretStoreNames:
@@ -94,6 +93,7 @@ rps:
   nodeEnv: "dev"
   useDBProfiles: "true"
   dbHost: "postgres"
+  dbName: "rpsdb"
   dbPort: "5432"
   useVault: "true"
   vaultAddr: "http://vault:8200"

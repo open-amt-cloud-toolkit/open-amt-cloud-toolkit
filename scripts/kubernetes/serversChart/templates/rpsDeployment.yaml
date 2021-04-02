@@ -42,7 +42,7 @@ spec:
           - name: "RPS_DB_HOST"
             value: "{{ .Values.rps.dbHost }}"
           - name: "RPS_DB_NAME"
-            value: "{{ .Values.backenddb.dbName }}"
+            value: "{{ .Values.rps.dbName }}"
           - name: "RPS_DB_PORT"
             value: "{{ .Values.rps.dbPort }}"
           - name: "RPS_DB_USER"
