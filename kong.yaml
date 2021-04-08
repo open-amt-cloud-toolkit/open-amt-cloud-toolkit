@@ -76,7 +76,9 @@ plugins:
   service: rps-rest
 - name: jwt
   route: mps-route
-
+  config:
+    claims_to_verify:
+    - exp
 
 consumers:
   - username: admin
