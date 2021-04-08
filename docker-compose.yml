@@ -13,14 +13,10 @@ services:
       dockerfile: ./Dockerfile
     environment:
       NODE_ENV: production
-      RPS_SERVER: https://${MPS_COMMON_NAME}:8081
-      MPS_SERVER: https://${MPS_COMMON_NAME}:3000
-      RPSXAPIKEY: ${RPS_XAPIKEY}
-      MPSXAPIKEY: ${MPS_XAPIKEY}
+      RPS_SERVER: https://localhost/rps
+      MPS_SERVER: https://localhost/mps
     volumes:
-      - ./sample-web-ui/nginx.conf:/etc/nginx/conf.d/default.conf
-    ports:
-      - ${WEBUI_PORT}:80
+      - ./sample-web-ui/nginx.conf:/etc/nginx/conf.d/default.conf  
   rps:
     image: ${RPS_IMAGE}
     networks:
@@ -28,33 +24,16 @@ services:
     build:
       context: ./rps
       dockerfile: ./Dockerfile
-    ports: 
-      - "${RPSWEBSOCKETPORT}:8080"
-      - "${RPSWEBPORT}:8081"
-    depends_on: 
-      - mps
     env_file:
       - .env
     environment: 
       RPS_USER: ${RPS_MPS_USER}
       RPS_PASSWORD: ${RPS_MPS_PASSWORD}
-      RPS_CORS_ORIGIN: http://${MPS_COMMON_NAME}:${WEBUI_PORT}
+      RPS_CORS_ORIGIN: "*"
       RPS_CORS_HEADERS: ${CORS_HEADERS}
       RPS_CORS_METHODS: ${CORS_METHODS}
       RPS_CORS_ALLOW_CREDENTIALS: ${CORS_ALLOW_CREDENTIALS}
-      RPS_MPS_SERVER: https://mps:3000
-    volumes:
-      - private-volume:/rcs-microservice/private
-    command: >
-      /bin/bash -c "
-        while ! nc -z mps 3000;
-        do
-          echo waiting for mps;
-          sleep 5;
-        done;
-        echo MPS Running!;
-        node ./dist/Index.js;
-      "
+      RPS_MPS_SERVER: http://mps:3000
   mps:
     image: ${MPS_IMAGE}
     networks:
@@ -63,7 +42,6 @@ services:
       context: ./mps
       dockerfile: ./Dockerfile
     ports: 
-      - "${MPSWEBPORT}:3000"
       - "${MPSPORT}:4433"
     env_file:
       - .env
@@ -71,7 +49,7 @@ services:
       MPS_USERNAME: ${MPS_USER}
       MPS_PASS: ${MPS_PASSWORD}
       MPS_MPSXAPIKEY: ${MPS_XAPIKEY}
-      MPS_CORS_ORIGIN: http://${MPS_COMMON_NAME}:${WEBUI_PORT}
+      MPS_CORS_ORIGIN: "*"
       MPS_CORS_HEADERS: ${CORS_HEADERS}
       MPS_CORS_METHODS: ${CORS_METHODS}
     volumes:
@@ -100,6 +78,40 @@ services:
       VAULT_DEV_LISTEN_ADDRESS: 0.0.0.0:8200
     cap_add: 
       - IPC_LOCK
+  kong:
+    image: kong:latest
+    healthcheck:
+      test:
+        - CMD
+        - nc
+        - -z
+        - localhost
+        - "8443"
+      retries: 10
+    command: 
+      - "kong"
+      - "start"
+      - "--vv"
+    environment:
+      - KONG_DATABASE=off
+      - KONG_CASSANDRA_CONTACT_POINTS=kong-database
+      - KONG_ADMIN_LISTEN=0.0.0.0:8001
+      - KONG_ADMIN_LISTEN_SSL=0.0.0.0:8444
+      - KONG_NGINX_DAEMON=off
+      - KONG_DECLARATIVE_CONFIG=/home/kong/kong.yml
+      - KONG_PROXY_ERROR_LOG=/dev/stderr
+      - KONG_PROXY_ACCESS_LOG=/dev/stdout
+      - KONG_ADMIN_ACCESS_LOG=/dev/stdout
+      - KONG_ADMIN_ERROR_LOG=/dev/stderr
+      - KONG_DNS_ORDER=LAST,A,CNAME
+    networks:
+      - openamtnetwork
+    volumes:
+      - ./kong.yaml:/home/kong/kong.yml
+    ports:
+      - "443:8443"
+      - "8001:8001"
+    restart: always
 volumes:
     app-volume:
     private-volume:
