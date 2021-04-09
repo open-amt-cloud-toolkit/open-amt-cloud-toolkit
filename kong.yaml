@@ -34,6 +34,10 @@ services:
     strip_path: true
     paths:
     - /mps/login
+  - name: mps-relay-route
+    strip_path: true
+    paths:
+    - /mps/ws
   - name: mps-route
     strip_path: true
     paths:
