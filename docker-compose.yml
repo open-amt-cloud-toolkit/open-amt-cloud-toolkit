@@ -29,10 +29,6 @@ services:
     environment: 
       RPS_USER: ${RPS_MPS_USER}
       RPS_PASSWORD: ${RPS_MPS_PASSWORD}
-      RPS_CORS_ORIGIN: "*"
-      RPS_CORS_HEADERS: ${CORS_HEADERS}
-      RPS_CORS_METHODS: ${CORS_METHODS}
-      RPS_CORS_ALLOW_CREDENTIALS: ${CORS_ALLOW_CREDENTIALS}
       RPS_MPS_SERVER: http://mps:3000
   mps:
     image: ${MPS_IMAGE}
@@ -48,10 +44,6 @@ services:
     environment: 
       MPS_USERNAME: ${MPS_USER}
       MPS_PASS: ${MPS_PASSWORD}
-      MPS_MPSXAPIKEY: ${MPS_XAPIKEY}
-      MPS_CORS_ORIGIN: "*"
-      MPS_CORS_HEADERS: ${CORS_HEADERS}
-      MPS_CORS_METHODS: ${CORS_METHODS}
     volumes:
       - private-volume:/mps-microservice/private
   db:
