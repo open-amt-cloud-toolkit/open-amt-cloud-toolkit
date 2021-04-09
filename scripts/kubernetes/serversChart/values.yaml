@@ -21,9 +21,8 @@ mpsSecretStoreNames:
   certs: "mpscerts"
   webcerts: "mpswebcerts"
   vault: "vaultaccess"
-  creds: "mpscreds"
-  mpsrediscreds: "mpsrediscreds"
-  session: "session"
+  creds: "mpscreds"  
+
 rpsSecretStoreNames:
   web: "rpsweb"
   api: "rpsapi"
@@ -47,8 +46,7 @@ mps:
   vaultAddr: "http://vault:8200"
   secretsPath: "kv/data/rps/"
   debugLevel: "5"
-  mpsPassword: "mpspassword"
-  apikeyKeyName: "x-api-key"
+  mpsPassword: "mpspassword"  
   webcertpublic: "mpsweb_cert.crt"
   webcertkey: "mpsweb_cert.key"
   webcertca: "rootCA_mpsweb.crt"
@@ -58,8 +56,7 @@ mps:
   vaultkey: "vault-token.txt"
   staticIPAddress: "STATIC_IP_MPS"
   resourceGroupName: "NODE_RESOURCE_GROUP"
-  certFormat: "raw"
-  sessionEncryptionKey: "session-key.txt"
+  certFormat: "raw"  
   networkAdaptor: "eth0"
   proxy: "8100"
   distributedKvPort: "8500"
@@ -76,10 +73,6 @@ mps_web:
   webAdminPasswordKey: "adminuserpassword"
   staticIPAddress: "STATIC_IP_WEB"
   authEnabled: "false"
-  mpsrediscreds: "mpsrediscreds"
-  redisEnable: "true"
-  redisHost: "azureredis"
-  redisPort: "6379"
   resourceGroupName: "NODE_RESOURCE_GROUP"
 ui:
   replicaCount: 1
@@ -102,7 +95,6 @@ rps:
   rpswebPort: 8081
   webAdminUserKey: "adminusername"
   webAdminPasswordKey: "adminuserpassword"
-  apikeyKeyName: "x-api-key"
   webcertpublic: "rps_cert.crt"
   webcertkey: "rps_cert.key"
   rootcacert: "rootCA_rps.crt"

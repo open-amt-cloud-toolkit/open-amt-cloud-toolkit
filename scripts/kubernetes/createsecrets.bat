@@ -42,11 +42,6 @@ echo usage: createsecrets.bat [adminusername] [adminpassword] [mpsapikey] [mpspa
 EXIT /B 1
 )
 
-if "" == "%~7" (
-echo usage: createsecrets.bat [adminusername] [adminpassword] [mpsapikey] [mpspassword] [rpsapikey] [sessionEncryptionKey] [redisPassword]
-EXIT /B 1
-)
-
 
 
 set adminusername=%1
@@ -55,7 +50,6 @@ set mpsapikey=%3
 set mpspassword=%4
 set rpsapikey=%5
 set sessionEncryptionKey=%6
-set redisPassword = %7
 
 call kubectl create secret generic mpsweb --from-literal=adminusername=%adminusername% --from-literal=adminuserpassword=%adminpassword% && (
   echo mpsweb secret created successfully
@@ -68,14 +62,6 @@ call kubectl create secret generic mpsapi --from-literal=x-api-key=%mpsapikey% &
  echo mpsapi secret created successfully
 ) || (
   echo mpsapi secret creation failed
-  EXIT /B 1
-)
-
-
-call kubectl create secret generic mpsrediscreds --from-literal=mpsrediscreds=%redisPassword% && (
- echo mpsrediscreds secret created successfully
-) || (
-  echo mpsrediscreds secret creation failed
   EXIT /B 1
 )
 

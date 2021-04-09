@@ -133,22 +133,6 @@ spec:
               secretKeyRef:
                 name: {{ .Values.mpsSecretStoreNames.vault }}
                 key: {{ .Values.mps.vaultkey }}
-          - name: MPS_SESSION_ENCRYPTION_KEY
-            valueFrom:
-              secretKeyRef:
-                name: {{ .Values.mpsSecretStoreNames.session }}
-                key: {{ .Values.mps.sessionEncryptionKey }}
-          - name: "MPS_REDIS_PASSWORD"
-            valueFrom:
-              secretKeyRef:
-                name: {{ .Values.mpsSecretStoreNames.mpsrediscreds }}
-                key: {{ .Values.mps_web.mpsrediscreds }}
-          - name: "MPS_REDIS_HOST"
-            value: "{{ .Values.mps_web.redisHost }}"
-          - name: "MPS_REDIS_PORT"
-            value: "{{ .Values.mps_web.redisPort }}"
-          - name: "MPS_REDIS_ENABLE"
-            value: "{{ .Values.mps_web.redisEnable }}"
           - name: "MPS_CORS_ORIGIN"
             value: "http://{{ .Values.ui.staticIPAddress }},https://{{ .Values.rps.staticIPAddress }}"
         ports:

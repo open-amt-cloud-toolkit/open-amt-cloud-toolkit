@@ -52,12 +52,8 @@ spec:
             value: "{{ .Values.mps.enableLogging }}"
           - name: "MPS_DEBUG"
             value: "{{ .Values.mps.debug }}"
-          - name: "MPS_USE_DB"
-            value: "{{ .Values.mps.useDB }}"
           - name: "MPS_CONNECTION_STRING"
             value: "postgresql://{{ .Values.backenddb.dbUser }}:{{ .Values.backenddb.dbPassword }}@{{ .Values.rps.dbHost }}:{{ .Values.rps.dbPort }}/mpsdb"
-          - name: "MPS_USE_VAULT"
-            value: "{{ .Values.mps.useVault }}"
           - name: "MPS_VAULT_ADDRESS"
             value : "{{ .Values.mps.vaultAddr }}"
           - name: "MPS_SECRETS_PATH"
@@ -91,11 +87,6 @@ spec:
               secretKeyRef:
                 name: {{ .Values.mpsSecretStoreNames.creds }}
                 key: {{ .Values.mps.mpsPassword }}
-          - name: MPS_MPSXAPIKEY
-            valueFrom:
-              secretKeyRef:
-                name: {{ .Values.mpsSecretStoreNames.api }}
-                key: {{ .Values.mps.apikeyKeyName }}
           - name: MPS_CERT_FORMAT
             value: {{ .Values.mps.certFormat }}
           - name: MPS_TLS_CERT_CA
@@ -133,22 +124,6 @@ spec:
               secretKeyRef:
                 name: {{ .Values.mpsSecretStoreNames.vault }}
                 key: {{ .Values.mps.vaultkey }}
-          - name: MPS_SESSION_ENCRYPTION_KEY
-            valueFrom:
-              secretKeyRef:
-                name: {{ .Values.mpsSecretStoreNames.session }}
-                key: {{ .Values.mps.sessionEncryptionKey }}
-          - name: "MPS_REDIS_PASSWORD"
-            valueFrom:
-              secretKeyRef:
-                name: {{ .Values.mpsSecretStoreNames.mpsrediscreds }}
-                key: {{ .Values.mps_web.mpsrediscreds }}
-          - name: "MPS_REDIS_HOST"
-            value: "{{ .Values.mps_web.redisHost }}"
-          - name: "MPS_REDIS_PORT"
-            value: "{{ .Values.mps_web.redisPort }}"
-          - name: "MPS_REDIS_ENABLE"
-            value: "{{ .Values.mps_web.redisEnable }}"
           - name: "MPS_CORS_ORIGIN"
             value: "http://{{ .Values.ui.staticIPAddress }},https://{{ .Values.rps.staticIPAddress }}"
         ports:

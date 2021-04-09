@@ -22,8 +22,6 @@ set mpsapikey=APIKEYFORMPS123!
 set mpspassword=Intel123!
 set rpsapikey=APIKEYFORRPS123!
 set sessionEncryptionKey=sessionEncryptionKey
-set redisPassword=cache@1234
-
 
 
 NET SESSION >nul 2>&1
@@ -64,7 +62,7 @@ call installvault.bat  && (
   EXIT /B 1
 )
 
-call createsecrets.bat %adminusername% %adminpassword% %mpsapikey% %mpspassword% %rpsapikey% %sessionEncryptionKey% %redisPassword% && (
+call createsecrets.bat %adminusername% %adminpassword% %mpsapikey% %mpspassword% %rpsapikey% %sessionEncryptionKey% && (
   echo createsecrets was successful
 ) || (
   echo createsecrets failed
