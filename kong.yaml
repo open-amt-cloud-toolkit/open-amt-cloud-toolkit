@@ -78,6 +78,9 @@ services:
 plugins:
 - name: jwt
   service: rps-rest
+  config:
+    claims_to_verify:
+    - exp
 - name: jwt
   route: mps-route
   config:
