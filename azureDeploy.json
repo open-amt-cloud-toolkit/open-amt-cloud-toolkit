@@ -59,20 +59,6 @@
         "description": "Name of the FQDN you wish to use to access this deployment (i.e. \"sample\" will result in an FQDN of sample.westus.azurecontainer.io)"
       }
     },
-    "authEnabled": {
-      "defaultValue": "false",
-      "type": "string",
-      "metadata": {
-        "description": "For details on this property view the configuration documentation located under \"Microservices\" in the Open AMT Cloud Toolkit documentation on https://open-amt-cloud-toolkit.github.io/docs/"
-      }
-    },
-    "corsHeaders": {
-      "defaultValue": "Origin, X-Requested-With, Accept, X-MPS-API-Key,x-rps-api-key, Content-Type, csrf-token, authorization",
-      "type": "string",
-      "metadata": {
-        "description": "For details on this property view the configuration documentation located under \"Microservices\" in the Open AMT Cloud Toolkit documentation on https://open-amt-cloud-toolkit.github.io/docs/"
-      }
-    },
     "useAllowlist": {
       "defaultValue": "false",
       "type": "string",
@@ -107,27 +93,6 @@
       "metadata": {
         "description": "For details on this property view the configuration documentation located under \"Microservices\" in the Open AMT Cloud Toolkit documentation on https://open-amt-cloud-toolkit.github.io/docs/"
       }
-    },
-    "mpsSessionEncryptionKey": {
-      "defaultValue": "<YourStrongSessionEncryptionKey123!>",
-      "type": "securestring",
-      "metadata": {
-        "description": "For details on this property view the configuration documentation located under \"Microservices\" in the Open AMT Cloud Toolkit documentation on https://open-amt-cloud-toolkit.github.io/docs/"
-      }
-    },
-    "mpsXAPIKey": {
-      "defaultValue": "APIKEYFORMPS123!",
-      "type": "string",
-      "metadata": {
-        "description": "For details on this property view the configuration documentation located under \"Microservices\" in the Open AMT Cloud Toolkit documentation on https://open-amt-cloud-toolkit.github.io/docs/"
-      }
-    },
-    "rpsXAPIKey": {
-      "defaultValue": "APIKEYFORRPS123!",
-      "type": "string",
-      "metadata": {
-        "description": "For details on this property view the configuration documentation located under \"Microservices\" in the Open AMT Cloud Toolkit documentation on https://open-amt-cloud-toolkit.github.io/docs/"
-      }
     }
   },
   "resources": [
@@ -153,55 +118,12 @@
               ],
               "environmentVariables": [
                 {
-                  "name": "RPS_WEB_TLS_CERT",
-                  "value": "../private/mpsserver-cert-public.crt"
-                },
-                {
-                  "name": "RPS_WEB_TLS_CERT_KEY",
-                  "value": "../private/mpsserver-cert-private.key"
-                },
-                {
-                  "name": "RPS_ROOT_CA_CERT",
-                  "value": "../private/root-cert-public.crt"
-                },
-                {
-                  "name": "RPS_CORS_ORIGIN",
-                  "value": "[concat('https://',parameters('fqdn'), '.', parameters('location'),'.azurecontainer.io')]"
-                },
-                {
-                  "name": "RPS_CORS_HEADERS",
-                  "value": "[parameters('corsHeaders')]"
-                },
-                {
-                  "name": "RPS_XAPIKEY",
-                  "value": "[parameters('rpsXAPIKey')]"
-                },
-                {
                   "name": "RPS_USER",
                   "value": "[parameters('mpsUsername')]"
                 },
                 {
                   "name": "RPS_PASSWORD",
                   "value": "[parameters('mpsPassword')]"
-                },
-                {
-                  "name": "RPS_CORS_ALLOW_CREDENTIALS",
-                  "value": "true"
-                },
-                {
-                  "name": "RPS_MPS_SERVER",
-                  "value": "https://127.0.0.1:3000"
-                }
-              ],
-              "command": [
-                "/bin/bash",
-                "-c",
-                "while ! nc -z localhost 3000;\ndo\necho waiting for mps;\nsleep 5;\ndone;\necho MPS Running!;\nnode ./dist/Index.js;"
-              ],
-              "volumeMounts": [
-                {
-                  "name": "private",
-                  "mountPath": "/rcs-microservice/private"
                 }
               ],
               "resources": {
@@ -228,24 +150,8 @@
                   "value": "[concat(parameters('fqdn'), '.', parameters('location'),'.azurecontainer.io')]"
                 },
                 {
-                  "name": "MPS_CORS_ORIGIN",
-                  "value": "[concat('https://',parameters('fqdn'), '.', parameters('location'),'.azurecontainer.io')]"
-                },
-                {
-                  "name": "MPS_CORS_HEADERS",
-                  "value": "[parameters('corsHeaders')]"
-                },
-                {
-                  "name": "MPS_AUTH_ENABLED",
-                  "value": "[parameters('authEnabled')]"
-                },
-                {
                   "name": "MPS_USE_ALLOWLIST",
                   "value": "[parameters('useAllowlist')]"
-                },
-                {
-                  "name": "MPS_XAPIKEY",
-                  "value": "[parameters('mpsXAPIKey')]"
                 },
                 {
                   "name": "MPS_WEB_ADMIN_USER",
@@ -262,10 +168,6 @@
                 {
                   "name": "MPS_PASS",
                   "value": "[parameters('mpsPassword')]"
-                },
-                {
-                  "name": "MPS_USE_DB",
-                  "value": "true"
                 }
               ],
               "ports": [
@@ -274,12 +176,6 @@
                 },
                 {
                   "port": 3000
-                }
-              ],
-              "volumeMounts": [
-                {
-                  "name": "private",
-                  "mountPath": "/mps-microservice/private"
                 }
               ]
             }
@@ -290,36 +186,20 @@
               "image": "[concat(parameters('registry'), '/', parameters('sampleWebUIImageName'))]",
               "ports": [
                 {
-                  "port": 443
+                  "port": 80
                 }
               ],
               "environmentVariables": [
                 {
                   "name": "MPS_SERVER",
-                  "value": "[concat('https://',parameters('fqdn'), '.', parameters('location'), '.azurecontainer.io:3000')]"
+                  "value": "[concat('https://',parameters('fqdn'), '.', parameters('location'), '.azurecontainer.io:8443/mps')]"
                 },
                 {
                   "name": "RPS_SERVER",
-                  "value": "[concat('https://',parameters('fqdn'), '.', parameters('location'), '.azurecontainer.io:8081')]"
+                  "value": "[concat('https://',parameters('fqdn'), '.', parameters('location'), '.azurecontainer.io:8443/rps')]"
                 },
-                {
-                  "name": "MPSXAPIKEY",
-                  "value": "[parameters('mpsXAPIKey')]"
-                },
-                {
-                  "name": "RPSXAPIKEY",
-                  "value": "[parameters('rpsXAPIKey')]"
-                },
-                {
-                  "name": "AUTH_MODE_ENABLED",
-                  "value": "[parameters('authEnabled')]"
-                }
               ],
               "volumeMounts": [
-                {
-                  "name": "private",
-                  "mountPath": "/etc/nginx/certs"
-                },
                 {
                   "name": "nginx-config",
                   "mountPath": "/etc/nginx/conf.d"
@@ -356,7 +236,65 @@
             }
           },
           {
-            "name": "rpsdb",
+            "name": "kong",
+            "properties": {
+              "image": "kong:latest",
+              "ports": [
+                {
+                  "port": 8443
+                }
+              ],
+              "command": [
+                "kong",
+                "start",
+                "--vv"
+              ],
+              "environmentVariables": [
+                {
+                  "name": "KONG_DATABASE",
+                  "value": "off"
+                },
+                {
+                  "name": "KONG_CASSANDRA_CONTACT_POINTS",
+                  "value": "kong-database"
+                },
+                {
+                  "name": "KONG_ADMIN_LISTEN",
+                  "value": "0.0.0.0:8001"
+                },
+                {
+                  "name": "KONG_ADMIN_LISTEN_SSL",
+                  "value": "0.0.0.0:8444"
+                },
+                {
+                  "name": "KONG_NGINX_DAEMON",
+                  "value": "off"
+                },
+                {
+                  "name": "KONG_DECLARATIVE_CONFIG",
+                  "value": "/home/kong/kong.yaml"
+                },
+                {
+                  "name": "KONG_LOG_LEVEL",
+                  "value": "debug"
+                }
+              ],
+              "volumeMounts": [
+                {
+                  "name": "kong-config",
+                  "mountPath": "/home/kong/"
+                }
+              ],
+              "resources": {
+                "requests": {
+                  "cpu": 0.5,
+                  "memoryInGb": 1.0
+                }
+              }
+            }
+          },
+          {
+            "name": "db",
             "properties": {
               "image": "postgres:latest",
               "ports": [
@@ -409,23 +347,15 @@
           "ports": [
             {
               "protocol": "tcp",
-              "port": 8080
-            },
-            {
-              "protocol": "tcp",
-              "port": 8081
-            },
-            {
-              "protocol": "tcp",
               "port": 4433
             },
             {
               "protocol": "tcp",
-              "port": 3000
+              "port": 80
             },
             {
               "protocol": "tcp",
-              "port": 443
+              "port": 8443
             }
           ]
         },
@@ -439,7 +369,13 @@
           {
             "name": "nginx-config",
             "secret": {
-              "nginx.conf": "c2VydmVyIHsKICAgIGxpc3RlbiA4MCBkZWZhdWx0X3NlcnZlcjsKICAgIGxpc3RlbiBbOjpdOjgwIGRlZmF1bHRfc2VydmVyOwogICAgc2VydmVyX25hbWUgXzsKICAgIHJldHVybiAzMDcgaHR0cHM6Ly8kaG9zdCRyZXF1ZXN0X3VyaTsKfQoKc2VydmVyIHsKICAgIGxpc3RlbiBbOjpdOjQ0MyBzc2w7CiAgICBsaXN0ZW4gICAgICAgICAgNDQzIHNzbDsKCiAgICAgICAgIyBQcm90ZWN0IGFnYWluc3QgdGhlIEJFQVNUIGF0dGFjayBieSBub3QgdXNpbmcgU1NMdjMgYXQgYWxsLiBJZiB5b3UgbmVlZCB0byBzdXBwb3J0IG9sZGVyIGJyb3dzZXJzIChJRTYpIHlvdSBtYXkgbmVlZCB0byBhZGQKICAgICMgU1NMdjMgdG8gdGhlIGxpc3Qgb2YgcHJvdG9jb2xzIGJlbG93LgogICAgc3NsX3Byb3RvY29scyAgIFRMU3YxLjI7CgogICAgc2VydmVyX25hbWUgICAgIGxvY2FsaG9zdDsKICAgIAogICAgIyBDaXBoZXJzIHNldCB0byBiZXN0IGFsbG93IHByb3RlY3Rpb24gZnJvbSBCZWFzdCwgd2hpbGUgcHJvdmlkaW5nIGZvcndhcmRpbmcgc2VjcmVjeSwgYXMgZGVmaW5lZCBieSBNb3ppbGxhIC0gaHR0cHM6Ly93aWtpLm1vemlsbGEub3JnL1NlY3VyaXR5L1NlcnZlcl9TaWRlX1RMUyNOZ2lueAogICAgc3NsX2NpcGhlcnMgICAgICAgICAgICAgICAgRUNESEUtUlNBLUFFUzEyOC1HQ00tU0hBMjU2OkVDREhFLUVDRFNBLUFFUzEyOC1HQ00tU0hBMjU2OkVDREhFLVJTQS1BRVMyNTYtR0NNLVNIQTM4NDpFQ0RIRS1FQ0RTQS1BRVMyNTYtR0NNLVNIQTM4NDpESEUtUlNBLUFFUzEyOC1HQ00tU0hBMjU2OkRIRS1EU1MtQUVTMTI4LUdDTS1TSEEyNTY6a0VESCtBRVNHQ006RUNESEUtUlNBLUFFUzEyOC1TSEEyNTY6RUNESEUtRUNEU0EtQUVTMTI4LVNIQTI1NjpFQ0RIRS1SU0EtQUVTMTI4LVNIQTpFQ0RIRS1FQ0RTQS1BRVMxMjgtU0hBOkVDREhFLVJTQS1BRVMyNTYtU0hBMzg0OkVDREhFLUVDRFNBLUFFUzI1Ni1TSEEzODQ6RUNESEUtUlNBLUFFUzI1Ni1TSEE6RUNESEUtRUNEU0EtQUVTMjU2LVNIQTpESEUtUlNBLUFFUzEyOC1TSEEyNTY6REhFLVJTQS1BRVMxMjgtU0hBOkRIRS1EU1MtQUVTMTI4LVNIQTI1NjpESEUtUlNBLUFFUzI1Ni1TSEEyNTY6REhFLURTUy1BRVMyNTYtU0hBOkRIRS1SU0EtQUVTMjU2LVNIQTpBRVMxMjgtR0NNLVNIQTI1NjpBRVMyNTYtR0NNLVNIQTM4NDpFQ0RIRS1SU0EtUkM0LVNIQTpFQ0RIRS1FQ0RTQS1SQzQtU0hBOkFFUzEyODpBRVMyNTY6UkM0LVNIQTpISUdIOiFhTlVMTDohZU5VTEw6IUVYUE9SVDohREVTOiEzREVTOiFNRDU6IVBTSzsKICAgIHNzbF9wcmVmZXJfc2VydmVyX2NpcGhlcnMgIG9uOwoKICAgICMgT3B0aW1pemUgU1NMIGJ5IGNhY2hpbmcgc2Vzc2lvbiBwYXJhbWV0ZXJzIGZvciAxMCBtaW51dGVzLiBUaGlzIGN1dHMgZG93biBvbiB0aGUgbnVtYmVyIG9mIGV4cGVuc2l2ZSBTU0wgaGFuZHNoYWtlcy4KICAgICMgVGhlIGhhbmRzaGFrZSBpcyB0aGUgbW9zdCBDUFUtaW50ZW5zaXZlIG9wZXJhdGlvbiwgYW5kIGJ5IGRlZmF1bHQgaXQgaXMgcmUtbmVnb3RpYXRlZCBvbiBldmVyeSBuZXcvcGFyYWxsZWwgY29ubmVjdGlvbi4KICAgICMgQnkgZW5hYmxpbmcgYSBjYWNoZSAob2YgdHlwZSAic2hhcmVkIGJldHdlZW4gYWxsIE5naW54IHdvcmtlcnMiKSwgd2UgdGVsbCB0aGUgY2xpZW50IHRvIHJlLXVzZSB0aGUgYWxyZWFkeSBuZWdvdGlhdGVkIHN0YXRlLgogICAgIyBGdXJ0aGVyIG9wdGltaXphdGlvbiBjYW4gYmUgYWNoaWV2ZWQgYnkgcmFpc2luZyBrZWVwYWxpdmVfdGltZW91dCwgYnV0IHRoYXQgc2hvdWxkbid0IGJlIGRvbmUgdW5sZXNzIHlvdSBzZXJ2ZSBwcmltYXJpbHkgSFRUUFMuCiAgICBzc2xfc2Vzc2lvbl9jYWNoZSAgICBzaGFyZWQ6U1NMOjEwbTsgIyBhIDFtYiBjYWNoZSBjYW4gaG9sZCBhYm91dCA0MDAwIHNlc3Npb25zLCBzbyB3ZSBjYW4gaG9sZCA0MDAwMCBzZXNzaW9ucwogICAgc3NsX3Nlc3Npb25fdGltZW91dCAgMjRoOwoKICAgICMgVXNlIGEgaGlnaGVyIGtlZXBhbGl2ZSB0aW1lb3V0IHRvIHJlZHVjZSB0aGUgbmVlZCBmb3IgcmVwZWF0ZWQgaGFuZHNoYWtlcwogICAga2VlcGFsaXZlX3RpbWVvdXQgMzAwOyAjIHVwIGZyb20gNzUgc2VjcyBkZWZhdWx0CgogICAgaW5kZXggaW5kZXguaHRtbDsKCiAgICBzc2xfY2VydGlmaWNhdGUgICAgICAvZXRjL25naW54L2NlcnRzL21wc3NlcnZlci1jZXJ0LXB1YmxpYy5jcnQ7CiAgICBzc2xfY2VydGlmaWNhdGVfa2V5ICAvZXRjL25naW54L2NlcnRzL21wc3NlcnZlci1jZXJ0LXByaXZhdGUua2V5OwoKICAgICNjaGFyc2V0IGtvaTgtcjsKICAgICNhY2Nlc3NfbG9nICAvdmFyL2xvZy9uZ2lueC9ob3N0LmFjY2Vzcy5sb2cgIG1haW47CgogICAgbG9jYXRpb24gLyB7CiAgICAgICAgcm9vdCAgIC91c3Ivc2hhcmUvbmdpbngvaHRtbDsKICAgICAgICBpbmRleCAgaW5kZXguaHRtbCBpbmRleC5odG07CiAgICB9CgogICAgZXJyb3JfcGFnZSAgNDA0ICAgICAgICAgICAgICAvaW5kZXguaHRtbDsKCiAgICAjIHJlZGlyZWN0IHNlcnZlciBlcnJvciBwYWdlcyB0byB0aGUgc3RhdGljIHBhZ2UgLzUweC5odG1sCiAgICAjCiAgICBlcnJvcl9wYWdlICAgNTAwIDUwMiA1MDMgNTA0ICAvNTB4Lmh0bWw7CiAgICBsb2NhdGlvbiA9IC81MHguaHRtbCB7CiAgICAgICAgcm9vdCAgIC91c3Ivc2hhcmUvbmdpbngvaHRtbDsKICAgIH0KCn0KCg=="
+              "nginx.conf": "c2VydmVyIHsNCiAgICBsaXN0ZW4gODAgZGVmYXVsdF9zZXJ2ZXI7DQogICAgbGlzdGVuIFs6Ol06ODAgZGVmYXVsdF9zZXJ2ZXI7DQogICAgc2VydmVyX25hbWUgXzsNCiANCg0KICAgIGxvY2F0aW9uIC8gew0KICAgICAgICByb290ICAgL3Vzci9zaGFyZS9uZ2lueC9odG1sOw0KICAgICAgICBpbmRleCAgaW5kZXguaHRtbCBpbmRleC5odG07DQogICAgfQ0KDQogICAgZXJyb3JfcGFnZSAgNDA0ICAgICAgICAgICAgICAvaW5kZXguaHRtbDsNCg0KICAgICMgcmVkaXJlY3Qgc2VydmVyIGVycm9yIHBhZ2VzIHRvIHRoZSBzdGF0aWMgcGFnZSAvNTB4Lmh0bWwNCiAgICAjDQogICAgZXJyb3JfcGFnZSAgIDUwMCA1MDIgNTAzIDUwNCAgLzUweC5odG1sOw0KICAgIGxvY2F0aW9uID0gLzUweC5odG1sIHsNCiAgICAgICAgcm9vdCAgIC91c3Ivc2hhcmUvbmdpbngvaHRtbDsNCiAgICB9DQp9DQoNCg=="
+            }
+          },
+          {
+            "name": "kong-config",
+            "secret": {
+              "kong.yaml": "IyoqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKg0KIyBDb3B5cmlnaHQgKGMpIEludGVsIENvcnBvcmF0aW9uIDIwMTgtMjAxOQ0KIyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogQXBhY2hlLTIuMA0KIyoqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKg0KDQojIE1ldGFkYXRhIGZpZWxkcyBzdGFydCB3aXRoIGFuIHVuZGVyc2NvcmUgKF8pDQojIEZpZWxkcyB0aGF0IGRvIG5vdCBzdGFydCB3aXRoIGFuIHVuZGVyc2NvcmUgcmVwcmVzZW50IEtvbmcgZW50aXRpZXMgYW5kIGF0dHJpYnV0ZXMNCg0KIyBfZm9ybWF0X3ZlcnNpb24gaXMgbWFuZGF0b3J5LA0KIyBpdCBzcGVjaWZpZXMgdGhlIG1pbmltdW0gdmVyc2lvbiBvZiBLb25nIHRoYXQgc3VwcG9ydHMgdGhlIGZvcm1hdA0KDQpfZm9ybWF0X3ZlcnNpb246ICIyLjEiDQoNCiMgX3RyYW5zZm9ybSBpcyBvcHRpb25hbCwgZGVmYXVsdGluZyB0byB0cnVlLg0KIyBJdCBzcGVjaWZpZXMgd2hldGhlciBzY2hlbWEgdHJhbnNmb3JtYXRpb25zIHNob3VsZCBiZSBhcHBsaWVkIHdoZW4gaW1wb3J0aW5nIHRoaXMgZmlsZQ0KIyBhcyBhIHJ1bGUgb2YgdGh1bWIsIGxlYXZlIHRoaXMgc2V0dGluZyB0byB0cnVlIGlmIHlvdSBhcmUgaW1wb3J0aW5nIGNyZWRlbnRpYWxzDQojIHdpdGggcGxhaW4gcGFzc3dvcmRzLCB3aGljaCBuZWVkIHRvIGJlIGVuY3J5cHRlZC9oYXNoZWQgYmVmb3JlIHN0b3Jpbmcgb24gdGhlIGRhdGFiYXNlLg0KIyBPbiB0aGUgb3RoZXIgaGFuZCwgaWYgeW91IGFyZSByZWltcG9ydGluZyBhIGRhdGFiYXNlIHdpdGggcGFzc3dvcmRzIGFscmVhZHkgZW5jcnlwdGVkL2hhc2hlZCwNCiMgc2V0IGl0IHRvIGZhbHNlLg0KDQpfdHJhbnNmb3JtOiB0cnVlDQoNCiMgRWFjaCBLb25nIGVudGl0eSAoY29yZSBlbnRpdHkgb3IgY3VzdG9tIGVudGl0eSBpbnRyb2R1Y2VkIGJ5IGEgcGx1Z2luKQ0KIyBjYW4gYmUgbGlzdGVkIGluIHRoZSB0b3AtbGV2ZWwgYXMgYW4gYXJyYXkgb2Ygb2JqZWN0czoNCg0Kc2VydmljZXM6DQotIG5hbWU6IHdlYg0KICBob3N0OiAxMjcuMC4wLjENCiAgcG9ydDogODANCiAgdGFnczoNCiAgLSB3ZWINCiAgcm91dGVzOg0KICAtIG5hbWU6IHdlYi1yb3V0ZQ0KICAgIHBhdGhzOg0KICAgIC0gLw0KLSBuYW1lOiBtcHMtcmVzdA0KICBob3N0OiAxMjcuMC4wLjENCiAgcG9ydDogMzAwMA0KICB0YWdzOg0KICAtIG1wcw0KICByb3V0ZXM6DQogIC0gbmFtZTogbXBzLWxvZ2luLXJvdXRlDQogICAgc3RyaXBfcGF0aDogdHJ1ZQ0KICAgIHBhdGhzOg0KICAgIC0gL21wcy9sb2dpbg0KICAtIG5hbWU6IG1wcy1yZWxheS1yb3V0ZQ0KICAgIHN0cmlwX3BhdGg6IHRydWUNCiAgICBwYXRoczoNCiAgICAtIC9tcHMvd3MNCiAgLSBuYW1lOiBtcHMtcm91dGUNCiAgICBzdHJpcF9wYXRoOiB0cnVlDQogICAgcGF0aHM6DQogICAgLSAvbXBzDQoNCi0gbmFtZTogcnBzLXJlc3QNCiAgaG9zdDogMTI3LjAuMC4xDQogIHBvcnQ6IDgwODEgIA0KICB0YWdzOg0KICAtIHJwcw0KICByb3V0ZXM6DQogIC0gbmFtZTogcnBzLXJvdXRlDQogICAgc3RyaXBfcGF0aDogdHJ1ZQ0KICAgIHBhdGhzOg0KICAgIC0gL3Jwcw0KDQotIG5hbWU6IHJwcy13cw0KICBob3N0OiAxMjcuMC4wLjENCiAgcG9ydDogODA4MA0KICB0YWdzOg0KICAtIHJwcw0KICByb3V0ZXM6DQogIC0gbmFtZTogcnBzLWFjdGl2YXRlLXJvdXRlDQogICAgc3RyaXBfcGF0aDogdHJ1ZQ0KICAgIHBhdGhzOg0KICAgIC0gL2FjdGl2YXRlDQoNCnBsdWdpbnM6DQotIG5hbWU6IGp3dA0KICBzZXJ2aWNlOiBycHMtcmVzdA0KICBjb25maWc6DQogICAgY2xhaW1zX3RvX3ZlcmlmeToNCiAgICAtIGV4cA0KLSBuYW1lOiBqd3QNCiAgcm91dGU6IG1wcy1yb3V0ZQ0KICBjb25maWc6DQogICAgY2xhaW1zX3RvX3ZlcmlmeToNCiAgICAtIGV4cA0KDQpjb25zdW1lcnM6DQogIC0gdXNlcm5hbWU6IGFkbWluDQpqd3Rfc2VjcmV0czoNCiAgLSBjb25zdW1lcjogYWRtaW4NCiAgICBrZXk6IDlFbVJKVGJJaUliNGJJZVNzbWdjV0lqclI2SHlFVHFjICNzYW1wbGUga2V5DQogICAgc2VjcmV0OiAic3VwZXJzZWNyZXQiICANCg0KDQoNCiMgcm91dGVzOg0KIyAtIG5hbWU6IGFub3RoZXItcm91dGUNCiMgICAjIFJlbGF0aW9uc2hpcHMgY2FuIGFsc28gYmUgc3BlY2lmaWVkIGJldHdlZW4gdG9wLWxldmVsIGVudGl0aWVzLA0KIyAgICMgZWl0aGVyIGJ5IG5hbWUgb3IgYnkgaWQNCiMgICBzZXJ2aWNlOiBleGFtcGxlLXNlcnZpY2UNCiMgICBob3N0czogWyJoZWxsby5jb20iXQ0KDQojIGNvbnN1bWVyczoNCiMgLSB1c2VybmFtZTogZXhhbXBsZS11c2VyDQojICAgIyBDdXN0b20gZW50aXRpZXMgZnJvbSBwbHVnaW4gY2FuIGFsc28gYmUgc3BlY2lmaWVkDQojICAgIyBJZiB0aGV5IHNwZWNpZnkgYSBmb3JlaWduLWtleSByZWxhdGlvbnNocCwgdGhleSBjYW4gYWxzbyBiZSBuZXN0ZWQNCiMgICBrZXlhdXRoX2NyZWRlbnRpYWxzOg0KIyAgIC0ga2V5OiBteS1rZXkNCiMgICBwbHVnaW5zOg0KIyAgIC0gbmFtZTogcmF0ZS1saW1pdGluZw0KIyAgICAgX2NvbW1lbnQ6ICJ0aGVzZSBhcmUgZGVmYXVsdCByYXRlLWxpbWl0cyBmb3IgdXNlciBleGFtcGxlLXVzZXIiDQojICAgICBjb25maWc6DQojICAgICAgIHBvbGljeTogbG9jYWwNCiMgICAgICAgc2Vjb25kOiA1DQojICAgICAgIGhvdXI6IDEwMDAwDQoNCiMgV2hlbiBhbiBlbnRpdHkgaGFzIG11bHRpcGxlIGZvcmVpZ24ta2V5IHJlbGF0aW9uc2hpcHMNCiMgKGUuZy4gYSBwbHVnaW4gbWF0Y2hpbmcgb24gYm90aCBjb25zdW1lciBhbmQgc2VydmljZSkNCiMgaXQgbXVzdCBiZSBzcGVjaWZpZWQgYXMgYSB0b3AtbGV2ZWwgZW50aXR5LCBhbmQgbm90IHRocm91Z2gNCiMgbmVzdGluZy4NCg0KIyBwbHVnaW5zOg0KIyAtIG5hbWU6IHJhdGUtbGltaXRpbmcNCiMgICBjb25zdW1lcjogZXhhbXBsZS11c2VyDQojICAgc2VydmljZTogYW5vdGhlci1zZXJ2aWNlDQojICAgX2NvbW1lbnQ6ICJleGFtcGxlLXVzZXIgaXMgZXh0cmEgbGltaXRlZCB3aGVuIHVzaW5nIGFub3RoZXItc2VydmljZSINCiMgICBjb25maWc6DQojICAgICBob3VyOiAyDQojICAgIyB0YWdzIGFyZSBmb3IgeW91ciBvcmdhbml6YXRpb24gb25seSBhbmQgaGF2ZSBubyBtZWFuaW5nIGZvciBLb25nOg0KIyAgIHRhZ3M6DQojICAgLSBleHRyYV9saW1pdHMNCiMgICAtIG15X3RhZw0K"
             }
           },
           {
