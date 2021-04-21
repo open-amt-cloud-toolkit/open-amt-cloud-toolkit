@@ -52,9 +52,9 @@ services:
       - openamtnetwork
     restart: always
     environment:
-      POSTGRES_DB: ${RPS_DB_NAME}
-      POSTGRES_USER: ${RPS_DB_USER}
-      POSTGRES_PASSWORD: ${RPS_DB_PASSWORD}
+      POSTGRES_DB: rpsdb
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
       - "5432:5432"
     volumes: 
