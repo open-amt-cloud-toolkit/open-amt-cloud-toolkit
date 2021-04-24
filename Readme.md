@@ -10,7 +10,7 @@ git clone --recursive https://github.com/open-amt-cloud-toolkit/open-amt-cloud-t
 ```
 
 
-[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fopen-amt-cloud-toolkit%2Fopen-amt-cloud-toolkit%2Fmain%2FazureDeploy.json)
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fopen-amt-cloud-toolkit%2Fopen-amt-cloud-toolkit%2Fv1.2.0%2FazureDeploy.json)
 
 Optionally, deploy from AzureCLI using the following commands:
 
