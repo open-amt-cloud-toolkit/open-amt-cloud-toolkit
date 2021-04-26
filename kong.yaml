@@ -76,8 +76,9 @@ services:
     - /
 
 plugins:
+- name: cors 
 - name: jwt
-  service: rps-rest
+  route: rps-route
   config:
     claims_to_verify:
     - exp

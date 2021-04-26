@@ -37,7 +37,7 @@ services:
     build:
       context: ./mps
       dockerfile: ./Dockerfile
-    ports: 
+    ports:
       - "${MPSPORT}:4433"
     env_file:
       - .env
@@ -71,7 +71,7 @@ services:
     cap_add: 
       - IPC_LOCK
   kong:
-    image: kong:latest
+    image: kong:2.3
     healthcheck:
       test:
         - CMD
