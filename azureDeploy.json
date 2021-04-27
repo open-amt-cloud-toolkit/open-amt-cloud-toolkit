@@ -197,7 +197,7 @@
                 {
                   "name": "RPS_SERVER",
                   "value": "[concat('https://',parameters('fqdn'), '.', parameters('location'), '.azurecontainer.io:8443/rps')]"
-                },
+                }
               ],
               "volumeMounts": [
                 {
