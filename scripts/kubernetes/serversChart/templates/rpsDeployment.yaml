@@ -31,20 +31,6 @@ spec:
         env:          
           - name: "RPS_LOG_LEVEL"
             value: "{{ .Values.rps.logLevel }}"
-          - name: "RPS_USE_VAULT"
-            value: "{{ .Values.rps.useVault }}"
-          - name: "RPS_NODE_ENV"
-            value: "{{ .Values.rps.nodeEnv }}"
-          - name: "RPS_HTTPS"
-            value: "{{ .Values.rps.https }}"
-          - name: "RPS_USE_DB_PROFILES"
-            value: "{{ .Values.rps.useDBProfiles }}"
-          - name: "RPS_DB_HOST"
-            value: "{{ .Values.rps.dbHost }}"
-          - name: "RPS_DB_NAME"
-            value: "{{ .Values.rps.dbName }}"
-          - name: "RPS_DB_PORT"
-            value: "{{ .Values.rps.dbPort }}"
           - name: "RPS_DB_USER"
             value: "{{ .Values.backenddb.dbUser }}"
           - name: "RPS_DB_PASSWORD"
@@ -68,11 +54,6 @@ spec:
               secretKeyRef:
                 name: {{ .Values.mpsSecretStoreNames.certs }}
                 key: {{ .Values.mps.mpscertca }}
-          - name: "RPS_XAPIKEY"
-            valueFrom:
-              secretKeyRef:
-                name: {{ .Values.rpsSecretStoreNames.api }}
-                key: {{ .Values.rps.apikeyKeyName }}
           - name: "RPS_VAULT_ADDRESS"
             value : "{{ .Values.rps.vaultAddr }}"
           - name: RPS_VAULT_TOKEN
@@ -86,6 +67,10 @@ spec:
             value: "http://{{ .Values.ui.staticIPAddress }}"
           - name: "RPS_MPS_SERVER"
             value : "https://{{ .Values.mps_web.staticIPAddress }}:{{ .Values.mps_web.webPort }}"
+          - name: "RPS_CONNECTION_STRING"
+            value: "postgresql://{{ .Values.backenddb.dbUser }}:{{ .Values.backenddb.dbPassword }}@{{ .Values.rps.dbHost }}:{{ .Values.rps.dbPort }}/rpsdb"
+          - name: "RPS_DELAY_TIMER"
+            value: "{{ .Values.rps.rpsDelayTimer }}"
         resources:
           requests:
             cpu: 100m

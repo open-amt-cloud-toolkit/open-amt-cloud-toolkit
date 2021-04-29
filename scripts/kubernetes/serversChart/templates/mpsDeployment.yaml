@@ -91,11 +91,6 @@ spec:
               secretKeyRef:
                 name: {{ .Values.mpsSecretStoreNames.creds }}
                 key: {{ .Values.mps.mpsPassword }}
-          - name: MPS_MPSXAPIKEY
-            valueFrom:
-              secretKeyRef:
-                name: {{ .Values.mpsSecretStoreNames.api }}
-                key: {{ .Values.mps.apikeyKeyName }}
           - name: MPS_CERT_FORMAT
             value: {{ .Values.mps.certFormat }}
           - name: MPS_TLS_CERT_CA

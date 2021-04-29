@@ -45,10 +45,9 @@ mps:
   useDB: "true"
   useVault: "true"
   vaultAddr: "http://vault:8200"
-  secretsPath: "kv/data/rps/"
+  secretsPath: "secret/data/"
   debugLevel: "5"
   mpsPassword: "mpspassword"
-  apikeyKeyName: "x-api-key"
   webcertpublic: "mpsweb_cert.crt"
   webcertkey: "mpsweb_cert.key"
   webcertca: "rootCA_mpsweb.crt"
@@ -65,6 +64,7 @@ mps:
   distributedKvPort: "8500"
   distributedKvName: "HashiCorpConsul"
   webProxyPort: "8100"
+  mpsConnectionString: "postgresql://postgresadmin:admin123@db:5432/rpsdb"
 mps_web:
   replicaCount: 2
   serverDeploymentMode: "web"
@@ -81,28 +81,21 @@ mps_web:
   redisHost: "azureredis"
   redisPort: "6379"
   resourceGroupName: "NODE_RESOURCE_GROUP"
+  webConnectionString: "postgresql://postgresadmin:admin123@db:5432/rpsdb"
 ui:
   replicaCount: 1
-  port: "80"
+  port: "4200"
   staticIPAddress: "STATIC_IP_UI"
   resourceGroupName: "NODE_RESOURCE_GROUP"
 rps:
   replicaCount: 2
   logLevel: "silly"
-  https: "true"
-  nodeEnv: "dev"
-  useDBProfiles: "true"
-  dbHost: "postgres"
-  dbName: "rpsdb"
-  dbPort: "5432"
-  useVault: "true"
   vaultAddr: "http://vault:8200"
-  secretsPath: "kv/data/rps/"
+  secretsPath: "secret/data/"
   rpswsPort: 8080
   rpswebPort: 8081
   webAdminUserKey: "adminusername"
   webAdminPasswordKey: "adminuserpassword"
-  apikeyKeyName: "x-api-key"
   webcertpublic: "rps_cert.crt"
   webcertkey: "rps_cert.key"
   rootcacert: "rootCA_rps.crt"
@@ -111,3 +104,5 @@ rps:
   useRawCerts: "true"
   staticIPAddress: "STATIC_IP_RPS"
   resourceGroupName: "NODE_RESOURCE_GROUP"
+  rpsConnectionString: "postgresql://postgresadmin:admin123@db:5432/rpsdb"
+  rpsDelayTimer: 12
