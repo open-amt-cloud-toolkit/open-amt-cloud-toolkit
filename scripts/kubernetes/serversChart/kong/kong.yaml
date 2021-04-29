@@ -1,0 +1,135 @@
+#*********************************************************************
+# Copyright (c) Intel Corporation 2018-2019
+# SPDX-License-Identifier: Apache-2.0
+#*********************************************************************
+
+# Metadata fields start with an underscore (_)
+# Fields that do not start with an underscore represent Kong entities and attributes
+
+# _format_version is mandatory,
+# it specifies the minimum version of Kong that supports the format
+
+_format_version: "2.1"
+
+# _transform is optional, defaulting to true.
+# It specifies whether schema transformations should be applied when importing this file
+# as a rule of thumb, leave this setting to true if you are importing credentials
+# with plain passwords, which need to be encrypted/hashed before storing on the database.
+# On the other hand, if you are reimporting a database with passwords already encrypted/hashed,
+# set it to false.
+
+_transform: true
+
+# Each Kong entity (core entity or custom entity introduced by a plugin)
+# can be listed in the top-level as an array of objects:
+
+services:
+- name: mps-rest
+  host: mps
+  port: 3000
+  tags:
+  - mps
+  routes:
+  - name: mps-login-route
+    strip_path: true
+    paths:
+    - /mps/login
+  - name: mps-relay-route
+    strip_path: true
+    paths:
+    - /mps/ws
+  - name: mps-route
+    strip_path: true
+    paths:
+    - /mps
+
+- name: rps-rest
+  host: rps
+  port: 8081  
+  tags:
+  - rps
+  routes:
+  - name: rps-route
+    strip_path: true
+    paths:
+    - /rps
+
+- name: rps-ws
+  host: rps
+  port: 8080
+  tags:
+  - rps
+  routes:
+  - name: rps-activate-route
+    strip_path: true
+    paths:
+    - /activate
+
+- name: web
+  host: webui
+  port: 80
+  tags:
+  - web
+  routes:
+  - name: web-route
+    paths:
+    - /
+
+plugins:
+- name: jwt
+  service: rps-rest
+  config:
+    claims_to_verify:
+    - exp
+- name: jwt
+  route: mps-route
+  config:
+    claims_to_verify:
+    - exp
+
+consumers:
+  - username: admin
+jwt_secrets:
+  - consumer: admin
+    key: 9EmRJTbIiIb4bIeSsmgcWIjrR6HyETqc #sample key
+    secret: "supersecret"  
+
+
+
+# routes:
+# - name: another-route
+#   # Relationships can also be specified between top-level entities,
+#   # either by name or by id
+#   service: example-service
+#   hosts: ["hello.com"]
+
+# consumers:
+# - username: example-user
+#   # Custom entities from plugin can also be specified
+#   # If they specify a foreign-key relationshp, they can also be nested
+#   keyauth_credentials:
+#   - key: my-key
+#   plugins:
+#   - name: rate-limiting
+#     _comment: "these are default rate-limits for user example-user"
+#     config:
+#       policy: local
+#       second: 5
+#       hour: 10000
+
+# When an entity has multiple foreign-key relationships
+# (e.g. a plugin matching on both consumer and service)
+# it must be specified as a top-level entity, and not through
+# nesting.
+
+# plugins:
+# - name: rate-limiting
+#   consumer: example-user
+#   service: another-service
+#   _comment: "example-user is extra limited when using another-service"
+#   config:
+#     hour: 2
+#   # tags are for your organization only and have no meaning for Kong:
+#   tags:
+#   - extra_limits
+#   - my_tag

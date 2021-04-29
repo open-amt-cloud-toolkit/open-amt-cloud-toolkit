@@ -9,8 +9,8 @@ metadata:
   labels:
     app: kong-config 
 data:
-  nginx.conf: |-
-{{ .Files.Get "kong.yaml" | indent 4 }}
+  kong.yaml: |-
+{{ .Files.Get "kong/kong.yaml" | indent 4 }}
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -29,7 +29,7 @@ spec:
       containers:
       - name: azure-kong
         image: {{ .Values.images.kong }}
-        command: ['/bin/bash', '-c', 'kong start --vv']
+        command: ['kong', 'start', '--vv']
         volumeMounts:
           - name: kong-config
             mountPath: /home/kong/kong.yaml
