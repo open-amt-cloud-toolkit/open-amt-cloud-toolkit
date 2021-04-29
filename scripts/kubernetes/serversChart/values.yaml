@@ -10,6 +10,7 @@ images:
   mps: "mps:latest"
   rps: "rps:latest"
   ui: "ui:latest"
+  kong: "kong:latest"
   postgresdb: "postgres:10.4"
   pullSecret: "regcred"
 backenddb:
@@ -45,7 +46,7 @@ mps:
   useDB: "true"
   useVault: "true"
   vaultAddr: "http://vault:8200"
-  secretsPath: "secret/data/"
+  secretsPath: "kv/data/rps/"
   debugLevel: "5"
   mpsPassword: "mpspassword"
   webcertpublic: "mpsweb_cert.crt"
@@ -64,7 +65,7 @@ mps:
   distributedKvPort: "8500"
   distributedKvName: "HashiCorpConsul"
   webProxyPort: "8100"
-  mpsConnectionString: "postgresql://postgresadmin:admin123@db:5432/rpsdb"
+  mpsConnectionString: "postgresql://postgresadmin:admin123@db:5432/mpsdb"
 mps_web:
   replicaCount: 2
   serverDeploymentMode: "web"
@@ -81,17 +82,33 @@ mps_web:
   redisHost: "azureredis"
   redisPort: "6379"
   resourceGroupName: "NODE_RESOURCE_GROUP"
-  webConnectionString: "postgresql://postgresadmin:admin123@db:5432/rpsdb"
+  webConnectionString: "postgresql://postgresadmin:admin123@db:5432/mpsdb"
 ui:
   replicaCount: 1
-  port: "4200"
+  port: "80"
   staticIPAddress: "STATIC_IP_UI"
   resourceGroupName: "NODE_RESOURCE_GROUP"
+kong:
+  replicaCount: 1
+  webPort: 443
+  adminPort: 8001
+  database: "off"
+  cassandraContactPoints: "kong-database"
+  adminListen: "0.0.0.0:8001"
+  adminListenSSL: "0.0.0.0:8444"
+  nginxDaemon: "off"
+  declarativeConfig: "/home/kong/kong.yaml"
+  proxyErrorLog: "/dev/stderr"
+  proxyAccessLog: "/dev/stdout"
+  adminAccessLog: "/dev/stdout"
+  adminErrorLog: "/dev/stderr"
+  dnsOrder: "LAST,A,CNAME"
 rps:
   replicaCount: 2
   logLevel: "silly"
+  nodeEnv: "dev"
   vaultAddr: "http://vault:8200"
-  secretsPath: "secret/data/"
+  secretsPath: "kv/data/rps/"
   rpswsPort: 8080
   rpswebPort: 8081
   webAdminUserKey: "adminusername"

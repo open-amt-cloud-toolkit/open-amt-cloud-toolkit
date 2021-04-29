@@ -13,47 +13,28 @@ IF %ERRORLEVEL% EQU 0 (
 )
 
 if "" == "%~1" (
-echo usage: createsecrets.bat [adminusername] [adminpassword] [mpsapikey] [mpspassword] [rpsapikey] [sessionEncryptionKey]
+echo usage: createsecrets.bat [adminusername] [adminpassword] [mpspassword] [sessionEncryptionKey]
 EXIT /B 1
 )
 
 if "" == "%~2" (
-echo usage: createsecrets.bat [adminusername] [adminpassword] [mpsapikey] [mpspassword] [rpsapikey] [sessionEncryptionKey]
+echo usage: createsecrets.bat [adminusername] [adminpassword] [mpspassword] [sessionEncryptionKey]
 EXIT /B 1
 )
 
 if "" == "%~3" (
-echo usage: createsecrets.bat [adminusername] [adminpassword] [mpsapikey] [mpspassword] [rpsapikey] [sessionEncryptionKey]
+echo usage: createsecrets.bat [adminusername] [adminpassword] [mpspassword] [sessionEncryptionKey]
 EXIT /B 1
 )
 
 if "" == "%~4" (
-echo usage: createsecrets.bat [adminusername] [adminpassword] [mpsapikey] [mpspassword] [rpsapikey] [sessionEncryptionKey]
+echo usage: createsecrets.bat [adminusername] [adminpassword] [mpspassword] [sessionEncryptionKey]
 EXIT /B 1
 )
-
-if "" == "%~5" (
-echo usage: createsecrets.bat [adminusername] [adminpassword] [mpsapikey] [mpspassword] [rpsapikey] [sessionEncryptionKey]
-EXIT /B 1
-)
-
-if "" == "%~6" (
-echo usage: createsecrets.bat [adminusername] [adminpassword] [mpsapikey] [mpspassword] [rpsapikey] [sessionEncryptionKey]
-EXIT /B 1
-)
-
-if "" == "%~7" (
-echo usage: createsecrets.bat [adminusername] [adminpassword] [mpsapikey] [mpspassword] [rpsapikey] [sessionEncryptionKey] [redisPassword]
-EXIT /B 1
-)
-
-
 
 set adminusername=%1
 set adminpassword=%2
-set mpsapikey=%3
 set mpspassword=%4
-set rpsapikey=%5
 set sessionEncryptionKey=%6
 set redisPassword = %7
 
@@ -63,14 +44,6 @@ call kubectl create secret generic mpsweb --from-literal=adminusername=%adminuse
   echo mpsweb secret creation failed
   EXIT /B 1
 )
-
-call kubectl create secret generic mpsapi --from-literal=x-api-key=%mpsapikey% && (
- echo mpsapi secret created successfully
-) || (
-  echo mpsapi secret creation failed
-  EXIT /B 1
-)
-
 
 call kubectl create secret generic mpsrediscreds --from-literal=mpsrediscreds=%redisPassword% && (
  echo mpsrediscreds secret created successfully
@@ -90,13 +63,6 @@ call kubectl create secret generic session --from-literal=session-key.txt=%sessi
  echo mpssession secret created successfully
 ) || (
   echo mpssession secret creation failed
-  EXIT /B 1
-)
-
-call kubectl create secret generic rpsapi --from-literal=x-api-key=%rpsapikey% && (
- echo rpsapi secret created successfully
-) || (
-  echo rpsapi secret creation failed
   EXIT /B 1
 )
 

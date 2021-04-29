@@ -1,0 +1,78 @@
+#/*********************************************************************
+# Copyright (c) Intel Corporation 2020
+# SPDX-License-Identifier: Apache-2.0
+#**********************************************************************/
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kong-config-file
+  labels:
+    app: kong-config 
+data:
+  nginx.conf: |-
+{{ .Files.Get "kong.yaml" | indent 4 }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: azure-kong
+spec:
+  replicas: {{ .Values.kong.replicaCount }}
+  selector:
+    matchLabels:
+      app: azure-kong
+  template:
+    metadata:
+      labels:
+        app: azure-kong
+    spec:
+      containers:
+      - name: azure-kong
+        image: {{ .Values.images.kong }}
+        command: ['/bin/bash', '-c', 'kong start --vv']
+        volumeMounts:
+          - name: kong-config
+            mountPath: /home/kong/kong.yaml
+            subPath: kong.yaml
+      volumes:
+      - name: kong-config
+        configMap:
+          name: kong-config-file
+          items:
+          - key: kong.yaml
+            path: kong.yaml
+        env:          
+          - name: "KONG_DATABASE"
+            value: "{{ .Values.kong.database }}"
+          - name: "KONG_CASSANDRA_CONTACT_POINTS"
+            value: "{{ .Values.kong.cassandraContactPoints }}"
+          - name: "KONG_ADMIN_LISTEN"
+            value: "{{ .Values.kong.adminListen }}"
+          - name: "KONG_ADMIN_LISTEN_SSL"
+            value: "{{ .Values.kong.adminListenSSL }}"
+          - name: "KONG_NGINX_DAEMON"
+            value: "{{ .Values.kong.nginxDaemon }}"
+          - name: "KONG_DECLARATIVE_CONFIG"
+            value: "{{ .Values.kong.declarativeConfig }}"
+          - name: "KONG_PROXY_ERROR_LOG"
+            value: "{{ .Values.kong.proxyErrorLog }}"
+          - name: "KONG_PROXY_ACCESS_LOG"
+            value: "{{ .Values.kong.proxyAccessLog }}"
+          - name: "KONG_ADMIN_ACCESS_LOG"
+            value: "{{ .Values.kong.adminAccessLog }}"
+          - name: "KONG_ADMIN_ERROR_LOG"
+           value: "{{ .Values.kong.adminErrorLog }}"
+          - name: "KONG_DNS_ORDER"
+            value: "{{ .Values.kong.dnsOrder }}"
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 250m
+            memory: 784Mi
+        ports:
+        - containerPort: {{ .Values.kong.webPort }}
+          name: ui
+        - containerPort: {{ .Values.kong.adminPort }}
+          name: admin

@@ -18,9 +18,7 @@ set pfxPassword=Passw@rd123!
 
 set adminusername=admin
 set adminpassword=Intel123!
-set mpsapikey=APIKEYFORMPS123!
 set mpspassword=Intel123!
-set rpsapikey=APIKEYFORRPS123!
 set sessionEncryptionKey=sessionEncryptionKey
 set redisPassword=cache@1234
 
@@ -64,7 +62,7 @@ call installvault.bat  && (
   EXIT /B 1
 )
 
-call createsecrets.bat %adminusername% %adminpassword% %mpsapikey% %mpspassword% %rpsapikey% %sessionEncryptionKey% %redisPassword% && (
+call createsecrets.bat %adminusername% %adminpassword% %mpspassword% %sessionEncryptionKey% %redisPassword% && (
   echo createsecrets was successful
 ) || (
   echo createsecrets failed
