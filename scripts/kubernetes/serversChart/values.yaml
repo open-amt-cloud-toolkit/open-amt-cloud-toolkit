@@ -18,7 +18,6 @@ backenddb:
   dbPassword: "admin123"
 mpsSecretStoreNames:
   web: "mpsweb"
-  api: "mpsapi"
   certs: "mpscerts"
   webcerts: "mpswebcerts"
   vault: "vaultaccess"
@@ -27,7 +26,6 @@ mpsSecretStoreNames:
   session: "session"
 rpsSecretStoreNames:
   web: "rpsweb"
-  api: "rpsapi"
   rpscerts: "rpscerts"
   vault: "vaultaccess"
 mps:
@@ -123,3 +121,4 @@ rps:
   resourceGroupName: "NODE_RESOURCE_GROUP"
   rpsConnectionString: "postgresql://postgresadmin:admin123@db:5432/rpsdb"
   rpsDelayTimer: 12
+  dbName: "rpsdb"

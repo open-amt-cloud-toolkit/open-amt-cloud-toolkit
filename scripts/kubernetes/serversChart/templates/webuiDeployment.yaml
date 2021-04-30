@@ -49,16 +49,6 @@ spec:
             value: "https://{{ .Values.mps_web.staticIPAddress }}:{{ .Values.mps_web.webPort }}"
           - name: "RPS_SERVER"
             value: "https://{{ .Values.rps.staticIPAddress }}:{{ .Values.rps.rpswebPort }}"
-          - name: "RPSXAPIKEY"
-            valueFrom:
-              secretKeyRef:
-                name: {{ .Values.rpsSecretStoreNames.api }}
-                key: {{ .Values.rps.apikeyKeyName }}
-          - name: "MPSXAPIKEY"
-            valueFrom:
-              secretKeyRef:
-                name: {{ .Values.mpsSecretStoreNames.api }}
-                key: {{ .Values.mps.apikeyKeyName }}
         ports:
         - containerPort: {{ .Values.ui.port }}
           name: ui
