@@ -9,7 +9,7 @@ metadata:
   labels:
     app: kong-config 
 data:
-  kong.yaml: |-
+  kong.yaml: |- 
 {{ .Files.Get "kong/kong.yaml" | indent 4 }}
 ---
 apiVersion: apps/v1
@@ -26,7 +26,14 @@ spec:
       labels:
         app: azure-kong
     spec:
-      containers:
+     volumes:
+      - name: kong-config
+        configMap:
+          name: kong-config-file
+          items:
+          - key: kong.yaml
+            path: kong.yaml
+     containers:
       - name: azure-kong
         image: {{ .Values.images.kong }}
         command: ['kong', 'start', '--vv']
@@ -34,13 +41,6 @@ spec:
           - name: kong-config
             mountPath: /home/kong/kong.yaml
             subPath: kong.yaml
-      volumes:
-      - name: kong-config
-        configMap:
-          name: kong-config-file
-          items:
-          - key: kong.yaml
-            path: kong.yaml
         env:          
           - name: "KONG_DATABASE"
             value: "{{ .Values.kong.database }}"
@@ -61,7 +61,7 @@ spec:
           - name: "KONG_ADMIN_ACCESS_LOG"
             value: "{{ .Values.kong.adminAccessLog }}"
           - name: "KONG_ADMIN_ERROR_LOG"
-           value: "{{ .Values.kong.adminErrorLog }}"
+            value: "{{ .Values.kong.adminErrorLog }}"
           - name: "KONG_DNS_ORDER"
             value: "{{ .Values.kong.dnsOrder }}"
         resources:
