@@ -7,9 +7,9 @@
 # Declare variables to be passed into your templates.
 
 images:
-  mps: "mps:latest"
-  rps: "rps:latest"
-  ui: "ui:latest"
+  mps: "docker.io/vprodemo/brian_mps:scale_20210429_v1"
+  rps: "docker.io/vprodemo/brian_rps:scale_20210429_v1"
+  ui: "docker.io/vprodemo/brian_ui:scale_20210429_v1"
   kong: "kong:latest"
   postgresdb: "postgres:10.4"
   pullSecret: "regcred"
@@ -73,22 +73,21 @@ mps_web:
   debugLevel: "5"
   webAdminUserKey: "adminusername"
   webAdminPasswordKey: "adminuserpassword"
-  staticIPAddress: "STATIC_IP_WEB"
+  staticIPAddress: "azure-mpswebserver"
   authEnabled: "false"
   mpsrediscreds: "mpsrediscreds"
   redisEnable: "true"
   redisHost: "azureredis"
   redisPort: "6379"
-  resourceGroupName: "NODE_RESOURCE_GROUP"
   webConnectionString: "postgresql://postgresadmin:admin123@db:5432/mpsdb"
 ui:
   replicaCount: 1
   port: "80"
   staticIPAddress: "STATIC_IP_UI"
-  resourceGroupName: "NODE_RESOURCE_GROUP"
 kong:
   replicaCount: 1
-  webPort: 443
+  uiPort: 443
+  kongWebPort: 8443
   adminPort: 8001
   database: "off"
   cassandraContactPoints: "kong-database"
@@ -117,8 +116,7 @@ rps:
   vaultkey: "vault-token.txt"
   webSocketTLS: "true"
   useRawCerts: "true"
-  staticIPAddress: "STATIC_IP_RPS"
-  resourceGroupName: "NODE_RESOURCE_GROUP"
+  staticIPAddress: "azure-rps"
   rpsConnectionString: "postgresql://postgresadmin:admin123@db:5432/rpsdb"
   rpsDelayTimer: 12
   dbName: "rpsdb"

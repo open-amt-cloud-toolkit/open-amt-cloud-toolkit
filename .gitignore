@@ -1,1 +1,3 @@
 .env
+scripts/kubernetes/vault-output.txt
+scripts/kubernetes/vault-output-error.txt

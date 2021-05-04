@@ -21,14 +21,12 @@ apiVersion: v1
 kind: Service
 metadata:
   annotations:
-    service.beta.kubernetes.io/azure-load-balancer-resource-group: {{ .Values.mps_web.resourceGroupName }}
+    service.beta.kubernetes.io/azure-load-balancer-resource-group: {{ .Values.mps.resourceGroupName }}
   name: azure-mps-web-load-balancer
 spec:
   ports:
   - port: {{ .Values.mps_web.webPort }}
     name: web
-  loadBalancerIP: {{ .Values.mps_web.staticIPAddress }}
-  type: LoadBalancer
   selector:
     app: azure-mpswebserver
 ---
@@ -36,7 +34,7 @@ apiVersion: v1
 kind: Service
 metadata:
   annotations:
-    service.beta.kubernetes.io/azure-load-balancer-resource-group: {{ .Values.rps.resourceGroupName }}
+    service.beta.kubernetes.io/azure-load-balancer-resource-group: {{ .Values.mps.resourceGroupName }}
   name: azure-rps-load-balancer
 spec:
   ports:
@@ -44,8 +42,6 @@ spec:
     name: rps
   - port: {{ .Values.rps.rpswebPort }}
     name: rpsweb
-  loadBalancerIP: {{ .Values.rps.staticIPAddress }}
-  type: LoadBalancer
   selector:
     app: azure-rps
 ---
@@ -53,13 +49,14 @@ apiVersion: v1
 kind: Service
 metadata:
   annotations:
-    service.beta.kubernetes.io/azure-load-balancer-resource-group: {{ .Values.ui.resourceGroupName }}
-  name: azure-webui-load-balancer
+    service.beta.kubernetes.io/azure-load-balancer-resource-group: {{ .Values.mps.resourceGroupName }}
+  name: azure-kong-load-balancer
 spec:
   ports:
-  - port: {{ .Values.ui.port }}
+  - port: {{ .Values.kong.uiPort }}
     name: ui
+    targetPort: {{ .Values.kong.kongWebPort }}
   loadBalancerIP: {{ .Values.ui.staticIPAddress }}
   type: LoadBalancer
   selector:
-    app: azure-webui
+    app: azure-kong
