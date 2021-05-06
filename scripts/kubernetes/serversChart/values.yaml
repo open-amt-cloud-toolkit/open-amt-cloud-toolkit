@@ -64,9 +64,9 @@ mps:
   distributedKvName: "HashiCorpConsul"
   webProxyPort: "8100"
   mpsConnectionString: "postgresql://postgresadmin:admin123@db:5432/mpsdb"
-  jwtSecret: "supersecret",
-  jwtIssuer: "9EmRJTbIiIb4bIeSsmgcWIjrR6HyETqc",
-  jwtExpiration: "24", 
+  jwtSecret: "supersecret"
+  jwtIssuer: "9EmRJTbIiIb4bIeSsmgcWIjrR6HyETqc"
+  jwtExpiration: "24"
 mps_web:
   replicaCount: 2
   serverDeploymentMode: "web"
