@@ -22,7 +22,6 @@ mpsSecretStoreNames:
   webcerts: "webcerts"
   vault: "vaultaccess"
   creds: "mpscreds"
-  mpsrediscreds: "mpsrediscreds"
   session: "session"
 rpsSecretStoreNames:
   web: "rpsweb"

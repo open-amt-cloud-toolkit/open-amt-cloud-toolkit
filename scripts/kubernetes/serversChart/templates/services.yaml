@@ -11,7 +11,7 @@ metadata:
 spec:
   ports:
   - port: {{ .Values.mps.mpsPort }}
-    name: mpsPort
+    name: mpsport
   loadBalancerIP: {{ .Values.mps.staticIPAddress }}
   type: LoadBalancer
   selector:
@@ -26,7 +26,7 @@ metadata:
 spec:
   ports:
   - port: {{ .Values.ui.port }}
-    name: webUiPort
+    name: webuiport
   selector:
     app: webui
 ---

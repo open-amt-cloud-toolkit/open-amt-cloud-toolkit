@@ -27,7 +27,7 @@ spec:
           - name: "MPS_HTTPS"
             value: "{{ .Values.mps.https }}"
           - name: "MPS_AUTH_ENABLED"
-            value: "{{ .Values.mps_web.authEnabled }}"
+            value: "{{ .Values.mps.authEnabled }}"
           - name: "MPS_LOG_LEVEL"
             value: "{{ .Values.mps.logLevel }}"      
           - name: "MPS_GENERATE_CERTIFICATES"
@@ -41,7 +41,7 @@ spec:
           - name: "MPS_PORT"
             value: "{{ .Values.mps.mpsPort }}"
           - name: "MPS_WEB_PORT"
-            value: "{{ .Values.mps_web.webPort }}"
+            value: "{{ .Values.mps.webPort }}"
           - name: "MPS_USERNAME"
             value: "{{ .Values.mps.mpsUser }}"
           - name: "MPS_USE_GLOBAL_CREDENTIALS"
@@ -54,8 +54,6 @@ spec:
             value: "{{ .Values.mps.useDB }}"
           - name: "MPS_CONNECTION_STRING"
             value: "postgresql://{{ .Values.backenddb.dbUser }}:{{ .Values.backenddb.dbPassword }}@{{ .Values.rps.dbHost }}:{{ .Values.rps.dbPort }}/mpsdb"
-          - name: "MPS_USE_VAULT"
-            value: "{{ .Values.mps.useVault }}"
           - name: "MPS_VAULT_ADDRESS"
             value : "{{ .Values.mps.vaultAddr }}"
           - name: "MPS_SECRETS_PATH"
@@ -66,12 +64,12 @@ spec:
             valueFrom:
               secretKeyRef:
                 name: {{ .Values.mpsSecretStoreNames.web }}
-                key: {{ .Values.mps_web.webAdminUserKey }}
+                key: {{ .Values.mps.webAdminUserKey }}
           - name: "MPS_WEB_ADMIN_PASSWORD"
             valueFrom:
               secretKeyRef:
                 name: {{ .Values.mpsSecretStoreNames.web }}
-                key: {{ .Values.mps_web.webAdminPasswordKey }}
+                key: {{ .Values.mps.webAdminPasswordKey }}
           - name: "MPS_PASS"
             valueFrom:
               secretKeyRef:
@@ -125,5 +123,5 @@ spec:
         ports:
         - containerPort: {{ .Values.mps.mpsPort }}
           name: mps
-        - containerPort: {{ .Values.mps_web.webPort }}
+        - containerPort: {{ .Values.mps.webPort }}
           name: web
