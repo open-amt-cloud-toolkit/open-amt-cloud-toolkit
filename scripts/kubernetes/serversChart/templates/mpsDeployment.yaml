@@ -146,6 +146,12 @@ spec:
             value: "{{ .Values.mps_web.redisEnable }}"
           - name: "MPS_CORS_ORIGIN"
             value: "http://{{ .Values.ui.staticIPAddress }},https://{{ .Values.rps.staticIPAddress }}"
+          - name: "JWT_SECRET"
+            value: "{{ .Values.ui.jwtSecret }}"
+          - name: "JWT_ISSUER"
+            value: "{{ .Values.ui.jwtIssuer }}"
+          - name: "JWT_EXPIRATION"
+            value: "{{ .Values.ui.jwtExpiration }}"
         ports:
         - containerPort: {{ .Values.mps.mpsPort }}
           name: mps
