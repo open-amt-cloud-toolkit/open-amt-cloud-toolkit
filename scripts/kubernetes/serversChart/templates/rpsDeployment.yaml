@@ -5,16 +5,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: azure-rps
+  name: rps
 spec:
   replicas: {{ .Values.rps.replicaCount }}
   selector:
     matchLabels:
-      app: azure-rps
+      app: rps
   template:
     metadata:
       labels:
-        app: azure-rps
+        app: rps
     spec:
       imagePullSecrets:
         - name: {{ .Values.images.pullSecret }}
@@ -25,7 +25,7 @@ spec:
           'until pg_isready -h postgres -p 5432; 
           do echo waiting for database; sleep 2; done;']
       containers:
-      - name: azure-rps
+      - name: rps
         image: {{ .Values.images.rps }}
         command: ['/bin/bash', '-c', 'node ./dist/Index.js']
         env:          
@@ -69,13 +69,6 @@ spec:
             value: "postgresql://{{ .Values.backenddb.dbUser }}:{{ .Values.backenddb.dbPassword }}@{{ .Values.rps.dbHost }}:{{ .Values.rps.dbPort }}/rpsdb"
           - name: "RPS_DELAY_TIMER"
             value: "{{ .Values.rps.rpsDelayTimer }}"
-        resources:
-          requests:
-            cpu: 100m
-            memory: 128Mi
-          limits:
-            cpu: 250m
-            memory: 784Mi
         ports:
         - containerPort: {{ .Values.rps.rpswsPort }}
           name: rps

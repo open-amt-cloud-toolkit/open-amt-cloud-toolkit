@@ -29,12 +29,11 @@ rpsSecretStoreNames:
   rpscerts: "rpscerts"
   vault: "vaultaccess"
 mps:
-  replicaCount: 2
+  replicaCount: 1
   https: "true"
   generateCerts: "false"
   logLevel: "silly"
   nodeEnv: "dev"
-  serverDeploymentMode: "mps"
   useAllowList: "false"
   mpsPort: "4433"
   mpsUser: "admin"
@@ -54,39 +53,23 @@ mps:
   mpscertkey: "mps_cert.key"
   mpscertca: "rootCA_mps.crt"
   vaultkey: "vault-token.txt"
-  staticIPAddress: "STATIC_IP_MPS"
+  staticIPAddress: "mps"
   resourceGroupName: "NODE_RESOURCE_GROUP"
   certFormat: "raw"
   sessionEncryptionKey: "session-key.txt"
-  networkAdaptor: "eth0"
-  proxy: "8100"
-  distributedKvPort: "8500"
-  distributedKvName: "HashiCorpConsul"
-  webProxyPort: "8100"
   mpsConnectionString: "postgresql://postgresadmin:admin123@db:5432/mpsdb"
   jwtSecret: "supersecret"
   jwtIssuer: "9EmRJTbIiIb4bIeSsmgcWIjrR6HyETqc"
   jwtExpiration: "24"
-mps_web:
-  replicaCount: 2
-  serverDeploymentMode: "web"
   webPort: "3000"
-  enableLogging: "true"
-  debug: "true"
-  debugLevel: "5"
   webAdminUserKey: "adminusername"
   webAdminPasswordKey: "adminuserpassword"
-  staticIPAddress: "azure-mpswebserver"
   authEnabled: "false"
-  mpsrediscreds: "mpsrediscreds"
-  redisEnable: "true"
-  redisHost: "azureredis"
-  redisPort: "6379"
   webConnectionString: "postgresql://postgresadmin:admin123@db:5432/mpsdb"
 ui:
   replicaCount: 1
   port: "80"
-  staticIPAddress: "STATIC_IP_UI"
+  staticIPAddress: "webui"
 kong:
   replicaCount: 1
   uiPort: 443
@@ -119,7 +102,7 @@ rps:
   vaultkey: "vault-token.txt"
   webSocketTLS: "true"
   useRawCerts: "true"
-  staticIPAddress: "azure-rps"
+  staticIPAddress: "rps"
   rpsConnectionString: "postgresql://postgresadmin:admin123@db:5432/rpsdb"
   rpsDelayTimer: 12
   dbName: "rpsdb"

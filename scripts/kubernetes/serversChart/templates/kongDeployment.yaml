@@ -15,16 +15,16 @@ data:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: azure-kong
+  name: kong
 spec:
   replicas: {{ .Values.kong.replicaCount }}
   selector:
     matchLabels:
-      app: azure-kong
+      app: kong
   template:
     metadata:
       labels:
-        app: azure-kong
+        app: kong
     spec:
      volumes:
       - name: kong-config
@@ -34,7 +34,7 @@ spec:
           - key: kong.yaml
             path: kong.yaml
      containers:
-      - name: azure-kong
+      - name: kong
         image: {{ .Values.images.kong }}
         command: ['kong', 'start', '--vv']
         volumeMounts:
@@ -64,13 +64,6 @@ spec:
             value: "{{ .Values.kong.adminErrorLog }}"
           - name: "KONG_DNS_ORDER"
             value: "{{ .Values.kong.dnsOrder }}"
-        resources:
-          requests:
-            cpu: 100m
-            memory: 128Mi
-          limits:
-            cpu: 250m
-            memory: 784Mi
         ports:
         - containerPort: {{ .Values.kong.kongWebPort }}
           name: web

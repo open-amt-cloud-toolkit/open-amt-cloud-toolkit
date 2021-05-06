@@ -5,21 +5,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: azure-mpsserver
+  name: mps
 spec:
   replicas: {{ .Values.mps.replicaCount }}
   selector:
     matchLabels:
-      app: azure-mpsserver
+      app: mps
   template:
     metadata:
       labels:
-        app: azure-mpsserver
+        app: mps
     spec:
       imagePullSecrets:
         - name: {{ .Values.images.pullSecret }}
       containers:
-      - name: azure-mpsserver
+      - name: mps
         image: {{ .Values.images.mps }}
         env:
           - name: "GENERATE_SOURCEMAP"
@@ -36,8 +36,6 @@ spec:
             value: "{{ .Values.mps.nodeEnv }}"
           - name: "MPS_COMMON_NAME"
             value: "{{ .Values.mps.staticIPAddress }}"
-          - name: "MPS_STARTUP_MODE"
-            value: "{{ .Values.mps.serverDeploymentMode }}"
           - name: "MPS_USE_ALLOWLIST"
             value: "{{ .Values.mps.useAllowList }}"
           - name: "MPS_PORT"
@@ -64,18 +62,6 @@ spec:
             value: "{{ .Values.mps.secretsPath }}"
           - name: "MPS_DEBUG_LEVEL"
             value: "{{ .Values.mps.debugLevel }}"
-          - name: "MPS_DISTRIBUTED_KV_PORT"
-            value: "{{ .Values.mps.distributedKvPort }}"
-          - name: "MPS_DISTRIBUTED_KV_NAME"
-            value: "{{ .Values.mps.distributedKvName }}"
-          - name: "MPS_WEB_PROXY_PORT"
-            value: "{{ .Values.mps.webProxyPort }}"
-          - name: "MPS_DISTRIBUTED_KV_IP"
-            valueFrom:
-              fieldRef:
-                fieldPath: status.hostIP
-          - name: "MPS_NETWORK_ADAPTOR"
-            value: "{{ .Values.mps.networkAdaptor }}"
           - name: "MPS_WEB_ADMIN_USER"
             valueFrom:
               secretKeyRef:
@@ -128,22 +114,6 @@ spec:
               secretKeyRef:
                 name: {{ .Values.mpsSecretStoreNames.vault }}
                 key: {{ .Values.mps.vaultkey }}
-          - name: MPS_SESSION_ENCRYPTION_KEY
-            valueFrom:
-              secretKeyRef:
-                name: {{ .Values.mpsSecretStoreNames.session }}
-                key: {{ .Values.mps.sessionEncryptionKey }}
-          - name: "MPS_REDIS_PASSWORD"
-            valueFrom:
-              secretKeyRef:
-                name: {{ .Values.mpsSecretStoreNames.mpsrediscreds }}
-                key: {{ .Values.mps_web.mpsrediscreds }}
-          - name: "MPS_REDIS_HOST"
-            value: "{{ .Values.mps_web.redisHost }}"
-          - name: "MPS_REDIS_PORT"
-            value: "{{ .Values.mps_web.redisPort }}"
-          - name: "MPS_REDIS_ENABLE"
-            value: "{{ .Values.mps_web.redisEnable }}"
           - name: "MPS_CORS_ORIGIN"
             value: "http://{{ .Values.ui.staticIPAddress }},https://{{ .Values.rps.staticIPAddress }}"
           - name: "JWT_SECRET"
@@ -155,5 +125,5 @@ spec:
         ports:
         - containerPort: {{ .Values.mps.mpsPort }}
           name: mps
-        - containerPort: {{ .Values.mps.proxy }}
-          name: proxy
+        - containerPort: {{ .Values.mps_web.webPort }}
+          name: web

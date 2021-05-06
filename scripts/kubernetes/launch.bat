@@ -48,13 +48,6 @@ call createipsandcerts.bat %Resource_group% %aks_cluster% %pfxPassword%  && (
   EXIT /B 1
 )
 
-call installconsul.bat  && (
-  echo installconsulwas successful
-) || (
-  echo installconsul failed
-  EXIT /B 1
-)
-
 call installvault.bat  && (
   echo installvaultwas successful
 ) || (
