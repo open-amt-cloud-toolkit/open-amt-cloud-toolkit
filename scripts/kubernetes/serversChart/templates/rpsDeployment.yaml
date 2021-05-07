@@ -61,10 +61,8 @@ spec:
                 key: {{ .Values.rps.vaultkey }}
           - name: "RPS_SECRETS_PATH"
             value: "{{ .Values.rps.secretsPath }}"
-          - name: "RPS_CORS_ORIGIN"
-            value: "http://{{ .Values.ui.staticIPAddress }}"
           - name: "RPS_MPS_SERVER"
-            value : "https://{{ .Values.mps.staticIPAddress }}:{{ .Values.mps.webPort }}"
+            value : "https://mps:{{ .Values.mps.webPort }}"
           - name: "RPS_CONNECTION_STRING"
             value: "postgresql://{{ .Values.backenddb.dbUser }}:{{ .Values.backenddb.dbPassword }}@{{ .Values.rps.dbHost }}:{{ .Values.rps.dbPort }}/rpsdb"
           - name: "RPS_DELAY_TIMER"

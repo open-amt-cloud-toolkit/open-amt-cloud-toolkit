@@ -74,7 +74,7 @@ echo "Node Resource Group" %nodeResourceGroup%
 
 
 @echo STATIC_IP_MPS=%mps_ip_address% >> .env
-@echo STATIC_IP_UI=%ui_ip_address% >> .env
+@echo STATIC_IP_KONG=%ui_ip_address% >> .env
 @echo NODE_RESOURCE_GROUP=%nodeResourceGroup% >> .env
 
 del temp

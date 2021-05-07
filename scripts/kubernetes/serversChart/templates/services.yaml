@@ -6,7 +6,7 @@ apiVersion: v1
 kind: Service
 metadata:
   annotations:
-    service.beta.kubernetes.io/azure-load-balancer-resource-group: {{ .Values.mps.resourceGroupName }}
+    service.beta.kubernetes.io/azure-load-balancer-resource-group: {{ .Values.global.resourceGroupName }}
   name: mps-load-balancer
 spec:
   ports:
@@ -21,7 +21,7 @@ apiVersion: v1
 kind: Service
 metadata:
   annotations:
-    service.beta.kubernetes.io/azure-load-balancer-resource-group: {{ .Values.mps.resourceGroupName }}
+    service.beta.kubernetes.io/azure-load-balancer-resource-group: {{ .Values.global.resourceGroupName }}
   name: ui-load-balancer
 spec:
   ports:
@@ -34,7 +34,7 @@ apiVersion: v1
 kind: Service
 metadata:
   annotations:
-    service.beta.kubernetes.io/azure-load-balancer-resource-group: {{ .Values.mps.resourceGroupName }}
+    service.beta.kubernetes.io/azure-load-balancer-resource-group: {{ .Values.global.resourceGroupName }}
   name: rps-load-balancer
 spec:
   ports:
@@ -49,14 +49,16 @@ apiVersion: v1
 kind: Service
 metadata:
   annotations:
-    service.beta.kubernetes.io/azure-load-balancer-resource-group: {{ .Values.mps.resourceGroupName }}
+    service.beta.kubernetes.io/azure-load-balancer-resource-group: {{ .Values.global.resourceGroupName }}
   name: kong-load-balancer
 spec:
   ports:
   - port: {{ .Values.kong.uiPort }}
     name: ui
     targetPort: {{ .Values.kong.kongWebPort }}
-  loadBalancerIP: {{ .Values.ui.staticIPAddress }}
+  - port: {{ .Values.kong.adminPort }}
+    name: admin
+  loadBalancerIP: {{ .Values.kong.staticIPAddress }}
   type: LoadBalancer
   selector:
     app: kong

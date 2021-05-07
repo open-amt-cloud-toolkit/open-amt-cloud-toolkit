@@ -112,8 +112,6 @@ spec:
               secretKeyRef:
                 name: {{ .Values.mpsSecretStoreNames.vault }}
                 key: {{ .Values.mps.vaultkey }}
-          - name: "MPS_CORS_ORIGIN"
-            value: "http://{{ .Values.ui.staticIPAddress }},https://{{ .Values.rps.staticIPAddress }}"
           - name: "JWT_SECRET"
             value: "{{ .Values.ui.jwtSecret }}"
           - name: "JWT_ISSUER"

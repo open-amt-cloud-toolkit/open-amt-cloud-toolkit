@@ -27,6 +27,8 @@ rpsSecretStoreNames:
   web: "rpsweb"
   rpscerts: "rpscerts"
   vault: "vaultaccess"
+global:
+  resourceGroupName: "NODE_RESOURCE_GROUP"
 mps:
   replicaCount: 1
   https: "true"
@@ -52,8 +54,7 @@ mps:
   mpscertkey: "mps_cert.key"
   mpscertca: "rootCA_mps.crt"
   vaultkey: "vault-token.txt"
-  staticIPAddress: "mps"
-  resourceGroupName: "NODE_RESOURCE_GROUP"
+  staticIPAddress: "STATIC_IP_MPS"
   certFormat: "raw"
   sessionEncryptionKey: "session-key.txt"
   mpsConnectionString: "postgresql://postgresadmin:admin123@db:5432/mpsdb"
@@ -64,13 +65,13 @@ mps:
   webAdminUserKey: "adminusername"
   webAdminPasswordKey: "adminuserpassword"
   authEnabled: "false"
-  webConnectionString: "postgresql://postgresadmin:admin123@db:5432/mpsdb"
 ui:
   replicaCount: 1
   port: "80"
   staticIPAddress: "webui"
 kong:
   replicaCount: 1
+  staticIPAddress: STATIC_IP_KONG
   uiPort: 443
   kongWebPort: 8443
   adminPort: 8001
