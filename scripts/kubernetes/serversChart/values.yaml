@@ -11,6 +11,7 @@ images:
   rps: "rps:latest"
   ui: "ui:latest"
   kong: "kong:latest"
+  kong: "kong:2.3"
   postgresdb: "postgres:10.4"
   pullSecret: "regcred"
 backenddb:
@@ -36,6 +37,7 @@ mps:
   logLevel: "silly"
   nodeEnv: "dev"
   useAllowList: "false"
+  webPort: "3000"
   mpsPort: "4433"
   mpsUser: "admin"
   useGlobalCredentials: "true"
@@ -61,7 +63,6 @@ mps:
   jwtSecret: "supersecret"
   jwtIssuer: "9EmRJTbIiIb4bIeSsmgcWIjrR6HyETqc"
   jwtExpiration: "24"
-  webPort: "3000"
   webAdminUserKey: "adminusername"
   webAdminPasswordKey: "adminuserpassword"
   authEnabled: "false"
