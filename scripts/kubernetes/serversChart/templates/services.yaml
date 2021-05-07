@@ -7,7 +7,7 @@ kind: Service
 metadata:
   annotations:
     service.beta.kubernetes.io/azure-load-balancer-resource-group: {{ .Values.global.resourceGroupName }}
-  name: mps-load-balancer
+  name: mps
 spec:
   ports:
   - port: {{ .Values.mps.mpsPort }}
@@ -24,7 +24,7 @@ kind: Service
 metadata:
   annotations:
     service.beta.kubernetes.io/azure-load-balancer-resource-group: {{ .Values.global.resourceGroupName }}
-  name: ui-load-balancer
+  name: webui
 spec:
   ports:
   - port: {{ .Values.ui.port }}
@@ -37,7 +37,7 @@ kind: Service
 metadata:
   annotations:
     service.beta.kubernetes.io/azure-load-balancer-resource-group: {{ .Values.global.resourceGroupName }}
-  name: rps-load-balancer
+  name: rps
 spec:
   ports:
   - port: {{ .Values.rps.rpswsPort }}
@@ -52,7 +52,7 @@ kind: Service
 metadata:
   annotations:
     service.beta.kubernetes.io/azure-load-balancer-resource-group: {{ .Values.global.resourceGroupName }}
-  name: kong-load-balancer
+  name: kong
 spec:
   ports:
   - port: {{ .Values.kong.uiPort }}
