@@ -46,9 +46,9 @@ spec:
           - name: "NODE_ENV"
             value: "production"
           - name: "MPS_SERVER"
-            value: "https://localhost/mps"
+            value: "https://{{ .Values.kong.staticIPAddress }}/mps"
           - name: "RPS_SERVER"
-            value: "https://localhost/rps"
+            value: "https://{{ .Values.kong.staticIPAddress }}/rps"
         ports:
         - containerPort: {{ .Values.ui.port }}
           name: ui

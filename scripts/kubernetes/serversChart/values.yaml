@@ -87,7 +87,7 @@ kong:
   adminErrorLog: "/dev/stderr"
   dnsOrder: "LAST,A,CNAME"
 rps:
-  replicaCount: 2
+  replicaCount: 1
   logLevel: "silly"
   nodeEnv: "dev"
   vaultAddr: "http://vault:8200"
