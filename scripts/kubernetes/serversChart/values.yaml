@@ -17,6 +17,7 @@ images:
 backenddb:
   dbUser: "postgresadmin"
   dbPassword: "admin123"
+  port: "5432"
 mpsSecretStoreNames:
   web: "mpsweb"
   certs: "mpscerts"
@@ -59,7 +60,6 @@ mps:
   staticIPAddress: "STATIC_IP_MPS"
   certFormat: "raw"
   sessionEncryptionKey: "session-key.txt"
-  mpsConnectionString: "postgresql://postgresadmin:admin123@db:5432/mpsdb"
   jwtSecret: "supersecret"
   jwtIssuer: "9EmRJTbIiIb4bIeSsmgcWIjrR6HyETqc"
   jwtExpiration: "24"
@@ -102,6 +102,5 @@ rps:
   vaultkey: "vault-token.txt"
   webSocketTLS: "true"
   useRawCerts: "true"
-  rpsConnectionString: "postgresql://postgresadmin:admin123@db:5432/rpsdb"
   rpsDelayTimer: 12
   dbName: "rpsdb"

@@ -53,7 +53,7 @@ spec:
           - name: "MPS_USE_DB"
             value: "{{ .Values.mps.useDB }}"
           - name: "MPS_CONNECTION_STRING"
-            value: "postgresql://{{ .Values.backenddb.dbUser }}:{{ .Values.backenddb.dbPassword }}@{{ .Values.rps.dbHost }}:{{ .Values.rps.dbPort }}/mpsdb"
+            value: "postgresql://{{ .Values.backenddb.dbUser }}:{{ .Values.backenddb.dbPassword }}@db:{{ .Values.backenddb.port }}/mpsdb"
           - name: "MPS_VAULT_ADDRESS"
             value : "{{ .Values.mps.vaultAddr }}"
           - name: "MPS_SECRETS_PATH"
