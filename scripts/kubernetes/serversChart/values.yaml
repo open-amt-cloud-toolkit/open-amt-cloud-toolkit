@@ -69,7 +69,6 @@ mps:
 ui:
   replicaCount: 1
   port: "80"
-  staticIPAddress: "webui"
 kong:
   replicaCount: 1
   staticIPAddress: STATIC_IP_KONG
@@ -103,7 +102,6 @@ rps:
   vaultkey: "vault-token.txt"
   webSocketTLS: "true"
   useRawCerts: "true"
-  staticIPAddress: "rps"
   rpsConnectionString: "postgresql://postgresadmin:admin123@db:5432/rpsdb"
   rpsDelayTimer: 12
   dbName: "rpsdb"
