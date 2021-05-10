@@ -7,7 +7,7 @@ kind: ConfigMap
 metadata:
   name: postgres-config
   labels:
-    app: postgres
+    app: db
 data:
   POSTGRES_DB: {{ .Values.rps.dbName }}
   POSTGRES_USER: {{ .Values.backenddb.dbUser }}
@@ -105,16 +105,16 @@ spec:
 kind: Deployment
 apiVersion: apps/v1
 metadata:
-  name: rpsdb
+  name: db
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: postgres
+      app: db
   template:
     metadata:
       labels:
-        app: postgres
+        app: db
     spec:
       containers:
         - name: backenddb
@@ -143,12 +143,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: postgres
+  name: db
   labels:
-    app: postgres
+    app: db
 spec:
   type: NodePort
   ports:
    - port: 5432
   selector:
-   app: postgres
+   app: db
