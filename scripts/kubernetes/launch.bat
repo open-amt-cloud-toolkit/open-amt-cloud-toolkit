@@ -19,10 +19,6 @@ set pfxPassword=Passw@rd123!
 set adminusername=admin
 set adminpassword=Intel123!
 set mpspassword=Intel123!
-set sessionEncryptionKey=sessionEncryptionKey
-set redisPassword=cache@1234
-
-
 
 NET SESSION >nul 2>&1
 IF %ERRORLEVEL% EQU 0 (
@@ -55,7 +51,7 @@ call installvault.bat  && (
   EXIT /B 1
 )
 
-call createsecrets.bat %adminusername% %adminpassword% %mpspassword% %sessionEncryptionKey% %redisPassword% && (
+call createsecrets.bat %adminusername% %adminpassword% %mpspassword% && (
   echo createsecrets was successful
 ) || (
   echo createsecrets failed
