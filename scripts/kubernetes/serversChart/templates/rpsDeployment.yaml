@@ -62,11 +62,18 @@ spec:
           - name: "RPS_SECRETS_PATH"
             value: "{{ .Values.rps.secretsPath }}"
           - name: "RPS_MPS_SERVER"
-            value : "https://mps:{{ .Values.mps.webPort }}"
+            value : "http://mps:{{ .Values.mps.webPort }}"
           - name: "RPS_CONNECTION_STRING"
             value: "postgresql://{{ .Values.backenddb.dbUser }}:{{ .Values.backenddb.dbPassword }}@db:{{ .Values.backenddb.port }}/rpsdb"
           - name: "RPS_DELAY_TIMER"
             value: "{{ .Values.rps.rpsDelayTimer }}"
+          - name: "RPS_USER"
+            value: "{{ .Values.mps.mpsUser }}"
+          - name: "RPS_PASSWORD"
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.mpsSecretStoreNames.creds }}
+                key: {{ .Values.mps.mpsPassword }}
         ports:
         - containerPort: {{ .Values.rps.rpswsPort }}
           name: rps

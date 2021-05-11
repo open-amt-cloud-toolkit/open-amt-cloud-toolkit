@@ -34,9 +34,8 @@ EXIT /B 1
 
 set adminusername=%1
 set adminpassword=%2
-set mpspassword=%4
-set sessionEncryptionKey=%6
-set redisPassword = %7
+set mpspassword=%3
+set sessionEncryptionKey=%4
 
 call kubectl create secret generic mpsweb --from-literal=adminusername=%adminusername% --from-literal=adminuserpassword=%adminpassword% && (
   echo mpsweb secret created successfully
@@ -45,24 +44,10 @@ call kubectl create secret generic mpsweb --from-literal=adminusername=%adminuse
   EXIT /B 1
 )
 
-call kubectl create secret generic mpsrediscreds --from-literal=mpsrediscreds=%redisPassword% && (
- echo mpsrediscreds secret created successfully
-) || (
-  echo mpsrediscreds secret creation failed
-  EXIT /B 1
-)
-
 call kubectl create secret generic mpscreds --from-literal=mpspassword=%mpspassword% && (
  echo mpscreds secret created successfully
 ) || (
   echo mpscreds secret creation failed
-  EXIT /B 1
-)
-
-call kubectl create secret generic session --from-literal=session-key.txt=%sessionEncryptionKey% && (
- echo mpssession secret created successfully
-) || (
-  echo mpssession secret creation failed
   EXIT /B 1
 )
 
