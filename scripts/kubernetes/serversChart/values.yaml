@@ -10,7 +10,6 @@ images:
   mps: "mps:latest"
   rps: "rps:latest"
   ui: "ui:latest"
-  kong: "kong:latest"
   kong: "kong:2.3"
   postgresdb: "postgres:10.4"
   pullSecret: "regcred"
