@@ -27,8 +27,8 @@ services:
     env_file:
       - .env
     environment: 
-      RPS_USER: ${RPS_MPS_USER}
-      RPS_PASSWORD: ${RPS_MPS_PASSWORD}
+      RPS_USER: ${MPS_USER}
+      RPS_PASSWORD: ${MPS_PASSWORD}
       RPS_MPS_SERVER: http://mps:3000
   mps:
     image: ${MPS_IMAGE}
@@ -44,8 +44,20 @@ services:
     environment: 
       MPS_USERNAME: ${MPS_USER}
       MPS_PASS: ${MPS_PASSWORD}
+      MPS_INSTANCE_NAME: '{{.Task.Name}}'
     volumes:
       - private-volume:/mps-microservice/private
+  mpsrouter:
+    image: mpsrouter:latest
+    environment:
+      MPS_CONNECTION_STRING: postgresql://postgresadmin:admin123@db:5432/mpsdb?sslmode=disable
+      PORT: ${PORT}
+      MPS_PORT: ${MPSWEBPORT}
+    build:
+      context: ./mps-router
+      dockerfile: ./Dockerfile
+    networks:
+      - openamtnetwork
   db:
     image: postgres
     networks:
