@@ -6,6 +6,11 @@ az group create --name openamtk8s --location eastus
 az deployment group create --resource-group openamtk8s --template-file aks.json
 ```
 
+2) Update Dependencies
+```
+helm dependency update
+```
+
 2) Create secrets 
 
 ### for accessing your private registry 

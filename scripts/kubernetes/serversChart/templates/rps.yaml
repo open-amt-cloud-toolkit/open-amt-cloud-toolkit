@@ -1,0 +1,57 @@
+#/*********************************************************************
+# Copyright (c) Intel Corporation 2020
+# SPDX-License-Identifier: Apache-2.0
+#**********************************************************************/
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: rps
+  name: rps
+spec:
+  ports:
+  - port: 8080
+    name: websockets
+    protocol: TCP
+    targetPort: 8080
+  - port: 8081
+    name: webapi
+    protocol: TCP
+    targetPort: 8081
+  selector:
+    app: rps
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rps
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rps
+  template:
+    metadata:
+      labels:
+        app: rps
+    spec:
+      imagePullSecrets:
+        - name: registrycredentials
+      containers:
+        - name: rps
+          image: vprodemo.azurecr.io/rps:latest
+          env:
+            - name: "RPS_VAULT_ADDRESS"
+              value: "http://vault"
+            - name: RPS_VAULT_TOKEN
+              value: myroot
+            - name: "RPS_MPS_SERVER"
+              value: "https://mps:3000"
+            - name: "RPS_CONNECTION_STRING"
+              value: "postgresql://postgresadmin:admin123@postgres:5432/rpsdb"
+          ports:
+            - containerPort: 8080
+              name: rps
+            - containerPort: 8081
+              name: rpsweb

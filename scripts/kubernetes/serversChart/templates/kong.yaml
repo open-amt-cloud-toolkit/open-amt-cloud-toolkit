@@ -1,0 +1,51 @@
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: rps-rest
+  namespace: default
+  annotations:
+    konghq.com/strip-path: "true"
+    kubernetes.io/ingress.class: kong
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /
+        #pathType: Prefix
+        backend:
+          serviceName: webui
+          servicePort: 80
+      - path: /rps
+        #pathType: Prefix
+        backend:
+          serviceName: rps
+          servicePort: 8081
+      - path: /activate
+        #pathType: Prefix
+        backend:
+          serviceName: rps
+          servicePort: 8080
+      - path: /mps
+        #pathType: Prefix
+        backend:
+          serviceName: mps
+          servicePort: 3000
+      - path: /mps/login
+        #pathType: Prefix
+        backend:
+          serviceName: mps
+          servicePort: 3000
+---
+apiVersion: configuration.konghq.com/v1beta1
+kind: TCPIngress
+metadata:
+  name: cira-ingress
+  annotations:
+    kubernetes.io/ingress.class: kong
+spec:
+  rules:
+  - port: 4433
+    backend:
+      serviceName: mps
+      servicePort: 4433

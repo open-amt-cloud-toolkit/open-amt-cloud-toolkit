@@ -111,3 +111,7 @@ rps:
   useRawCerts: "true"
   staticIPAddress: "STATIC_IP_RPS"
   resourceGroupName: "NODE_RESOURCE_GROUP"
+vault:
+  ui:
+    enabled: "true"
+    serviceType: "LoadBalancer"
