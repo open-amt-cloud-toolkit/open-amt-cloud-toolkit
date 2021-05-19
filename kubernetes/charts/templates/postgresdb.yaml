@@ -92,7 +92,7 @@ data:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: rpsdata
+  name: oactdb
 spec:
   accessModes:
   - ReadWriteOnce
@@ -105,7 +105,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: rpsdbvolume
+  name: oactdbvolume
   labels:
     type: local
 spec:
@@ -119,7 +119,7 @@ spec:
 kind: Deployment
 apiVersion: apps/v1
 metadata:
-  name: rpsdb
+  name: oactdb
 spec:
   replicas: 1
   selector:
@@ -149,7 +149,7 @@ spec:
       volumes:
         - name: volume
           persistentVolumeClaim:
-            claimName: rpsdata
+            claimName: oactdb
         - name: initdb
           configMap:
               name: init-db

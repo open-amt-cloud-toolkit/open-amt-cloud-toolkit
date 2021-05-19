@@ -1,0 +1,39 @@
+#/*********************************************************************
+# Copyright (c) Intel Corporation 2020
+# SPDX-License-Identifier: Apache-2.0
+#**********************************************************************/
+# Default values for installServersChart.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+images:
+  mps: "vprodemo.azurecr.io/mps:latest"
+  rps: "vprodemo.azurecr.io/rps:latest"
+  webui: "vprodemo.azurecr.io/webui:latest"
+  postgresdb: "postgres:10.4"
+backenddb:
+  dbUser: "postgresadmin"
+  dbPassword: "admin123"
+mps:
+  commonName: coolk8soact.westus2.cloudapp.azure.com
+  replicaCount: 1
+  logLevel: "silly"
+  connectionString: "postgresql://postgresadmin:admin123@postgres:5432/mpsdb"
+  mpsUser: "admin"       
+  mpsPassword: "mpspassword"
+ui:
+  replicaCount: 1
+  staticIPAddress: "STATIC_IP_UI"
+  resourceGroupName: "NODE_RESOURCE_GROUP"
+rps:
+  replicaCount: 1
+  logLevel: "silly"
+  connectionString: "postgresql://postgresadmin:admin123@postgres:5432/rpsdb"
+vault:
+  ui:
+    enabled: "true"
+    serviceType: "LoadBalancer"
+kong:
+  proxy:    
+    annotations:
+      service.beta.kubernetes.io/azure-dns-label-name: "coolk8soact"

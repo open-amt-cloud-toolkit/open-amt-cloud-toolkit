@@ -27,7 +27,7 @@ metadata:
   name: rps
   namespace: default
 spec:
-  replicas: 1
+  replicas: {{ .Values.rps.replicaCount }}
   selector:
     matchLabels:
       app: rps
@@ -42,14 +42,21 @@ spec:
         - name: rps
           image: vprodemo.azurecr.io/rps:latest
           env:
+            - name: "RPS_LOG_LEVEL"
+              value: "{{ .Values.rps.logLevel }}"
             - name: "RPS_VAULT_ADDRESS"
-              value: "http://vault"
-            - name: RPS_VAULT_TOKEN
-              value: myroot
+              value: "http://{{ .Release.Name }}-vault:8200"
+            - name: "RPS_SECRETS_PATH"
+              value: 'kv/data/'
             - name: "RPS_MPS_SERVER"
               value: "https://mps:3000"
             - name: "RPS_CONNECTION_STRING"
-              value: "postgresql://postgresadmin:admin123@postgres:5432/rpsdb"
+              value: "{{ .Values.rps.connectionString }}"
+            - name: RPS_VAULT_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: vault
+                  key: vaultKey
           ports:
             - containerPort: 8080
               name: rps

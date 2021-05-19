@@ -12,9 +12,8 @@ services:
       context: ./sample-web-ui
       dockerfile: ./Dockerfile
     environment:
-      NODE_ENV: production
-      RPS_SERVER: https://localhost/rps
-      MPS_SERVER: https://localhost/mps
+      RPS_SERVER: https://${MPS_COMMON_NAME}/rps
+      MPS_SERVER: https://${MPS_COMMON_NAME}/mps
     volumes:
       - ./sample-web-ui/nginx.conf:/etc/nginx/conf.d/default.conf  
   rps:

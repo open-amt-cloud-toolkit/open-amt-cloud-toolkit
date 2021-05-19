@@ -4,7 +4,6 @@
   "parameters": {
     "clusterName": {
       "type": "string",
-      "defaultValue": "aks101cluster",
       "metadata": {
         "description": "The name of the Managed Cluster resource."
       }
@@ -111,6 +110,10 @@
     "controlPlaneFQDN": {
       "type": "string",
       "value": "[reference(parameters('clusterName')).fqdn]"
+    },
+    "FQDNSuffix": {
+      "type": "string",
+      "value": "[concat(parameters('location'),'.cloudapp.azure.com')]"
     }
   }
 }
