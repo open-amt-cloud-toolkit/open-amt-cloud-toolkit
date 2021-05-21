@@ -40,7 +40,7 @@ spec:
         - name: registrycredentials
       containers:
         - name: rps
-          image: vprodemo.azurecr.io/rps:latest
+          image:  {{ .Values.images.rps }}
           env:
             - name: "RPS_LOG_LEVEL"
               value: "{{ .Values.rps.logLevel }}"

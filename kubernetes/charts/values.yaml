@@ -10,6 +10,7 @@ images:
   mps: "vprodemo.azurecr.io/mps:latest"
   rps: "vprodemo.azurecr.io/rps:latest"
   webui: "vprodemo.azurecr.io/webui:latest"
+  mpsrouter: "vprodemo.azurecr.io/mpsrouter:latest"
   postgresdb: "postgres:10.4"
 backenddb:
   dbUser: "postgresadmin"
@@ -37,3 +38,6 @@ kong:
   proxy:    
     annotations:
       service.beta.kubernetes.io/azure-dns-label-name: "coolk8soact"
+mpsrouter:
+  replicaCount: 1
+  connectionString: "postgresql://postgresadmin:admin123@db:5432/mpsdb?sslmode=disable"
