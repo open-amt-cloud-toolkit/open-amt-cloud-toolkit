@@ -13,3 +13,6 @@
 [submodule "sample-web-ui"]
 	path = sample-web-ui
 	url = https://github.com/open-amt-cloud-toolkit/sample-web-ui.git
+[submodule "mps-router"]
+	path = mps-router
+	url = https://github.com/open-amt-cloud-toolkit/mps-router.git
