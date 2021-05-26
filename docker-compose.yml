@@ -104,6 +104,14 @@ services:
       - "443:8443"
       - "8001:8001"
     restart: always
+  mosquitto:
+    image: eclipse-mosquitto
+    ports:
+      - "8883:8883"
+    volumes: 
+      - ./mosquitto.conf:/mosquitto/config/mosquitto.conf
+    networks:
+      - openamtnetwork
 volumes:
     app-volume:
     private-volume:
