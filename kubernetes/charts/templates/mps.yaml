@@ -1,0 +1,135 @@
+#/*********************************************************************
+# Copyright (c) Intel Corporation 2020
+# SPDX-License-Identifier: Apache-2.0
+#**********************************************************************/
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: mps
+  name: mps
+spec:
+  ports:
+  - port: 4433
+    name: cira
+    protocol: TCP
+    targetPort: 4433
+  - port: 3000
+    name: webapi
+    protocol: TCP
+    targetPort: 3000
+  selector:
+    app: mps
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mps-certs
+spec:
+  accessModes:
+  - ReadWriteOnce
+  #storageClassName: managed-premium
+  resources:
+    requests:      
+      storage: 32Ki
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mps-certs-volume
+  labels:
+    type: local
+spec:
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 32Ki
+  hostPath:
+    path: "/mnt/data/mpscerts"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mps
+  namespace: default
+spec:
+  replicas: {{ .Values.mps.replicaCount }}
+  selector:
+    matchLabels:
+      app: mps
+  template:
+    metadata:
+      labels:
+        app: mps
+    spec:
+      imagePullSecrets:
+        - name: registrycredentials
+      containers:
+        - name: mps
+          image: {{ .Values.images.mps }}
+          env:
+            - name: "MPS_LOG_LEVEL"
+              value: "{{ .Values.mps.logLevel }}"   
+            - name: "MPS_COMMON_NAME"
+              value: "{{ .Values.mps.commonName }}"
+            - name: "MPS_CONNECTION_STRING"
+              value: "{{ .Values.mps.connectionString }}"
+            - name: "MPS_VAULT_ADDRESS"
+              value: "http://{{ .Release.Name }}-vault:8200"
+            - name: "MPS_SECRETS_PATH"
+              value: 'kv/data/'
+            - name: "MPS_PORT"
+              value: '4433'
+            - name: "MPS_INSTANCE_NAME"
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: "MPS_JWT_EXPIRATION"
+              value: "{{ .Values.mps.jwtExpiration }}"
+            - name: "MPS_JWT_SECRET"
+              valueFrom:
+                secretKeyRef:
+                  name: open-amt-admin-jwt
+                  key: secret
+            - name: "MPS_JWT_ISSUER"
+              valueFrom:
+                secretKeyRef:
+                  name: open-amt-admin-jwt
+                  key: key
+            - name: MPS_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: mps
+                  key: user
+            - name: MPS_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: mps
+                  key: password
+            - name: MPS_WEB_ADMIN_USER
+              valueFrom:
+                secretKeyRef:
+                  name: mpsweb
+                  key: user
+            - name: MPS_WEB_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mpsweb
+                  key: password
+            - name: MPS_VAULT_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: vault
+                  key: vaultKey
+          ports:
+            - containerPort: 3000
+              name: mps
+            - containerPort: 4433
+              name: mpsws
+          volumeMounts:
+            - mountPath: "/mps-microservice/private"
+              name: mpscerts
+      volumes:
+        - name: mpscerts
+          persistentVolumeClaim:
+            claimName: mps-certs
