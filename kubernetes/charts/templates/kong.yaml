@@ -1,0 +1,115 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: web-mps
+  namespace: default
+  annotations:
+    konghq.com/strip-path: "true"
+    kubernetes.io/ingress.class: kong
+    konghq.com/plugins: open-amt-cors
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /
+            #pathType: Prefix
+            backend:
+              serviceName: webui
+              servicePort: 80
+          - path: /mps/login
+            #pathType: Prefix
+            backend:
+              serviceName: mps
+              servicePort: 3000
+          - path: /mps/ws
+            #pathType: Prefix
+            backend:
+              serviceName: mpsrouter
+              servicePort: 8003
+          - path: /activate
+            #pathType: Prefix
+            backend:
+              serviceName: rps
+              servicePort: 8080
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: rps
+  namespace: default
+  annotations:
+    konghq.com/strip-path: "true"
+    kubernetes.io/ingress.class: kong
+    konghq.com/plugins: open-amt-jwt, open-amt-cors,admin-acl
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /rps
+            #pathType: Prefix
+            backend:
+              serviceName: rps
+              servicePort: 8081
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: mps
+  namespace: default
+  annotations:
+    konghq.com/strip-path: "true"
+    kubernetes.io/ingress.class: kong
+    konghq.com/plugins: open-amt-jwt,open-amt-cors, admin-acl
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /mps
+            #pathType: Prefix
+            backend:
+              serviceName: mpsrouter
+              servicePort: 8003
+---
+apiVersion: configuration.konghq.com/v1beta1
+kind: TCPIngress
+metadata:
+  name: cira-ingress
+  annotations:
+    kubernetes.io/ingress.class: kong
+spec:
+  rules:
+    - port: 4433
+      backend:
+        serviceName: mps
+        servicePort: 4433
+---
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: open-amt-jwt
+plugin: jwt
+---
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: open-amt-cors
+plugin: cors
+---
+apiVersion: configuration.konghq.com/v1
+kind: KongConsumer
+metadata:
+  name: admin
+  annotations:
+    kubernetes.io/ingress.class: kong
+username: admin
+credentials:
+  - open-amt-admin-jwt
+  - open-amt-admin-acl
+---
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: admin-acl
+plugin: acl
+config:
+  whitelist: ["open-amt-admin"]
