@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS devices(
       guid uuid NOT NULL,
       tags text[],
       hostname varchar(256),
+      mpsusername varchar(16),
       mpsinstance text, 
       connectionstatus boolean,
       CONSTRAINT device_guid UNIQUE(guid)
