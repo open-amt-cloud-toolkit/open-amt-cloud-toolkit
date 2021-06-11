@@ -93,7 +93,7 @@ consumers:
 jwt_secrets:
   - consumer: admin
     key: 9EmRJTbIiIb4bIeSsmgcWIjrR6HyETqc #sample key
-    secret: "supersecret"  
+    secret: ""
 
 
 

@@ -9,6 +9,8 @@ CREATE TABLE IF NOT EXISTS ciraconfigs(
       mps_port integer,
       user_name varchar(40),
       password varchar(63),
+      generate_random_password BOOLEAN NOT NULL,
+      random_password_length integer,
       common_name varchar(256),
       server_address_format integer, 
       auth_method integer, 
@@ -64,4 +66,3 @@ INSERT INTO public.networkconfigs(
 INSERT INTO public.networkconfigs(
   network_profile_name, dhcp_enabled, static_ip_shared, ip_sync_enabled)  
   values('dhcp_enabled', true, false, true);
-

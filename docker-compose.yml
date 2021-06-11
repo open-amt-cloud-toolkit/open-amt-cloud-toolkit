@@ -26,8 +26,6 @@ services:
     env_file:
       - .env
     environment: 
-      RPS_USER: ${MPS_USER}
-      RPS_PASSWORD: ${MPS_PASSWORD}
       RPS_MPS_SERVER: http://mps:3000
   mps:
     image: ${MPS_IMAGE}
@@ -41,8 +39,6 @@ services:
     env_file:
       - .env
     environment: 
-      MPS_USERNAME: ${MPS_USER}
-      MPS_PASS: ${MPS_PASSWORD}
       MPS_INSTANCE_NAME: '{{.Task.Name}}'
     volumes:
       - private-volume:/mps-microservice/private
@@ -91,7 +87,7 @@ services:
         - localhost
         - "8443"
       retries: 10
-    command: 
+    command:
       - "kong"
       - "start"
       - "--vv"
