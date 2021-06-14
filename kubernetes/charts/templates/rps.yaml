@@ -40,6 +40,10 @@ spec:
         - name: registrycredentials
       containers:
         - name: rps
+          securityContext:
+            runAsUser: 999
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
           image:  {{ .Values.images.rps }}
           env:
             - name: "RPS_LOG_LEVEL"
@@ -52,16 +56,6 @@ spec:
               value: "http://mps:3000"
             - name: "RPS_CONNECTION_STRING"
               value: "{{ .Values.rps.connectionString }}"
-            - name: "RPS_USER"
-              valueFrom:
-                secretKeyRef:
-                  name: mps
-                  key: user
-            - name: "RPS_PASSWORD"
-              valueFrom:
-                secretKeyRef:
-                  name: mps
-                  key: password
             - name: RPS_VAULT_TOKEN
               valueFrom:
                 secretKeyRef:
