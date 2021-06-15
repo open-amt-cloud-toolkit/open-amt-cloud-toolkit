@@ -29,8 +29,10 @@
       }
     },
     "vaultToken": {
-      "defaultValue": "myroot",
-      "type": "securestring"
+      "type": "securestring",
+      "metadata": {
+        "description": "Specifies the root token to use for Vault in DEV mode"
+      }
     },
     "rpsImageName": {
       "defaultValue": "rps:latest",
@@ -67,28 +69,12 @@
       }
     },
     "mpsAdminUsername": {
-      "defaultValue": "standalone",
       "type": "securestring",
       "metadata": {
         "description": "For details on this property view the configuration documentation located under \"Microservices\" in the Open AMT Cloud Toolkit documentation on https://open-amt-cloud-toolkit.github.io/docs/"
       }
     },
     "mpsAdminPassword": {
-      "defaultValue": "G@ppm0ym",
-      "type": "securestring",
-      "metadata": {
-        "description": "For details on this property view the configuration documentation located under \"Microservices\" in the Open AMT Cloud Toolkit documentation on https://open-amt-cloud-toolkit.github.io/docs/"
-      }
-    },
-    "mpsUsername": {
-      "defaultValue": "standalone",
-      "type": "securestring",
-      "metadata": {
-        "description": "For details on this property view the configuration documentation located under \"Microservices\" in the Open AMT Cloud Toolkit documentation on https://open-amt-cloud-toolkit.github.io/docs/"
-      }
-    },
-    "mpsPassword": {
-      "defaultValue": "G@ppm0ym",
       "type": "securestring",
       "metadata": {
         "description": "For details on this property view the configuration documentation located under \"Microservices\" in the Open AMT Cloud Toolkit documentation on https://open-amt-cloud-toolkit.github.io/docs/"
@@ -99,6 +85,13 @@
       "type": "string",
       "metadata": {
         "description": "Specifies the duration (in minutes) that a token will be valid for"
+      }
+    },
+    "jwtSecret": {
+      "defaultValue": "supersecret",
+      "type": "securestring",
+      "metadata": {
+        "description": "Specifies the secret to use when generating JWT Tokens"
       }
     }
   },
@@ -125,12 +118,8 @@
               ],
               "environmentVariables": [
                 {
-                  "name": "RPS_USER",
-                  "value": "[parameters('mpsUsername')]"
-                },
-                {
-                  "name": "RPS_PASSWORD",
-                  "value": "[parameters('mpsPassword')]"
+                  "name": "RPS_VAULT_TOKEN",
+                  "value": "[parameters('vaultToken')]"
                 }
               ],
               "resources": {
@@ -169,16 +158,16 @@
                   "value": "[parameters('mpsAdminPassword')]"
                 },
                 {
-                  "name": "MPS_USERNAME",
-                  "value": "[parameters('mpsUsername')]"
-                },
-                {
-                  "name": "MPS_PASS",
-                  "value": "[parameters('mpsPassword')]"
-                },
-                {
                   "name": "MPS_JWT_EXPIRATION",
                   "value": "[parameters('tokenExpiration')]"
+                },
+                {
+                  "name": "MPS_JWT_SECRET",
+                  "value": "[parameters('jwtSecret')]"
+                },
+                {
+                  "name": "MPS_VAULT_TOKEN",
+                  "value": "[parameters('vaultToken')]"
                 }
               ],
               "ports": [
@@ -362,10 +351,6 @@
             },
             {
               "protocol": "tcp",
-              "port": 80
-            },
-            {
-              "protocol": "tcp",
               "port": 8443
             }
           ]
@@ -386,7 +371,7 @@
           {
             "name": "kong-config",
             "secret": {
-              "kong.yaml": "IyoqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKg0KIyBDb3B5cmlnaHQgKGMpIEludGVsIENvcnBvcmF0aW9uIDIwMTgtMjAxOQ0KIyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogQXBhY2hlLTIuMA0KIyoqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKg0KDQojIE1ldGFkYXRhIGZpZWxkcyBzdGFydCB3aXRoIGFuIHVuZGVyc2NvcmUgKF8pDQojIEZpZWxkcyB0aGF0IGRvIG5vdCBzdGFydCB3aXRoIGFuIHVuZGVyc2NvcmUgcmVwcmVzZW50IEtvbmcgZW50aXRpZXMgYW5kIGF0dHJpYnV0ZXMNCg0KIyBfZm9ybWF0X3ZlcnNpb24gaXMgbWFuZGF0b3J5LA0KIyBpdCBzcGVjaWZpZXMgdGhlIG1pbmltdW0gdmVyc2lvbiBvZiBLb25nIHRoYXQgc3VwcG9ydHMgdGhlIGZvcm1hdA0KDQpfZm9ybWF0X3ZlcnNpb246ICIyLjEiDQoNCiMgX3RyYW5zZm9ybSBpcyBvcHRpb25hbCwgZGVmYXVsdGluZyB0byB0cnVlLg0KIyBJdCBzcGVjaWZpZXMgd2hldGhlciBzY2hlbWEgdHJhbnNmb3JtYXRpb25zIHNob3VsZCBiZSBhcHBsaWVkIHdoZW4gaW1wb3J0aW5nIHRoaXMgZmlsZQ0KIyBhcyBhIHJ1bGUgb2YgdGh1bWIsIGxlYXZlIHRoaXMgc2V0dGluZyB0byB0cnVlIGlmIHlvdSBhcmUgaW1wb3J0aW5nIGNyZWRlbnRpYWxzDQojIHdpdGggcGxhaW4gcGFzc3dvcmRzLCB3aGljaCBuZWVkIHRvIGJlIGVuY3J5cHRlZC9oYXNoZWQgYmVmb3JlIHN0b3Jpbmcgb24gdGhlIGRhdGFiYXNlLg0KIyBPbiB0aGUgb3RoZXIgaGFuZCwgaWYgeW91IGFyZSByZWltcG9ydGluZyBhIGRhdGFiYXNlIHdpdGggcGFzc3dvcmRzIGFscmVhZHkgZW5jcnlwdGVkL2hhc2hlZCwNCiMgc2V0IGl0IHRvIGZhbHNlLg0KDQpfdHJhbnNmb3JtOiB0cnVlDQoNCiMgRWFjaCBLb25nIGVudGl0eSAoY29yZSBlbnRpdHkgb3IgY3VzdG9tIGVudGl0eSBpbnRyb2R1Y2VkIGJ5IGEgcGx1Z2luKQ0KIyBjYW4gYmUgbGlzdGVkIGluIHRoZSB0b3AtbGV2ZWwgYXMgYW4gYXJyYXkgb2Ygb2JqZWN0czoNCg0Kc2VydmljZXM6DQotIG5hbWU6IG1wcy1yZXN0DQogIGhvc3Q6IG1wc3JvdXRlcg0KICBwb3J0OiA4MDAzDQogIHRhZ3M6DQogIC0gbXBzDQogIHJvdXRlczoNCiAgLSBuYW1lOiBtcHMtbG9naW4tcm91dGUNCiAgICBzdHJpcF9wYXRoOiB0cnVlDQogICAgcGF0aHM6DQogICAgLSAvbXBzL2xvZ2luDQogIC0gbmFtZTogbXBzLXJlbGF5LXJvdXRlDQogICAgc3RyaXBfcGF0aDogdHJ1ZQ0KICAgIHBhdGhzOg0KICAgIC0gL21wcy93cw0KICAtIG5hbWU6IG1wcy1yb3V0ZQ0KICAgIHN0cmlwX3BhdGg6IHRydWUNCiAgICBwYXRoczoNCiAgICAtIC9tcHMNCg0KLSBuYW1lOiBycHMtcmVzdA0KICBob3N0OiBycHMNCiAgcG9ydDogODA4MSAgDQogIHRhZ3M6DQogIC0gcnBzDQogIHJvdXRlczoNCiAgLSBuYW1lOiBycHMtcm91dGUNCiAgICBzdHJpcF9wYXRoOiB0cnVlDQogICAgcGF0aHM6DQogICAgLSAvcnBzDQoNCi0gbmFtZTogcnBzLXdzDQogIGhvc3Q6IHJwcw0KICBwb3J0OiA4MDgwDQogIHRhZ3M6DQogIC0gcnBzDQogIHJvdXRlczoNCiAgLSBuYW1lOiBycHMtYWN0aXZhdGUtcm91dGUNCiAgICBzdHJpcF9wYXRoOiB0cnVlDQogICAgcGF0aHM6DQogICAgLSAvYWN0aXZhdGUNCg0KLSBuYW1lOiB3ZWINCiAgaG9zdDogd2VidWkNCiAgcG9ydDogODANCiAgdGFnczoNCiAgLSB3ZWINCiAgcm91dGVzOg0KICAtIG5hbWU6IHdlYi1yb3V0ZQ0KICAgIHBhdGhzOg0KICAgIC0gLw0KDQpwbHVnaW5zOg0KLSBuYW1lOiBjb3JzIA0KLSBuYW1lOiBqd3QNCiAgcm91dGU6IHJwcy1yb3V0ZQ0KICBjb25maWc6DQogICAgY2xhaW1zX3RvX3ZlcmlmeToNCiAgICAtIGV4cA0KLSBuYW1lOiBqd3QNCiAgcm91dGU6IG1wcy1yb3V0ZQ0KICBjb25maWc6DQogICAgY2xhaW1zX3RvX3ZlcmlmeToNCiAgICAtIGV4cA0KDQpjb25zdW1lcnM6DQogIC0gdXNlcm5hbWU6IGFkbWluDQpqd3Rfc2VjcmV0czoNCiAgLSBjb25zdW1lcjogYWRtaW4NCiAgICBrZXk6IDlFbVJKVGJJaUliNGJJZVNzbWdjV0lqclI2SHlFVHFjICNzYW1wbGUga2V5DQogICAgc2VjcmV0OiAiIg0KDQoNCg0KIyByb3V0ZXM6DQojIC0gbmFtZTogYW5vdGhlci1yb3V0ZQ0KIyAgICMgUmVsYXRpb25zaGlwcyBjYW4gYWxzbyBiZSBzcGVjaWZpZWQgYmV0d2VlbiB0b3AtbGV2ZWwgZW50aXRpZXMsDQojICAgIyBlaXRoZXIgYnkgbmFtZSBvciBieSBpZA0KIyAgIHNlcnZpY2U6IGV4YW1wbGUtc2VydmljZQ0KIyAgIGhvc3RzOiBbImhlbGxvLmNvbSJdDQoNCiMgY29uc3VtZXJzOg0KIyAtIHVzZXJuYW1lOiBleGFtcGxlLXVzZXINCiMgICAjIEN1c3RvbSBlbnRpdGllcyBmcm9tIHBsdWdpbiBjYW4gYWxzbyBiZSBzcGVjaWZpZWQNCiMgICAjIElmIHRoZXkgc3BlY2lmeSBhIGZvcmVpZ24ta2V5IHJlbGF0aW9uc2hwLCB0aGV5IGNhbiBhbHNvIGJlIG5lc3RlZA0KIyAgIGtleWF1dGhfY3JlZGVudGlhbHM6DQojICAgLSBrZXk6IG15LWtleQ0KIyAgIHBsdWdpbnM6DQojICAgLSBuYW1lOiByYXRlLWxpbWl0aW5nDQojICAgICBfY29tbWVudDogInRoZXNlIGFyZSBkZWZhdWx0IHJhdGUtbGltaXRzIGZvciB1c2VyIGV4YW1wbGUtdXNlciINCiMgICAgIGNvbmZpZzoNCiMgICAgICAgcG9saWN5OiBsb2NhbA0KIyAgICAgICBzZWNvbmQ6IDUNCiMgICAgICAgaG91cjogMTAwMDANCg0KIyBXaGVuIGFuIGVudGl0eSBoYXMgbXVsdGlwbGUgZm9yZWlnbi1rZXkgcmVsYXRpb25zaGlwcw0KIyAoZS5nLiBhIHBsdWdpbiBtYXRjaGluZyBvbiBib3RoIGNvbnN1bWVyIGFuZCBzZXJ2aWNlKQ0KIyBpdCBtdXN0IGJlIHNwZWNpZmllZCBhcyBhIHRvcC1sZXZlbCBlbnRpdHksIGFuZCBub3QgdGhyb3VnaA0KIyBuZXN0aW5nLg0KDQojIHBsdWdpbnM6DQojIC0gbmFtZTogcmF0ZS1saW1pdGluZw0KIyAgIGNvbnN1bWVyOiBleGFtcGxlLXVzZXINCiMgICBzZXJ2aWNlOiBhbm90aGVyLXNlcnZpY2UNCiMgICBfY29tbWVudDogImV4YW1wbGUtdXNlciBpcyBleHRyYSBsaW1pdGVkIHdoZW4gdXNpbmcgYW5vdGhlci1zZXJ2aWNlIg0KIyAgIGNvbmZpZzoNCiMgICAgIGhvdXI6IDINCiMgICAjIHRhZ3MgYXJlIGZvciB5b3VyIG9yZ2FuaXphdGlvbiBvbmx5IGFuZCBoYXZlIG5vIG1lYW5pbmcgZm9yIEtvbmc6DQojICAgdGFnczoNCiMgICAtIGV4dHJhX2xpbWl0cw0KIyAgIC0gbXlfdGFnDQo="
+              "kong.yaml": "X2Zvcm1hdF92ZXJzaW9uOiAiMi4xIg0KX3RyYW5zZm9ybTogdHJ1ZQ0KDQpzZXJ2aWNlczoNCi0gbmFtZTogbXBzLXJlc3QNCiAgaG9zdDogMTI3LjAuMC4xDQogIHBvcnQ6IDMwMDANCiAgdGFnczoNCiAgLSBtcHMNCiAgcm91dGVzOg0KICAtIG5hbWU6IG1wcy1sb2dpbi1yb3V0ZQ0KICAgIHN0cmlwX3BhdGg6IHRydWUNCiAgICBwYXRoczoNCiAgICAtIC9tcHMvbG9naW4NCiAgLSBuYW1lOiBtcHMtcmVsYXktcm91dGUNCiAgICBzdHJpcF9wYXRoOiB0cnVlDQogICAgcGF0aHM6DQogICAgLSAvbXBzL3dzDQogIC0gbmFtZTogbXBzLXJvdXRlDQogICAgc3RyaXBfcGF0aDogdHJ1ZQ0KICAgIHBhdGhzOg0KICAgIC0gL21wcw0KDQotIG5hbWU6IHJwcy1yZXN0DQogIGhvc3Q6IDEyNy4wLjAuMQ0KICBwb3J0OiA4MDgxICANCiAgdGFnczoNCiAgLSBycHMNCiAgcm91dGVzOg0KICAtIG5hbWU6IHJwcy1yb3V0ZQ0KICAgIHN0cmlwX3BhdGg6IHRydWUNCiAgICBwYXRoczoNCiAgICAtIC9ycHMNCg0KLSBuYW1lOiBycHMtd3MNCiAgaG9zdDogMTI3LjAuMC4xDQogIHBvcnQ6IDgwODANCiAgdGFnczoNCiAgLSBycHMNCiAgcm91dGVzOg0KICAtIG5hbWU6IHJwcy1hY3RpdmF0ZS1yb3V0ZQ0KICAgIHN0cmlwX3BhdGg6IHRydWUNCiAgICBwYXRoczoNCiAgICAtIC9hY3RpdmF0ZQ0KDQotIG5hbWU6IHdlYg0KICBob3N0OiAxMjcuMC4wLjENCiAgcG9ydDogODANCiAgdGFnczoNCiAgLSB3ZWINCiAgcm91dGVzOg0KICAtIG5hbWU6IHdlYi1yb3V0ZQ0KICAgIHBhdGhzOg0KICAgIC0gLw0KDQpwbHVnaW5zOg0KLSBuYW1lOiBjb3JzIA0KLSBuYW1lOiBqd3QNCiAgcm91dGU6IHJwcy1yb3V0ZQ0KICBjb25maWc6DQogICAgY2xhaW1zX3RvX3ZlcmlmeToNCiAgICAtIGV4cA0KLSBuYW1lOiBqd3QNCiAgcm91dGU6IG1wcy1yb3V0ZQ0KICBjb25maWc6DQogICAgY2xhaW1zX3RvX3ZlcmlmeToNCiAgICAtIGV4cA0KDQpjb25zdW1lcnM6DQogIC0gdXNlcm5hbWU6IGFkbWluDQpqd3Rfc2VjcmV0czoNCiAgLSBjb25zdW1lcjogYWRtaW4NCiAgICBrZXk6IDlFbVJKVGJJaUliNGJJZVNzbWdjV0lqclI2SHlFVHFjICNzYW1wbGUga2V5DQogICAgc2VjcmV0OiAic3VwZXJzZWNyZXQiDQo="
             }
           },
           {
