@@ -36,6 +36,10 @@ spec:
         - name: registrycredentials
       containers:
         - name: mpsrouter
+          securityContext:
+            runAsUser: 999
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
           image:  {{ .Values.images.mpsrouter }}
           env:
             - name: "MPS_CONNECTION_STRING"

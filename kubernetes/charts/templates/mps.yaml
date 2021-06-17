@@ -27,25 +27,11 @@ metadata:
   name: mps-certs
 spec:
   accessModes:
-  - ReadWriteOnce
-  #storageClassName: managed-premium
+  - "{{ .Values.mps.storageAccessMode }}"
+  storageClassName: "{{ .Values.mps.storageClassName }}"
   resources:
     requests:      
-      storage: 32Ki
----
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: mps-certs-volume
-  labels:
-    type: local
-spec:
-  accessModes:
-  - ReadWriteOnce
-  capacity:
-    storage: 32Ki
-  hostPath:
-    path: "/mnt/data/mpscerts"
+      storage: 1Gi
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -96,16 +82,6 @@ spec:
                 secretKeyRef:
                   name: open-amt-admin-jwt
                   key: key
-            - name: MPS_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  name: mps
-                  key: user
-            - name: MPS_PASS
-              valueFrom:
-                secretKeyRef:
-                  name: mps
-                  key: password
             - name: MPS_WEB_ADMIN_USER
               valueFrom:
                 secretKeyRef:

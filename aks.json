@@ -15,12 +15,6 @@
         "description": "The location of the Managed Cluster resource."
       }
     },
-    "dnsPrefix": {
-      "type": "string",
-      "metadata": {
-        "description": "Optional DNS prefix to use with hosted Kubernetes API server FQDN."
-      }
-    },
     "osDiskSizeGB": {
       "type": "int",
       "defaultValue": 0,
@@ -75,8 +69,11 @@
       "apiVersion": "2021-03-01",
       "name": "[parameters('clusterName')]",
       "location": "[parameters('location')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Storage/storageAccounts', concat(parameters('clusterName'),'stg'))]"
+      ],
       "properties": {
-        "dnsPrefix": "[parameters('dnsPrefix')]",
+        "dnsPrefix": "[parameters('clusterName')]",
         "agentPoolProfiles": [
           {
             "name": "agentpool",
@@ -104,6 +101,29 @@
       "identity": {
         "type": "SystemAssigned"
       }
+    },
+    {
+      "type": "Microsoft.Storage/storageAccounts",
+      "apiVersion": "2019-06-01",
+      "name": "[concat(parameters('clusterName'),'stg')]",
+      "location": "[parameters('location')]",
+      "sku": {
+        "name": "Standard_LRS",
+        "tier": "Standard"
+      },
+      "kind": "StorageV2",
+      "properties": {
+        "accessTier": "Hot",
+        "allowBlobPublicAccess": false
+      }
+    },
+    {
+      "type": "Microsoft.Storage/storageAccounts/fileServices/shares",
+      "apiVersion": "2019-06-01",
+      "name": "[concat(parameters('clusterName'),'stg', '/default/', 'mps-certs')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Storage/storageAccounts', concat(parameters('clusterName'),'stg'))]"
+      ]
     }
   ],
   "outputs": {
