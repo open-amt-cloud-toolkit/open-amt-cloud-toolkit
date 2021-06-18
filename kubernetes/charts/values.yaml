@@ -11,7 +11,7 @@ images:
   rps: "vprodemo.azurecr.io/rps:latest"
   webui: "vprodemo.azurecr.io/webui:latest"
   mpsrouter: "vprodemo.azurecr.io/mpsrouter:latest"
-  postgresdb: "postgres:10.4"
+  postgresdb: "postgres:13"
 backenddb:
   dbUser: "postgresadmin"
   dbPassword: "admin123"
