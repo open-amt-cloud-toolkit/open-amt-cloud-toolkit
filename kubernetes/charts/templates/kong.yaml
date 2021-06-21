@@ -88,6 +88,9 @@ kind: KongPlugin
 metadata:
   name: open-amt-jwt
 plugin: jwt
+config: 
+  claims_to_verify:
+    - exp
 ---
 apiVersion: configuration.konghq.com/v1
 kind: KongPlugin
