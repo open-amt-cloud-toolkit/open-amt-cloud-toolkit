@@ -30,7 +30,6 @@ CREATE TABLE IF NOT EXISTS wirelessconfigs(
       created_by varchar(40),
       CONSTRAINT wirelessprofilename UNIQUE(wireless_profile_name)
     );
-    );
 CREATE TABLE IF NOT EXISTS profiles(
       profile_name citext NOT NULL,
       activation varchar(20) NOT NULL,
