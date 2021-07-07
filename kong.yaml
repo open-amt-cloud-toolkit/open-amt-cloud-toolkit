@@ -65,6 +65,17 @@ services:
     paths:
     - /activate
 
+- name: vault-api
+  host: vault
+  port: 8200 
+  tags:
+  - vault
+  routes:
+  - name: vault-route
+    strip_path: true
+    paths:
+    - /vault
+
 - name: web
   host: webui
   port: 80
