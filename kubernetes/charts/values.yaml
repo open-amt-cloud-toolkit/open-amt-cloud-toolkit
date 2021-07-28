@@ -11,24 +11,20 @@ images:
   rps: "vprodemo.azurecr.io/rps:latest"
   webui: "vprodemo.azurecr.io/webui:latest"
   mpsrouter: "vprodemo.azurecr.io/mpsrouter:latest"
-  postgresdb: "postgres:13"
-backenddb:
-  dbUser: "postgresadmin"
-  dbPassword: "admin123"
 mps:
-  commonName: 
+  commonName:
   # storageClassName: ""
   storageAccessMode: "ReadWriteOnce"
   replicaCount: 1
   logLevel: "silly"
-  connectionString: "postgresql://postgresadmin:admin123@postgres:5432/mpsdb"
+  connectionString: ""
   jwtExpiration: 1440
 ui:
   replicaCount: 1
 rps:
   replicaCount: 1
   logLevel: "silly"
-  connectionString: "postgresql://postgresadmin:admin123@postgres:5432/rpsdb"
+  connectionString: ""
 vault:
   ui:
     enabled: "true"
@@ -39,10 +35,10 @@ kong:
   proxy:
     annotations:
       service.beta.kubernetes.io/azure-dns-label-name: ""
-    stream: 
+    stream:
       - containerPort: 4433
         servicePort: 4433
         parameters: []
 mpsrouter:
   replicaCount: 1
-  connectionString: "postgresql://postgresadmin:admin123@postgres:5432/mpsdb?sslmode=disable"
+  connectionString: ""
