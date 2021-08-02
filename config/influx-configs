@@ -1,0 +1,20 @@
+[default]
+  url = "http://localhost:8086"
+  token = "sI8eUFozqGL_q2r0hOfa45HLVUwN2yS2FwpzqB9JUxy7sgduTOZ40mpAETBUaUU3jXI3Lv7mpqBGzfZRIVM-jQ=="
+  org = "open-amt-cloud-toolkit"
+  active = true
+# 
+# [eu-central]
+#   url = "https://eu-central-1-1.aws.cloud2.influxdata.com"
+#   token = "XXX"
+#   org = ""
+# 
+# [us-central]
+#   url = "https://us-central1-1.gcp.cloud2.influxdata.com"
+#   token = "XXX"
+#   org = ""
+# 
+# [us-west]
+#   url = "https://us-west-2-1.aws.cloud2.influxdata.com"
+#   token = "XXX"
+#   org = ""

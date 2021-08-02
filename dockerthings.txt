@@ -1,0 +1,12 @@
+
+docker run -d -p 3000:3000 grafana/grafana
+1150
+
+
+docker run -d -p 8086:8086  -v $PWD/data:/var/lib/influxdb2  -v $PWD/config:/etc/influxdb2  -e DOCKER_INFLUXDB_INIT_MODE=setup  -e DOCKER_INFLUXDB_INIT_USERNAME=open-amt-usr  -e DOCKER_INFLUXDB_INIT_PASSWORD=Intel123! -e DOCKER_INFLUXDB_INIT_ORG=open-amt-cloud-toolkit  -e DOCKER_INFLUXDB_INIT_BUCKET=open-amt-bucket  influxdb:2.0
+
+#generate config
+docker run --rm telegraf telegraf config > telegraf.conf
+
+#run config
+docker run -d --name=telegraf -v /var/run/docker.sock:/var/run/docker.sock  -v $PWD/telegraf.conf:/etc/telegraf/telegraf.conf:ro  -v /:/hostfs:ro  -e HOST_ETC=/hostfs/etc  -e HOST_PROC=/hostfs/proc  -e HOST_SYS=/hostfs/sys  -e HOST_VAR=/hostfs/var  -e HOST_RUN=/hostfs/run  -e HOST_MOUNT_PREFIX=/hostfs  telegraf
