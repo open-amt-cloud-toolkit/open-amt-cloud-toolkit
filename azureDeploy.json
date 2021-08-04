@@ -146,10 +146,6 @@
                   "value": "[concat(parameters('fqdn'), '.', parameters('location'),'.azurecontainer.io')]"
                 },
                 {
-                  "name": "MPS_USE_ALLOWLIST",
-                  "value": "[parameters('useAllowlist')]"
-                },
-                {
                   "name": "MPS_WEB_ADMIN_USER",
                   "value": "[parameters('mpsAdminUsername')]"
                 },
