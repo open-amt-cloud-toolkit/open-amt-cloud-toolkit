@@ -59,7 +59,10 @@ spec:
             - name: "MPS_COMMON_NAME"
               value: "{{ .Values.mps.commonName }}"
             - name: "MPS_CONNECTION_STRING"
-              value: "{{ .Values.mps.connectionString }}"
+              valueFrom:
+                secretKeyRef:
+                  name: mps
+                  key: connectionString
             - name: "MPS_VAULT_ADDRESS"
               value: "http://{{ .Release.Name }}-vault:8200"
             - name: "MPS_SECRETS_PATH"
