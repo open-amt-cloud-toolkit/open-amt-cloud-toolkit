@@ -61,7 +61,59 @@
       "metadata": {
         "description": "The type of operating system."
       }
+    },
+    "DBadministratorLogin": {
+      "type": "string",
+      "minLength": 1,
+      "metadata": {
+        "description": "Database administrator login name"
+      }
+    },
+    "DBadministratorLoginPassword": {
+      "type": "securestring",
+      "minLength": 8,
+      "metadata": {
+        "description": "Database administrator password"
+      }
+    },
+    "virtualNetworkName": {
+      "type": "string",
+      "defaultValue": "azure_postgresql_vnet",
+      "metadata": {
+        "description": "Virtual Network Name"
+      }
+    },
+    "subnetName": {
+      "type": "string",
+      "defaultValue": "azure_postgresql_subnet",
+      "metadata": {
+        "description": "Subnet Name"
+      }
+    },
+    "virtualNetworkRuleName": {
+      "type": "string",
+      "defaultValue": "AllowSubnet",
+      "metadata": {
+        "description": "Virtual Network RuleName"
+      }
+    },
+    "vnetAddressPrefix": {
+      "type": "string",
+      "defaultValue": "10.0.0.0/16",
+      "metadata": {
+        "description": "Virtual Network Address Prefix"
+      }
+    },
+    "subnetPrefix": {
+      "type": "string",
+      "defaultValue": "10.0.0.0/16",
+      "metadata": {
+        "description": "Subnet Address Prefix"
+      }
     }
+  },
+  "variables": {
+    "postgresServerName": "[concat(parameters('clusterName'),'-sql')]"
   },
   "resources": [
     {
@@ -70,7 +122,8 @@
       "name": "[parameters('clusterName')]",
       "location": "[parameters('location')]",
       "dependsOn": [
-        "[resourceId('Microsoft.Storage/storageAccounts', concat(parameters('clusterName'),'stg'))]"
+        "[resourceId('Microsoft.Storage/storageAccounts', concat(parameters('clusterName'),'stg'))]",
+        "[resourceId('Microsoft.DBforPostgreSQL/servers/', variables('postgresServerName'))]"
       ],
       "properties": {
         "dnsPrefix": "[parameters('clusterName')]",
@@ -124,9 +177,60 @@
       "dependsOn": [
         "[resourceId('Microsoft.Storage/storageAccounts', concat(parameters('clusterName'),'stg'))]"
       ]
+    },
+    {
+      "type": "Microsoft.DBforPostgreSQL/servers",
+      "apiVersion": "2017-12-01",
+      "name": "[variables('postgresServerName')]",
+      "location": "[parameters('location')]",
+      "sku": {
+        "name": "B_Gen5_2",
+        "tier": "Basic",
+        "capacity": 2,
+        "size": 51200,
+        "family": "Gen5"
+      },
+      "properties": {
+        "createMode": "Default",
+        "version": "11",
+        "administratorLogin": "[parameters('DBadministratorLogin')]",
+        "administratorLoginPassword": "[parameters('DBadministratorLoginPassword')]",
+        "storageProfile": {
+          "storageMB": 51200,
+          "backupRetentionDays": 7,
+          "geoRedundantBackup": "Disabled"
+        }
+      }
+    },
+    {
+      "type": "Microsoft.DBforPostgreSQL/servers/firewallRules",
+      "apiVersion": "2017-12-01",
+      "name": "[concat(variables('postgresServerName'),'/','fwrules')]",
+      "location": "[parameters('location')]",
+      "copy": {
+        "name": "firewallRulesCopy",
+        "mode": "Serial",
+        "batchSize": 1,
+        "count": 1
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.DBforPostgreSQL/servers/', variables('postgresServerName'))]"
+      ],
+      "properties": {
+        "startIpAddress": "0.0.0.0",
+        "endIpAddress": "0.0.0.0"
+      }
     }
   ],
   "outputs": {
+    "MPSDatabaseConnectionString": {
+      "type": "string",
+      "value": "[concat('postgresql://',parameters('DBadministratorLogin'),'@',variables('postgresServerName'),':','parameters('DBadministratorLoginPassword')','@','variables('postgresServerName')','.postgres.database.azure.com:5432/mpsdb?sslmode=require')]"
+    },
+    "RPSDatabaseConnectionString": {
+      "type": "string",
+      "value": "[concat('postgresql://',parameters('DBadministratorLogin'),'@',variables('postgresServerName'),':','parameters('DBadministratorLoginPassword')','@','variables('postgresServerName')','.postgres.database.azure.com:5432/rpsdb?sslmode=require')]"
+    },
     "controlPlaneFQDN": {
       "type": "string",
       "value": "[reference(parameters('clusterName')).fqdn]"
