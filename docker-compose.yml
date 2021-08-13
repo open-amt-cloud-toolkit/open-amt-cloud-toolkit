@@ -55,7 +55,11 @@ services:
     networks:
       - openamtnetwork
   db:
-    image: postgres
+    image: sslpostgres
+    build:
+      context: ./pg
+      dockerfile: ./Dockerfile
+    command: -c ssl=on -c ssl_cert_file=/var/lib/postgresql/server.crt -c ssl_key_file=/var/lib/postgresql/server.key -c hba_file=/var/lib/postgresql/pg_hba.conf
     networks:
       - openamtnetwork
     restart: always
