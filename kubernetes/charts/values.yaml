@@ -17,14 +17,12 @@ mps:
   storageAccessMode: "ReadWriteOnce"
   replicaCount: 1
   logLevel: "silly"
-  connectionString: ""
   jwtExpiration: 1440
 ui:
   replicaCount: 1
 rps:
   replicaCount: 1
   logLevel: "silly"
-  connectionString: ""
 vault:
   ui:
     enabled: "true"
@@ -41,4 +39,3 @@ kong:
         parameters: []
 mpsrouter:
   replicaCount: 1
-  connectionString: ""

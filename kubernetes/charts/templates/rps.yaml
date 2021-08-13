@@ -55,7 +55,10 @@ spec:
             - name: "RPS_MPS_SERVER"
               value: "http://mps:3000"
             - name: "RPS_CONNECTION_STRING"
-              value: "{{ .Values.rps.connectionString }}"
+              valueFrom:
+                secretKeyRef:
+                  name: rps
+                  key: connectionString
             - name: RPS_VAULT_TOKEN
               valueFrom:
                 secretKeyRef:
