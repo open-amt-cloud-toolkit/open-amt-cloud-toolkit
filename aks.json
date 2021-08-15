@@ -225,11 +225,11 @@
   "outputs": {
     "MPSDatabaseConnectionString": {
       "type": "string",
-      "value": "[concat('postgresql://',parameters('DBadministratorLogin'),'@',variables('postgresServerName'),':','parameters('DBadministratorLoginPassword')','@','variables('postgresServerName')','.postgres.database.azure.com:5432/mpsdb?sslmode=require')]"
+      "value": "[concat('postgresql://',parameters('DBadministratorLogin'),'@',variables('postgresServerName'),':',parameters('DBadministratorLoginPassword'),'@',variables('postgresServerName'),'.postgres.database.azure.com:5432/mpsdb?sslmode=require')]"
     },
     "RPSDatabaseConnectionString": {
       "type": "string",
-      "value": "[concat('postgresql://',parameters('DBadministratorLogin'),'@',variables('postgresServerName'),':','parameters('DBadministratorLoginPassword')','@','variables('postgresServerName')','.postgres.database.azure.com:5432/rpsdb?sslmode=require')]"
+      "value": "[concat('postgresql://',parameters('DBadministratorLogin'),'@',variables('postgresServerName'),':',parameters('DBadministratorLoginPassword'),'@',variables('postgresServerName'),'.postgres.database.azure.com:5432/rpsdb?sslmode=require')]"
     },
     "controlPlaneFQDN": {
       "type": "string",
