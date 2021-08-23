@@ -14,6 +14,5 @@ CREATE TABLE IF NOT EXISTS devices(
       connectionstatus boolean,
       mpsusername text,
       tenantid varchar(36),
-      CONSTRAINT device_guid UNIQUE(guid),
       PRIMARY KEY (guid,tenantid)
     ); 
