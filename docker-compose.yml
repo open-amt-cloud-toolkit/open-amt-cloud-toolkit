@@ -28,6 +28,10 @@ services:
       - .env
     environment: 
       RPS_MPS_SERVER: http://mps:3000
+      RPS_SECRETS_PATH: ${SECRETS_PATH}
+      RPS_VAULT_TOKEN: ${VAULT_TOKEN}
+      RPS_VAULT_ADDRESS: ${VAULT_ADDRESS}
+      RPS_CONNECTION_STRING: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/rpsdb?sslmode=no-verify
   mps:
     image: ${MPS_IMAGE}
     networks:
@@ -41,12 +45,16 @@ services:
       - .env
     environment: 
       MPS_INSTANCE_NAME: '{{.Task.Name}}'
+      MPS_SECRETS_PATH: ${SECRETS_PATH}
+      MPS_VAULT_TOKEN: ${VAULT_TOKEN}
+      MPS_VAULT_ADDRESS: ${VAULT_ADDRESS}
+      MPS_CONNECTION_STRING: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/mpsdb?sslmode=no-verify
     volumes:
       - private-volume:/mps-microservice/private
   mpsrouter:
     image: mpsrouter:latest
     environment:
-      MPS_CONNECTION_STRING: postgresql://postgresadmin:admin123@db:5432/mpsdb?sslmode=disable
+      MPS_CONNECTION_STRING: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/mpsdb?sslmode=disable
       PORT: ${PORT}
       MPS_PORT: ${MPSWEBPORT}
     build:
@@ -78,7 +86,7 @@ services:
     ports: 
       - "8200:8200"
     environment: 
-      VAULT_DEV_ROOT_TOKEN_ID: ${RPS_VAULT_TOKEN}
+      VAULT_DEV_ROOT_TOKEN_ID: ${VAULT_TOKEN}
       VAULT_DEV_LISTEN_ADDRESS: 0.0.0.0:8200
     cap_add: 
       - IPC_LOCK
