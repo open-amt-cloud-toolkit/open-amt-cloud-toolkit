@@ -15,7 +15,6 @@ CREATE TABLE IF NOT EXISTS ciraconfigs(
   mps_root_certificate text, 
   proxydetails text,
   tenant_id varchar(36) NOT NULL,
-  CONSTRAINT configname UNIQUE(cira_config_name,tenant_id),
   PRIMARY KEY (cira_config_name, tenant_id)
 );
 CREATE TABLE IF NOT EXISTS wirelessconfigs(
@@ -29,7 +28,6 @@ CREATE TABLE IF NOT EXISTS wirelessconfigs(
   creation_date timestamp,
   created_by varchar(40),
   tenant_id varchar(36) NOT NULL,
-  CONSTRAINT wirelessprofilename UNIQUE(wireless_profile_name,tenant_id),
   PRIMARY KEY (wireless_profile_name, tenant_id)
 );
 CREATE TABLE IF NOT EXISTS profiles(
@@ -44,7 +42,6 @@ CREATE TABLE IF NOT EXISTS profiles(
   tags text[],
   dhcp_enabled BOOLEAN,
   tenant_id varchar(36) NOT NULL,
-  CONSTRAINT name UNIQUE(profile_name,tenant_id),
   PRIMARY KEY (profile_name, tenant_id)
 );
 CREATE TABLE IF NOT EXISTS profiles_wirelessconfigs(
@@ -56,7 +53,7 @@ CREATE TABLE IF NOT EXISTS profiles_wirelessconfigs(
   creation_date timestamp,
   created_by varchar(40),
   tenant_id varchar(36) NOT NULL,
-  CONSTRAINT wirelessprofilepriority UNIQUE(wireless_profile_name, profile_name, priority)
+  PRIMARY KEY (wireless_profile_name, profile_name, priority, tenant_id)
 );
 CREATE TABLE IF NOT EXISTS domains(
   name citext NOT NULL,
@@ -67,13 +64,8 @@ CREATE TABLE IF NOT EXISTS domains(
   creation_date timestamp,
   created_by varchar(40),
   tenant_id varchar(36) NOT NULL,
-  CONSTRAINT domainname UNIQUE(name,tenant_id),
   CONSTRAINT domainsuffix UNIQUE(domain_suffix,tenant_id),
   PRIMARY KEY (name, tenant_id)
 );
 
-CREATE UNIQUE INDEX lower_cira_config_name_idx ON ciraconfigs ((lower(cira_config_name)));
-CREATE UNIQUE INDEX lower_profile_name_idx ON profiles ((lower(profile_name)));
 CREATE UNIQUE INDEX lower_name_suffix_idx ON domains ((lower(name)), (lower(domain_suffix)));
-CREATE UNIQUE INDEX lower_wireless_profile_name_idx ON wirelessconfigs ((lower(wireless_profile_name)));
-CREATE UNIQUE INDEX wifi_profile_priority ON profiles_wirelessconfigs((lower(wireless_profile_name)), (lower(profile_name)), priority);
