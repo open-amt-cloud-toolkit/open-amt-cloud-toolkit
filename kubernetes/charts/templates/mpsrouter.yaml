@@ -29,6 +29,8 @@ spec:
       app: mpsrouter
   template:
     metadata:
+      annotations:
+        kuma.io/direct-access-services: "mps_default_svc_3000"
       labels:
         app: mpsrouter
     spec:

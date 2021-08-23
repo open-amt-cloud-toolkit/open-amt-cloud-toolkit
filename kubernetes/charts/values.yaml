@@ -24,10 +24,21 @@ rps:
   replicaCount: 1
   logLevel: "silly"
 vault:
+  injector:
+    annotations:
+      kuma.io/sidecar-injection: disabled
+  server:
+    annotations:
+      kuma.io/sidecar-injection: disabled
   ui:
+    annotations:
+      kuma.io/sidecar-injection: disabled
     enabled: "true"
     serviceType: "LoadBalancer"
-kong:
+kong:  
+  podAnnotations:
+      kuma.io/sidecar-injection: enabled
+      kuma.io/gateway: enabled
   env:
     UPSTREAM_KEEPALIVE_POOL_SIZE: 0
   proxy:
