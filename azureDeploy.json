@@ -68,6 +68,20 @@
         "description": "For details on this property view the configuration documentation located under \"Microservices\" in the Open AMT Cloud Toolkit documentation on https://open-amt-cloud-toolkit.github.io/docs/"
       }
     },
+    "dbAdminUsername": {
+      "type": "securestring",
+      "defaultValue": "postgresadmin",
+      "metadata": {
+        "description": "For details on this property view the configuration documentation located under \"Microservices\" in the Open AMT Cloud Toolkit documentation on https://open-amt-cloud-toolkit.github.io/docs/"
+      }
+    },
+    "dbAdminPassword": {
+      "type": "securestring",
+      "defaultValue": "admin123",
+      "metadata": {
+        "description": "For details on this property view the configuration documentation located under \"Microservices\" in the Open AMT Cloud Toolkit documentation on https://open-amt-cloud-toolkit.github.io/docs/"
+      }
+    },
     "mpsAdminUsername": {
       "type": "securestring",
       "metadata": {
@@ -85,13 +99,6 @@
       "type": "string",
       "metadata": {
         "description": "Specifies the duration (in minutes) that a token will be valid for"
-      }
-    },
-    "jwtSecret": {
-      "defaultValue": "supersecret",
-      "type": "securestring",
-      "metadata": {
-        "description": "Specifies the secret to use when generating JWT Tokens"
       }
     }
   },
@@ -120,6 +127,10 @@
                 {
                   "name": "RPS_VAULT_TOKEN",
                   "value": "[parameters('vaultToken')]"
+                },
+                {
+                  "name": "RPS_CONNECTION_STRING",
+                  "value": "[concat('postgresql://',parameters('dbAdminUsername'),':',parameters('dbAdminPassword'),'@localhost:5432/rpsdb')]"
                 }
               ],
               "resources": {
@@ -159,11 +170,15 @@
                 },
                 {
                   "name": "MPS_JWT_SECRET",
-                  "value": "[parameters('jwtSecret')]"
+                  "value": "supersecret"
                 },
                 {
                   "name": "MPS_VAULT_TOKEN",
                   "value": "[parameters('vaultToken')]"
+                },
+                {
+                  "name": "MPS_CONNECTION_STRING",
+                  "value": "[concat('postgresql://',parameters('dbAdminUsername'),':',parameters('dbAdminPassword'),'@localhost:5432/mpsdb')]"
                 }
               ],
               "ports": [
