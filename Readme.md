@@ -26,7 +26,7 @@ git clone --recursive https://github.com/open-amt-cloud-toolkit/open-amt-cloud-t
 <br>
 
 ### Local using Docker
-The quickest and easiest option is to set up a local stack using Docker*, view our [Getting Started Guide](https://open-amt-cloud-toolkit.github.io/docs/1.4/Docker/overview/) for How-To steps and examples.
+The quickest and easiest option is to set up a local stack using Docker*, view our [Documentation Site](https://open-amt-cloud-toolkit.github.io/docs/) and click the Getting Started tab for How-To steps and examples.
 
 <br>
 
