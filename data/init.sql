@@ -44,6 +44,7 @@ CREATE TABLE IF NOT EXISTS profiles(
   tags text[],
   dhcp_enabled BOOLEAN,
   tenant_id varchar(36) NOT NULL,
+  tls_mode integer NULL,    
   PRIMARY KEY (profile_name, tenant_id)
 );
 CREATE TABLE IF NOT EXISTS profiles_wirelessconfigs(
@@ -69,5 +70,4 @@ CREATE TABLE IF NOT EXISTS domains(
   CONSTRAINT domainsuffix UNIQUE(domain_suffix,tenant_id),
   PRIMARY KEY (name, tenant_id)
 );
-
 CREATE UNIQUE INDEX lower_name_suffix_idx ON domains ((lower(name)), (lower(domain_suffix)));
