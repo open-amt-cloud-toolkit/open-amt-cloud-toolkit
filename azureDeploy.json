@@ -35,21 +35,21 @@
       }
     },
     "rpsImageName": {
-      "defaultValue": "rps:v2.0.1",
+      "defaultValue": "rps:latest",
       "type": "string",
       "metadata": {
         "description": "Name of the RPS image to deploy from specified registry"
       }
     },
     "mpsImageName": {
-      "defaultValue": "mps:v2.0.1",
+      "defaultValue": "mps:latest",
       "type": "string",
       "metadata": {
         "description": "Name of the MPS image to deploy from specified registry"
       }
     },
     "sampleWebUIImageName": {
-      "defaultValue": "webui:v2.0.0",
+      "defaultValue": "webui:latest",
       "type": "string",
       "metadata": {
         "description": "Name of the Sample WebUI image to deploy from specified registry"
