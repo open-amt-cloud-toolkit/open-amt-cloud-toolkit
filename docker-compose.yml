@@ -128,7 +128,6 @@ services:
   mosquitto:
     image: eclipse-mosquitto
     ports:
-      - "9001:9001"
       - "8883:8883"
     volumes: 
       - ./mosquitto.conf:/mosquitto/config/mosquitto.conf

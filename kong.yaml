@@ -76,6 +76,17 @@ services:
     paths:
     - /vault
 
+- name: mosquitto-ws
+  host: mosquitto
+  port: 9001
+  tags:
+  - mosquitto
+  routes:
+  - name: mosquitto-route
+    strip_path: true
+    paths:
+    - /mosquitto
+
 - name: web
   host: webui
   port: 80
