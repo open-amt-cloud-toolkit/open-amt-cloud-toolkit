@@ -156,29 +156,6 @@
       }
     },
     {
-      "type": "Microsoft.Storage/storageAccounts",
-      "apiVersion": "2019-06-01",
-      "name": "[concat(parameters('clusterName'),'stg')]",
-      "location": "[parameters('location')]",
-      "sku": {
-        "name": "Standard_LRS",
-        "tier": "Standard"
-      },
-      "kind": "StorageV2",
-      "properties": {
-        "accessTier": "Hot",
-        "allowBlobPublicAccess": false
-      }
-    },
-    {
-      "type": "Microsoft.Storage/storageAccounts/fileServices/shares",
-      "apiVersion": "2019-06-01",
-      "name": "[concat(parameters('clusterName'),'stg', '/default/', 'mps-certs')]",
-      "dependsOn": [
-        "[resourceId('Microsoft.Storage/storageAccounts', concat(parameters('clusterName'),'stg'))]"
-      ]
-    },
-    {
       "type": "Microsoft.DBforPostgreSQL/servers",
       "apiVersion": "2017-12-01",
       "name": "[variables('postgresServerName')]",

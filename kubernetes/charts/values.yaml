@@ -12,9 +12,7 @@ images:
   webui: "vprodemo.azurecr.io/webui:latest"
   mpsrouter: "vprodemo.azurecr.io/mpsrouter:latest"
 mps:
-  commonName:
-  # storageClassName: ""
-  storageAccessMode: "ReadWriteOnce"
+  commonName: 
   replicaCount: 1
   logLevel: "silly"
   jwtExpiration: 1440

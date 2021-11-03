@@ -21,18 +21,6 @@ spec:
   selector:
     app: mps
 ---
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: mps-certs
-spec:
-  accessModes:
-  - "{{ .Values.mps.storageAccessMode }}"
-  storageClassName: "{{ .Values.mps.storageClassName }}"
-  resources:
-    requests:      
-      storage: 1Gi
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -105,10 +93,3 @@ spec:
               name: mps
             - containerPort: 4433
               name: mpsws
-          volumeMounts:
-            - mountPath: "/mps-microservice/private"
-              name: mpscerts
-      volumes:
-        - name: mpscerts
-          persistentVolumeClaim:
-            claimName: mps-certs
