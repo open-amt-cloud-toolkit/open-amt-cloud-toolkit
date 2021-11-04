@@ -122,7 +122,6 @@
       "name": "[parameters('clusterName')]",
       "location": "[parameters('location')]",
       "dependsOn": [
-        "[resourceId('Microsoft.Storage/storageAccounts', concat(parameters('clusterName'),'stg'))]",
         "[resourceId('Microsoft.DBforPostgreSQL/servers/', variables('postgresServerName'))]"
       ],
       "properties": {
