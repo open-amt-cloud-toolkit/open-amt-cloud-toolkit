@@ -22,3 +22,6 @@
 [submodule "ui-toolkit-react"]
 	path = ui-toolkit-react
 	url = https://github.com/open-amt-cloud-toolkit/ui-toolkit-react.git
+[submodule "rpc-go"]
+	path = rpc-go
+	url = https://github.com/open-amt-cloud-toolkit/rpc-go
