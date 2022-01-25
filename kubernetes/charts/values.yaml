@@ -31,7 +31,7 @@ vault:
   ui:
     annotations:
       kuma.io/sidecar-injection: disabled
-    enabled: "true"
+    enabled: true
     serviceType: "LoadBalancer"
 kong:  
   podAnnotations:
