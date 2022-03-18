@@ -7,10 +7,10 @@
 # Declare variables to be passed into your templates.
 
 images:
-  mps: "vprodemo.azurecr.io/mps:latest"
-  rps: "vprodemo.azurecr.io/rps:latest"
-  webui: "vprodemo.azurecr.io/webui:latest"
-  mpsrouter: "vprodemo.azurecr.io/mpsrouter:latest"
+  mps: "intel/oact-mps:v2.2.0"
+  rps: "intel/oact-rps:v2.2.0"
+  webui: "intel/oact-webui:v2.1.1"
+  mpsrouter: "intel/oact-mpsrouter:v2.0.0"
 mps:
   commonName: 
   replicaCount: 1
