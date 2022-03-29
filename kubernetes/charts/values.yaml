@@ -9,7 +9,7 @@
 images:
   mps: "intel/oact-mps:v2.2.0"
   rps: "intel/oact-rps:v2.2.0"
-  webui: "intel/oact-webui:v2.1.1"
+  webui: "intel/oact-webui:v2.2.0"
   mpsrouter: "intel/oact-mpsrouter:v2.0.0"
 mps:
   commonName: 
