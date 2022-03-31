@@ -5,7 +5,7 @@
 version: '3.3'
 services: 
   webui:
-    image: intel/oact-webui:v2.2.0
+    image: intel/oact-webui:latest
     networks:
       - openamtnetwork
     build:
@@ -18,7 +18,7 @@ services:
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf  
   rps:
-    image: intel/oact-rps:v2.2.0
+    image: intel/oact-rps:latest
     networks:
       - openamtnetwork
     build:
@@ -38,7 +38,7 @@ services:
       RPS_VAULT_ADDRESS: ${VAULT_ADDRESS}
       RPS_CONNECTION_STRING: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/rpsdb?sslmode=no-verify
   mps:
-    image: intel/oact-mps:v2.2.0
+    image: intel/oact-mps:latest
     networks:
       - openamtnetwork
     build:
@@ -63,7 +63,7 @@ services:
     volumes:
       - private-volume:/mps-microservice/private
   mpsrouter:
-    image: intel/oact-mpsrouter:v2.0.0
+    image: intel/oact-mpsrouter:latest
     environment:
       MPS_CONNECTION_STRING: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/mpsdb?sslmode=disable
       PORT: ${PORT}
