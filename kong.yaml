@@ -30,10 +30,6 @@ services:
   tags:
   - mps
   routes:
-  - name: mps-login-route
-    strip_path: true
-    paths:
-    - /mps/login
   - name: mps-relay-route
     strip_path: true
     paths:
@@ -43,6 +39,18 @@ services:
     paths:
     - /mps
 
+- name: mps-rest-v2
+  host: mps
+  port: 3000
+  path: /api/v1/authorize
+  tags:
+  - mps
+  routes:
+  - name: mps-login-route
+    strip_path: true
+    paths:
+    - /mps/login/api/v1/authorize
+ 
 - name: rps-rest
   host: rps
   port: 8081  
