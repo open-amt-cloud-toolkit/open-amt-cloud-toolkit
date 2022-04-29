@@ -18,8 +18,8 @@ spec:
                 name: webui
                 port:
                   number: 80
-          - path: /mps/login
-            pathType: Prefix
+          - path: /mps/login/api/v1/authorize
+            pathType: Exact
             backend:
               service:
                 name: mps
