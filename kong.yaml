@@ -30,14 +30,23 @@ services:
   tags:
   - mps
   routes:
-  - name: mps-relay-route
-    strip_path: true
-    paths:
-    - /mps/ws
   - name: mps-route
     strip_path: true
     paths:
     - /mps
+
+- name: mps-redirection
+  host: mps
+  port: 3000
+  path: /relay
+  tags:
+  - mps
+  routes:
+  - name: mps-redirection-route
+    strip_path: true
+    paths:
+    - /mps/ws/relay
+
 
 - name: mps-rest-v2
   host: mps
