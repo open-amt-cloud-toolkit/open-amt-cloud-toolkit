@@ -12,25 +12,69 @@ spec:
     - http:
         paths:
           - path: /
-            #pathType: Prefix
             backend:
               serviceName: webui
               servicePort: 80
-          - path: /mps/login
-            #pathType: Prefix
-            backend:
-              serviceName: mps
-              servicePort: 3000
-          - path: /mps/ws
-            #pathType: Prefix
-            backend:
-              serviceName: mpsrouter
-              servicePort: 8003
           - path: /activate
-            #pathType: Prefix
             backend:
               serviceName: rps
               servicePort: 8080
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: web-mps-login
+  namespace: default
+  annotations:
+    konghq.com/strip-path: "true"
+    konghq.com/plugins: open-amt-cors,api-login-rewrite
+spec:
+  ingressClassName: kong
+  rules:
+    - http:
+        paths:
+          - path: /mps/login/api/v1/authorize
+            pathType: Exact
+            backend:
+              serviceName: mps
+              servicePort: 3000
+---
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: api-login-rewrite
+config:
+  replace:
+    uri: "/api/v1/authorize"
+plugin: request-transformer
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: mps-redirection
+  namespace: default
+  annotations:
+    konghq.com/strip-path: "true"
+    konghq.com/plugins: open-amt-cors,mps-redirection-rewrite
+spec:
+  ingressClassName: kong
+  rules:
+    - http:
+        paths:
+          - path: /mps/ws/relay/(.*)
+            pathType: Prefix
+            backend:              
+              serviceName: mpsrouter
+              servicePort: 8003
+---
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: mps-redirection-rewrite
+config:
+  replace:
+    uri: "/relay/$(uri_captures[1])"
+plugin: request-transformer
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
@@ -65,7 +109,6 @@ spec:
     - http:
         paths:
           - path: /mps
-            #pathType: Prefix
             backend:
               serviceName: mpsrouter
               servicePort: 8003
