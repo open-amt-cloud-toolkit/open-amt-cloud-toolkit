@@ -1,74 +1,132 @@
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: web-mps
   namespace: default
   annotations:
     konghq.com/strip-path: "true"
-    kubernetes.io/ingress.class: kong
     konghq.com/plugins: open-amt-cors
 spec:
+  ingressClassName: kong
   rules:
     - http:
         paths:
           - path: /
-            #pathType: Prefix
+            pathType: Prefix
             backend:
-              serviceName: webui
-              servicePort: 80
-          - path: /mps/login
-            #pathType: Prefix
-            backend:
-              serviceName: mps
-              servicePort: 3000
-          - path: /mps/ws
-            #pathType: Prefix
-            backend:
-              serviceName: mpsrouter
-              servicePort: 8003
+              service:
+                name: webui
+                port:
+                  number: 80
           - path: /activate
-            #pathType: Prefix
+            pathType: Prefix
             backend:
-              serviceName: rps
-              servicePort: 8080
+              service:
+                name: rps
+                port: 
+                  number: 8080
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: web-mps-login
+  namespace: default
+  annotations:
+    konghq.com/strip-path: "true"
+    konghq.com/plugins: open-amt-cors,api-login-rewrite
+spec:
+  ingressClassName: kong
+  rules:
+    - http:
+        paths:
+          - path: /mps/login/api/v1/authorize
+            pathType: Exact
+            backend:
+              service:
+                name: mps
+                port: 
+                  number: 3000
+---
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: api-login-rewrite
+config:
+  replace:
+    uri: "/api/v1/authorize"
+plugin: request-transformer
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: mps-redirection
+  namespace: default
+  annotations:
+    konghq.com/strip-path: "true"
+    konghq.com/plugins: open-amt-cors,mps-redirection-rewrite
+spec:
+  ingressClassName: kong
+  rules:
+    - http:
+        paths:
+          - path: /mps/ws/relay/(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: mpsrouter
+                port: 
+                  number: 8003
+---
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: mps-redirection-rewrite
+config:
+  replace:
+    uri: "/relay/$(uri_captures[1])"
+plugin: request-transformer
+---
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: rps
   namespace: default
   annotations:
     konghq.com/strip-path: "true"
-    kubernetes.io/ingress.class: kong
     konghq.com/plugins: open-amt-jwt, open-amt-cors,admin-acl
 spec:
+  ingressClassName: kong
   rules:
     - http:
         paths:
           - path: /rps
-            #pathType: Prefix
+            pathType: Prefix
             backend:
-              serviceName: rps
-              servicePort: 8081
+              service:
+                name: rps
+                port:
+                  number: 8081
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: mps
   namespace: default
   annotations:
     konghq.com/strip-path: "true"
-    kubernetes.io/ingress.class: kong
     konghq.com/plugins: open-amt-jwt,open-amt-cors, admin-acl
 spec:
+  ingressClassName: kong
   rules:
     - http:
         paths:
           - path: /mps
-            #pathType: Prefix
+            pathType: Prefix
             backend:
-              serviceName: mpsrouter
-              servicePort: 8003
+              service:
+                name: mpsrouter
+                port:
+                  number: 8003
 ---
 apiVersion: configuration.konghq.com/v1beta1
 kind: TCPIngress

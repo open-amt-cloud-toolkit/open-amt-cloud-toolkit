@@ -26,12 +26,9 @@ appVersion: 1.4.0
 
 dependencies:
 - name: vault
-  version: "0.11.0"
+  version: "0.19.0"
   repository: https://helm.releases.hashicorp.com
-  ui:
-    enabled: "true"
-    serviceType: "LoadBalancer"
 
 - name: kong
-  version: "2.1.0"
-  repository: https://charts.konghq.com
+  version: "2.6.4"
+  repository: https://charts.konghq.com  

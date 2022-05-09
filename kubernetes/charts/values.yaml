@@ -7,42 +7,44 @@
 # Declare variables to be passed into your templates.
 
 images:
-  mps: "vprodemo.azurecr.io/mps:latest"
-  rps: "vprodemo.azurecr.io/rps:latest"
-  webui: "vprodemo.azurecr.io/webui:latest"
-  mpsrouter: "vprodemo.azurecr.io/mpsrouter:latest"
-  postgresdb: "postgres:13"
-backenddb:
-  dbUser: "postgresadmin"
-  dbPassword: "admin123"
+  mps: "intel/oact-mps:v2.2.0"
+  rps: "intel/oact-rps:v2.2.0"
+  webui: "intel/oact-webui:v2.2.0"
+  mpsrouter: "intel/oact-mpsrouter:v2.0.0"
 mps:
   commonName: 
-  # storageClassName: ""
-  storageAccessMode: "ReadWriteOnce"
   replicaCount: 1
   logLevel: "silly"
-  connectionString: "postgresql://postgresadmin:admin123@postgres:5432/mpsdb"
   jwtExpiration: 1440
 ui:
   replicaCount: 1
 rps:
   replicaCount: 1
   logLevel: "silly"
-  connectionString: "postgresql://postgresadmin:admin123@postgres:5432/rpsdb"
 vault:
+  injector:
+    annotations:
+      kuma.io/sidecar-injection: disabled
+  server:
+    annotations:
+      kuma.io/sidecar-injection: disabled
   ui:
-    enabled: "true"
+    annotations:
+      kuma.io/sidecar-injection: disabled
+    enabled: true
     serviceType: "LoadBalancer"
-kong:
+kong:  
+  podAnnotations:
+      kuma.io/sidecar-injection: enabled
+      kuma.io/gateway: enabled
   env:
     UPSTREAM_KEEPALIVE_POOL_SIZE: 0
   proxy:
     annotations:
       service.beta.kubernetes.io/azure-dns-label-name: ""
-    stream: 
+    stream:
       - containerPort: 4433
         servicePort: 4433
         parameters: []
 mpsrouter:
   replicaCount: 1
-  connectionString: "postgresql://postgresadmin:admin123@postgres:5432/mpsdb?sslmode=disable"

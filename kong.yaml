@@ -30,19 +30,36 @@ services:
   tags:
   - mps
   routes:
-  - name: mps-login-route
-    strip_path: true
-    paths:
-    - /mps/login
-  - name: mps-relay-route
-    strip_path: true
-    paths:
-    - /mps/ws
   - name: mps-route
     strip_path: true
     paths:
     - /mps
 
+- name: mps-redirection
+  host: mps
+  port: 3000
+  path: /relay
+  tags:
+  - mps
+  routes:
+  - name: mps-redirection-route
+    strip_path: true
+    paths:
+    - /mps/ws/relay
+
+
+- name: mps-rest-v2
+  host: mps
+  port: 3000
+  path: /api/v1/authorize
+  tags:
+  - mps
+  routes:
+  - name: mps-login-route
+    strip_path: true
+    paths:
+    - /mps/login/api/v1/authorize
+ 
 - name: rps-rest
   host: rps
   port: 8081  
@@ -64,6 +81,28 @@ services:
     strip_path: true
     paths:
     - /activate
+
+- name: vault-api
+  host: vault
+  port: 8200 
+  tags:
+  - vault
+  routes:
+  - name: vault-route
+    strip_path: true
+    paths:
+    - /vault
+
+- name: mosquitto-ws
+  host: mosquitto
+  port: 9001
+  tags:
+  - mosquitto
+  routes:
+  - name: mosquitto-route
+    strip_path: true
+    paths:
+    - /mosquitto
 
 - name: web
   host: webui

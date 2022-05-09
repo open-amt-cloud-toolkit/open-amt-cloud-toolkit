@@ -29,6 +29,8 @@ spec:
       app: mpsrouter
   template:
     metadata:
+      annotations:
+        kuma.io/direct-access-services: "mps_default_svc_3000"
       labels:
         app: mpsrouter
     spec:
@@ -43,7 +45,10 @@ spec:
           image:  {{ .Values.images.mpsrouter }}
           env:
             - name: "MPS_CONNECTION_STRING"
-              value: "{{ .Values.mpsrouter.connectionString }}"
+              valueFrom:
+                secretKeyRef:
+                  name: mpsrouter
+                  key: connectionString
             - name: "PORT"
               value: "8003"
             - name: "MPS_PORT"
