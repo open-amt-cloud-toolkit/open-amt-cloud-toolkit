@@ -1,0 +1,4 @@
+{
+    "name": "Semantic Pull Request",
+    "description": "Semantic Pull Request check to ensure PR Title and commits follow conventional commits.",
+}
