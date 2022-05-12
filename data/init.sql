@@ -3,6 +3,7 @@
 * SPDX-License-Identifier: Apache-2.0
 **********************************************************************/
 CREATE EXTENSION IF NOT EXISTS citext;
+CREATE USER rpsdb;
 CREATE TABLE IF NOT EXISTS ciraconfigs(
   cira_config_name citext NOT NULL,
   mps_server_address varchar(256),
