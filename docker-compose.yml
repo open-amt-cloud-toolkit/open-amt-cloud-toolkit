@@ -97,7 +97,7 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
-      - "5432:5432"
+      - 5432:5432
     volumes: 
       - ./data:/docker-entrypoint-initdb.d
   vault:
@@ -105,7 +105,7 @@ services:
     networks:
       - openamtnetwork
     ports: 
-      - "8200:8200"
+      - 8200:8200
     environment: 
       VAULT_DEV_ROOT_TOKEN_ID: ${VAULT_TOKEN}
       VAULT_DEV_LISTEN_ADDRESS: 0.0.0.0:8200
@@ -143,13 +143,13 @@ services:
     volumes:
       - ./kong.yaml:/home/kong/kong.yml
     ports:
-      - "443:8443"
-      - "8001:8001"
+      - 443:8443
+      - 8001:8001
     restart: always
   mosquitto:
     image: eclipse-mosquitto
     ports:
-      - "8883:8883"
+      - 8883:8883
     volumes: 
       - ./mosquitto.conf:/mosquitto/config/mosquitto.conf
     networks:
