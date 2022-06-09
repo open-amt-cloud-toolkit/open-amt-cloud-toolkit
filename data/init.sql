@@ -45,7 +45,11 @@ CREATE TABLE IF NOT EXISTS profiles(
   tags text[],
   dhcp_enabled BOOLEAN,
   tenant_id varchar(36) NOT NULL,
-  tls_mode integer NULL,    
+  tls_mode integer NULL,
+  user_consent varchar(7) NULL,
+  ider_enabled BOOLEAN NULL,
+  kvm_enabled BOOLEAN NULL,
+  sol_enabled BOOLEAN NULL,
   PRIMARY KEY (profile_name, tenant_id)
 );
 CREATE TABLE IF NOT EXISTS profiles_wirelessconfigs(
