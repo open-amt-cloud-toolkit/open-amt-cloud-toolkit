@@ -107,11 +107,3 @@ spec:
               name: mps
             - containerPort: 4433
               name: mpsws
-          livenessProbe:
-            httpGet:
-              path: /api/v1/health
-              port: mps
-            initialDelaySeconds: 10
-            periodSeconds: 10
-            failureThreshold: 3
-

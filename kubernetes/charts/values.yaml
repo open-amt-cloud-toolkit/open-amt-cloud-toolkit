@@ -6,37 +6,65 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
+global:
+  imagePullSecrets: []
+  # - registrycredentials
+  storageClass: null
+
+postgresqlInitdbConfigMapName: "oact-postgresql-initdb" # A ConfigMap is automatically created with this name
+
+postgresql:
+  auth:
+    enablePostgresUser: true
+    existingSecret: "oact-postgresql" # A Secret is automatically created with this name.
+  primary:
+    initdb:
+      scriptsConfigMap: "oact-postgresql-initdb" # Must be the same as postgresqlInitdbConfigMapNameu.
+
 images:
   mps: "intel/oact-mps:latest"
   rps: "intel/oact-rps:latest"
   webui: "intel/oact-webui:latest"
   mpsrouter: "intel/oact-mpsrouter:latest"
+  kong: "kong:2.3"
+  mosquitto: "eclipse-mosquitto"
+
 mps:
-  commonName: 
+  commonName: ""
   replicaCount: 1
   logLevel: "silly"
   jwtExpiration: 1440
+  jwtIssuer: "oact-78adb863d59f"
+  jwtSecret: "" # If empty, generated automatically.
+  extraVolumes: []
+  # - name: oact-tls
+  #   secret:
+  #     secretName: ""
+  extraVolumeMounts: []
+  # - name: oact-tls
+  #   mountPath: "/private/tls"
+  extraEnvVars: []
+  # - name: MPS_CERT_FORMAT
+  #   value: 'file'
+  # - name: MPS_MPS_TLS_CONFIG__KEY
+  #   value: "/private/tls/tls.key"
+  # - name: MPS_MPS_TLS_CONFIG__CERT
+  #   value: "/private/tls/tls.crt"
+  # - name: MPS_WEB_TLS_CONFIG__KEY
+  #   value: "/private/tls/tls.key"
+  # - name: MPS_WEB_TLS_CONFIG__CERT
+  #   value: "/private/tls/tls.crt"
+  # - name: MPS_MPS_TLS_CONFIG__CA
+  #   value: "/private/tls/ca.crt"
 ui:
   replicaCount: 1
 rps:
   replicaCount: 1
   logLevel: "silly"
-vault:
-  injector:
-    annotations:
-      kuma.io/sidecar-injection: disabled
-  server:
-    annotations:
-      kuma.io/sidecar-injection: disabled
-  ui:
-    annotations:
-      kuma.io/sidecar-injection: disabled
-    enabled: true
-    serviceType: "LoadBalancer"
 kong:  
   podAnnotations:
-      kuma.io/sidecar-injection: enabled
-      kuma.io/gateway: enabled
+    kuma.io/sidecar-injection: enabled
+    kuma.io/gateway: enabled
   env:
     UPSTREAM_KEEPALIVE_POOL_SIZE: 0
   proxy:
@@ -48,3 +76,17 @@ kong:
         parameters: []
 mpsrouter:
   replicaCount: 1
+webui:
+  user: admin
+  password: "" # If empty, generated automatically.
+
+# Vaults are not created automatically.
+vault:
+  address: "http://vault:8200"
+  tokenEnv:
+    valueFrom:
+      secretKeyRef:
+        name: vault
+        key: token
+  secretsPath: 'kv/data/'
+

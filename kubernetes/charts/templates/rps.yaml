@@ -6,8 +6,9 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
+    {{- include "installServersChart.labels" . | nindent 4 }}
     app: rps
-  name: rps
+  name: {{ .Release.Name }}-rps
 spec:
   ports:
   - port: 8080
@@ -19,25 +20,28 @@ spec:
     protocol: TCP
     targetPort: 8081
   selector:
+    {{- include "installServersChart.selectorLabels" . | nindent 4 }}
     app: rps
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: rps
-  namespace: default
+  name: {{ .Release.Name }}-rps
+  labels:
+    {{- include "installServersChart.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.rps.replicaCount }}
   selector:
     matchLabels:
+      {{- include "installServersChart.selectorLabels" . | nindent 6 }}
       app: rps
   template:
     metadata:
       labels:
+        {{- include "installServersChart.labels" . | nindent 8 }}
         app: rps
     spec:
-      imagePullSecrets:
-        - name: registrycredentials
+      {{- include "installServersChart.imagePullSecrets" . | nindent 6 }}
       containers:
         - name: rps
           securityContext:
@@ -49,23 +53,30 @@ spec:
             - name: "RPS_LOG_LEVEL"
               value: "{{ .Values.rps.logLevel }}"
             - name: "RPS_VAULT_ADDRESS"
-              value: "http://{{ .Release.Name }}-vault:8200"
+              value: {{ .Values.vault.address | quote }}
             - name: "RPS_SECRETS_PATH"
-              value: 'kv/data/'
+              value: {{ .Values.vault.secretsPath | quote }}
             - name: "RPS_MPS_SERVER"
-              value: "http://mps:3000"
+              value: "http://{{ .Release.Name }}-mps:3000"
             - name: "RPS_CONNECTION_STRING"
               valueFrom:
                 secretKeyRef:
-                  name: rps
-                  key: connectionString
+                  name: {{ .Release.Name }}-secret
+                  key: rpsdb-connection-string
             - name: RPS_VAULT_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  name: vault
-                  key: vaultKey
+              {{- toYaml .Values.vault.tokenEnv | nindent 14 }}
+            - name: RPS_MQTT_ADDRESS
+              value: "mqtt://{{ .Release.Name }}-mosquitto:1883"
           ports:
             - containerPort: 8080
               name: rps
             - containerPort: 8081
               name: rpsweb
+          livenessProbe:
+            httpGet:
+              path: /api/v1/admin/health
+              port: rpsweb
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            failureThreshold: 3
+

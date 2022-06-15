@@ -3,8 +3,8 @@
 # SPDX-License-Identifier: Apache-2.0
 #**********************************************************************/
 apiVersion: v2
-name: Chart to install MPS, RPS and Backend db
-description: A Helm chart for Kubernetes
+name: open-amt-cloud-toolkit
+description: Chart to install MPS, RPS and Backend db
 
 # A chart can be either an 'application' or a 'library' chart.
 #

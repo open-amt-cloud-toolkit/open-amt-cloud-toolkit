@@ -1,0 +1,124 @@
+#*********************************************************************
+# Copyright (c) Intel Corporation 2018-2019
+# SPDX-License-Identifier: Apache-2.0
+#*********************************************************************
+
+# Metadata fields start with an underscore (_)
+# Fields that do not start with an underscore represent Kong entities and attributes
+
+# _format_version is mandatory,
+# it specifies the minimum version of Kong that supports the format
+
+_format_version: "2.1"
+
+# _transform is optional, defaulting to true.
+# It specifies whether schema transformations should be applied when importing this file
+# as a rule of thumb, leave this setting to true if you are importing credentials
+# with plain passwords, which need to be encrypted/hashed before storing on the database.
+# On the other hand, if you are reimporting a database with passwords already encrypted/hashed,
+# set it to false.
+
+_transform: true
+
+# Each Kong entity (core entity or custom entity introduced by a plugin)
+# can be listed in the top-level as an array of objects:
+
+services:
+- name: mps-rest
+  host: {{ .root.Release.Name }}-mpsrouter
+  port: 8003
+  tags:
+  - mps
+  routes:
+  - name: mps-route
+    strip_path: true
+    paths:
+    - /mps
+
+- name: mps-redirection
+  host: {{ .root.Release.Name }}-mps
+  port: 3000
+  path: /relay
+  tags:
+  - mps
+  routes:
+  - name: mps-redirection-route
+    strip_path: true
+    paths:
+    - /mps/ws/relay
+
+
+- name: mps-rest-v2
+  host: {{ .root.Release.Name }}-mps
+  port: 3000
+  path: /api/v1/authorize
+  tags:
+  - mps
+  routes:
+  - name: mps-login-route
+    strip_path: true
+    paths:
+    - /mps/login/api/v1/authorize
+
+- name: rps-rest
+  host: {{ .root.Release.Name }}-rps
+  port: 8081
+  tags:
+  - rps
+  routes:
+  - name: rps-route
+    strip_path: true
+    paths:
+    - /rps
+
+- name: rps-ws
+  host: {{ .root.Release.Name }}-rps
+  port: 8080
+  tags:
+  - rps
+  routes:
+  - name: rps-activate-route
+    strip_path: true
+    paths:
+    - /activate
+
+- name: mosquitto-ws
+  host: {{ .root.Release.Name }}-mosquitto
+  port: 9001
+  tags:
+  - mosquitto
+  routes:
+  - name: mosquitto-route
+    strip_path: true
+    paths:
+    - /mosquitto
+
+- name: web
+  host: {{ .root.Release.Name }}-webui
+  port: 80
+  tags:
+  - web
+  routes:
+  - name: web-route
+    paths:
+    - /
+
+plugins:
+- name: cors
+- name: jwt
+  route: rps-route
+  config:
+    claims_to_verify:
+    - exp
+- name: jwt
+  route: mps-route
+  config:
+    claims_to_verify:
+    - exp
+
+consumers:
+  - username: admin
+jwt_secrets:
+  - consumer: admin
+    key: "{{ .jwtIssuer  }}"
+    secret: "{{ .jwtSecret }}"

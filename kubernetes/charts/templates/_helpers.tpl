@@ -35,20 +35,20 @@ Create chart name and version as used by the chart label.
 Common labels
 */}}
 {{- define "installServersChart.labels" -}}
-helm.sh/chart: {{ include "installServersChart.chart" . }}
+helm.sh/chart: {{ include "installServersChart.chart" . | quote }}
 {{ include "installServersChart.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
-app.kubernetes.io/managed-by: {{ .Release.Service }}
+app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
 {{- end -}}
 
 {{/*
 Selector labels
 */}}
 {{- define "installServersChart.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "installServersChart.name" . }}
-app.kubernetes.io/instance: {{ .Release.Name }}
+app.kubernetes.io/name: {{ include "installServersChart.name" . | quote }}
+app.kubernetes.io/instance: {{ .Release.Name | quote }}
 {{- end -}}
 
 {{/*
@@ -61,3 +61,20 @@ Create the name of the service account to use
     {{ default "default" .Values.serviceAccount.name }}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Return the proper Image Registry Secret Names
+*/}}
+{{- define "installServersChart.imagePullSecrets" -}}
+  {{- $pullSecrets := list }}
+  {{- range .Values.global.imagePullSecrets -}}
+    {{- $pullSecrets = append $pullSecrets . -}}
+  {{- end -}}
+  {{- if (not (empty $pullSecrets)) }}
+imagePullSecrets:
+    {{- range $pullSecrets }}
+  - name: {{ . }}
+    {{- end }}
+  {{- end -}}
+{{- end -}}
+
