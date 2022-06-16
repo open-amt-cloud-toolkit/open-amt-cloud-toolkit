@@ -41,6 +41,13 @@ spec:
       containers:
         - name: mps
           image: {{ .Values.images.mps }}
+          readinessProbe:
+            httpGet:
+              path: /api/v1/health
+              port: 3000
+            periodSeconds: 12
+            timeoutSeconds: 12
+            failureThreshold: 3
           env:
             - name: "MPS_LOG_LEVEL"
               value: "{{ .Values.mps.logLevel }}"   
