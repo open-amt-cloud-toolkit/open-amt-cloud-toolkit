@@ -45,6 +45,12 @@ spec:
             runAsNonRoot: true
             allowPrivilegeEscalation: false
           image:  {{ .Values.images.rps }}
+          readinessProbe:
+            httpGet:
+              path: /api/v1/admin/health
+              port: 8081
+            initialDelaySeconds: 5
+            periodSeconds: 5
           env:
             - name: "RPS_LOG_LEVEL"
               value: "{{ .Values.rps.logLevel }}"

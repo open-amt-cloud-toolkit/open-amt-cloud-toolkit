@@ -43,6 +43,11 @@ spec:
             runAsNonRoot: true
             allowPrivilegeEscalation: false
           image:  {{ .Values.images.mpsrouter }}
+          readinessProbe:
+            exec:
+              command: ["/app","--health"]
+            initialDelaySeconds: 5
+            periodSeconds: 5
           env:
             - name: "MPS_CONNECTION_STRING"
               valueFrom:
@@ -56,3 +61,4 @@ spec:
           ports:
             - containerPort: 8003
               name: mpsrouter
+         
