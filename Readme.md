@@ -13,9 +13,13 @@ Open Active Management Technology Cloud Toolkit (Open AMT Cloud Toolkit) provide
 ## Clone
 
 **Important!** Make sure you clone with this repo with the `--recursive` flag since it uses git submodules.
+
+To clone live, in-development code (main branch):
 ```
 git clone --recursive https://github.com/open-amt-cloud-toolkit/open-amt-cloud-toolkit.git
 ```
+
+Alternatively, for steps to clone and Get Started with one of the tagged releases, [see our documentation](https://open-amt-cloud-toolkit.github.io/docs).
 
 <br>
 
