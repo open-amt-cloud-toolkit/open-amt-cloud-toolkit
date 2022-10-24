@@ -1,6 +1,9 @@
 dependencies:
-- name: postgresql
-  repository: https://charts.bitnami.com/bitnami
-  version: 11.6.6
-digest: sha256:efa35aeba6894856a46a12dbc242a75a3bad69f3520649964eccb15156af16a1
-generated: "2022-06-13T06:44:20.647481993Z"
+- name: vault
+  repository: https://helm.releases.hashicorp.com
+  version: 0.21.0
+- name: kong
+  repository: https://charts.konghq.com
+  version: 2.12.0
+digest: sha256:074e69845350593b1097b3e41215b33bd8ad33194af007a23b31e7bb121ed492
+generated: "2022-08-16T13:59:38.2100491-07:00"

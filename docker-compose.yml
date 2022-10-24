@@ -36,7 +36,7 @@ services:
       RPS_SECRETS_PATH: ${SECRETS_PATH}
       RPS_VAULT_TOKEN: ${VAULT_TOKEN}
       RPS_VAULT_ADDRESS: ${VAULT_ADDRESS}
-      RPS_CONNECTION_STRING: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/rpsdb?sslmode=no-verify
+      RPS_CONNECTION_STRING: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/rpsdb?sslmode=disable
   mps:
     image: intel/oact-mps:latest
     networks:
@@ -59,7 +59,7 @@ services:
       MPS_SECRETS_PATH: ${SECRETS_PATH}
       MPS_VAULT_TOKEN: ${VAULT_TOKEN}
       MPS_VAULT_ADDRESS: ${VAULT_ADDRESS}
-      MPS_CONNECTION_STRING: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/mpsdb?sslmode=no-verify
+      MPS_CONNECTION_STRING: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/mpsdb?sslmode=disable
     volumes:
       - private-volume:/mps-microservice/private
   mpsrouter:
@@ -79,11 +79,11 @@ services:
     networks:
       - openamtnetwork
   db:
-    image: sslpostgres
+    image: postgres:14
     build:
       context: ./pg
       dockerfile: ./Dockerfile
-    command: -c ssl=on -c ssl_cert_file=/var/lib/postgresql/server.crt -c ssl_key_file=/var/lib/postgresql/server.key
+    # command: -c ssl=on -c ssl_cert_file=/var/lib/postgresql/server.crt -c ssl_key_file=/var/lib/postgresql/server.key
     networks:
       - openamtnetwork
     restart: always
