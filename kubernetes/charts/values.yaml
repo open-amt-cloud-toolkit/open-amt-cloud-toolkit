@@ -11,15 +11,12 @@ global:
   # - registrycredentials
   storageClass: null
 
-postgresqlInitdbConfigMapName: "oact-postgresql-initdb" # A ConfigMap is automatically created with this name
 
 postgresql:
   auth:
     enablePostgresUser: true
     existingSecret: "oact-postgresql" # A Secret is automatically created with this name.
-  primary:
-    initdb:
-      scriptsConfigMap: "oact-postgresql-initdb" # Must be the same as postgresqlInitdbConfigMapNameu.
+
 
 images:
   mps: "intel/oact-mps:latest"
@@ -61,6 +58,7 @@ ui:
 rps:
   replicaCount: 1
   logLevel: "silly"
+
 kong:  
   podAnnotations:
     kuma.io/sidecar-injection: enabled
@@ -82,7 +80,18 @@ webui:
 
 # Vaults are not created automatically.
 vault:
-  address: "http://vault:8200"
+  injector:	
+    annotations:	
+      kuma.io/sidecar-injection: disabled	
+  server:	
+    annotations:	
+      kuma.io/sidecar-injection: disabled	
+  ui:	
+    annotations:	
+      kuma.io/sidecar-injection: disabled	
+    enabled: true	
+    serviceType: "LoadBalancer"
+  address: "http://openamtstack-vault:8200"
   tokenEnv:
     valueFrom:
       secretKeyRef:

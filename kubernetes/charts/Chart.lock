@@ -4,6 +4,9 @@ dependencies:
   version: 0.21.0
 - name: kong
   repository: https://charts.konghq.com
-  version: 2.12.0
-digest: sha256:074e69845350593b1097b3e41215b33bd8ad33194af007a23b31e7bb121ed492
-generated: "2022-08-16T13:59:38.2100491-07:00"
+  version: 2.13.1
+- name: common
+  repository: https://charts.bitnami.com/bitnami
+  version: 2.0.4
+digest: sha256:fc58a602d3828139c7c426dd9f85d123a9ff1c0d78c1268026c0ccd8b032a154
+generated: "2022-10-24T11:04:51.3228177-07:00"

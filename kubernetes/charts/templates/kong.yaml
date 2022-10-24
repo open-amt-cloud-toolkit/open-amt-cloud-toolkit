@@ -1,105 +1,171 @@
-apiVersion: v1
-kind: Service
+apiVersion: networking.k8s.io/v1
+kind: Ingress
 metadata:
-  labels:
-    {{- include "installServersChart.labels" . | nindent 4 }}
-    app: kong
-  name: {{ .Release.Name }}-kong
+  name: web-mps
+  annotations:
+    konghq.com/strip-path: "true"
+    konghq.com/plugins: open-amt-cors
 spec:
-  ports:
-  - port: 8001
-    name: admin-http
-    protocol: TCP
-    targetPort: admin-http
-  - port: 8444
-    name: admin-https
-    protocol: TCP
-    targetPort: admin-https
-  - port: 80
-    name: proxy-http
-    protocol: TCP
-    targetPort: proxy-http
-  - port: 443
-    name: proxy-https
-    protocol: TCP
-    targetPort: proxy-https
-  selector:
-    {{- include "installServersChart.selectorLabels" . | nindent 4 }}
-    app: kong
+  ingressClassName: kong
+  rules:
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-webui
+                port:
+                  number: 80
+          - path: /activate
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-rps
+                port: 
+                  number: 8080
 ---
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: networking.k8s.io/v1
+kind: Ingress
 metadata:
-  name: {{ .Release.Name }}-kong
-  labels:
-    {{- include "installServersChart.labels" . | nindent 4 }}
+  name: web-mps-login
+  annotations:
+    konghq.com/strip-path: "true"
+    konghq.com/plugins: open-amt-cors,api-login-rewrite
 spec:
-  replicas: {{ .Values.mps.replicaCount }}
-  selector:
-    matchLabels:
-      {{- include "installServersChart.selectorLabels" . | nindent 6 }}
-      app: kong
-  template:
-    metadata:
-      labels:
-        {{- include "installServersChart.labels" . | nindent 8 }}
-        app: kong
-    spec:
-      {{- include "installServersChart.imagePullSecrets" . | nindent 6 }}
-      volumes:
-        - name: kong-config
-          secret:
-            secretName: {{ .Release.Name }}-kong-config
-      containers:
-        - name: kong
-          image: {{ .Values.images.kong }}
-          command:
-          - kong
-          - start
-          - '--vv'
-          env:
-            - name: "KONG_DATABASE"
-              value: "off"
-            - name: "KONG_CASSANDRA_CONTACT_POINTS"
-              value: "kong-database"
-            - name: "KONG_ADMIN_LISTEN"
-              value: "0.0.0.0:8001, 0.0.0.0:8444 ssl"
-            - name: "KONG_NGINX_DAEMON"
-              value: "off"
-            - name: "KONG_DECLARATIVE_CONFIG"
-              value: "/home/kong/kong.yml"
-            - name: "KONG_PROXY_ERROR_LOG"
-              value: "/dev/stderr"
-            - name: "KONG_PROXY_ACCESS_LOG"
-              value: "/dev/stdout"
-            - name: "KONG_ADMIN_ACCESS_LOG"
-              value: "/dev/stdout"
-            - name: "KONG_ADMIN_ERROR_LOG"
-              value: "/dev/stderr"
-            - name: "KONG_DNS_ORDER"
-              value: "LAST,A,CNAME"
-            - name: "KONG_UPSTREAM_KEEPALIVE_POOL_SIZE"
-              value: "0"
-          ports:
-            - containerPort: 8001
-              name: admin-http
-            - containerPort: 8444
-              name: admin-https
-            - containerPort: 8000
-              name: proxy-http
-            - containerPort: 8443
-              name: proxy-https
-          volumeMounts:
-            - name: kong-config
-              mountPath: /home/kong/kong.yml
-              subPath: kong.yml
-          livenessProbe:
-            httpGet:
-              path: /
-              port: admin-http
-              scheme: HTTP
-            timeoutSeconds: 1
-            periodSeconds: 10
-            successThreshold: 1
-            failureThreshold: 3
-            initialDelaySeconds: 30
+  ingressClassName: kong
+  rules:
+    - http:
+        paths:
+          - path: /mps/login/api/v1/authorize
+            pathType: Exact
+            backend:
+              service:
+                name: {{ .Release.Name }}-mps
+                port: 
+                  number: 3000
+---
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: api-login-rewrite
+config:
+  replace:
+    uri: "/api/v1/authorize"
+plugin: request-transformer
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: mps-redirection
+  annotations:
+    konghq.com/strip-path: "true"
+    konghq.com/plugins: open-amt-cors,mps-redirection-rewrite
+spec:
+  ingressClassName: kong
+  rules:
+    - http:
+        paths:
+          - path: /mps/ws/relay/(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-mpsrouter
+                port: 
+                  number: 8003
+---
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: mps-redirection-rewrite
+config:
+  replace:
+    uri: "/relay/$(uri_captures[1])"
+plugin: request-transformer
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: rps
+  annotations:
+    konghq.com/strip-path: "true"
+    konghq.com/plugins: open-amt-jwt, open-amt-cors,admin-acl
+spec:
+  ingressClassName: kong
+  rules:
+    - http:
+        paths:
+          - path: /rps
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-rps
+                port:
+                  number: 8081
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: mps
+  annotations:
+    konghq.com/strip-path: "true"
+    konghq.com/plugins: open-amt-jwt,open-amt-cors, admin-acl
+spec:
+  ingressClassName: kong
+  rules:
+    - http:
+        paths:
+          - path: /mps
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-mpsrouter
+                port:
+                  number: 8003
+---
+apiVersion: configuration.konghq.com/v1beta1
+kind: TCPIngress
+metadata:
+  name: cira-ingress
+  annotations:
+    kubernetes.io/ingress.class: kong
+spec:
+  rules:
+    - port: 4433
+      backend:
+        serviceName: {{ .Release.Name }}-mps
+        servicePort: 4433
+---
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: open-amt-jwt
+plugin: jwt
+config: 
+  claims_to_verify:
+    - exp
+---
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: open-amt-cors
+plugin: cors
+---
+apiVersion: configuration.konghq.com/v1
+kind: KongConsumer
+metadata:
+  name: admin
+  annotations:
+    kubernetes.io/ingress.class: kong
+username: admin
+credentials:
+  - open-amt-admin-jwt
+  - open-amt-admin-acl
+---
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: admin-acl
+plugin: acl
+config:
+  allow: ["open-amt-admin"]
