@@ -11,7 +11,8 @@
       "defaultValue": "open-amt-cloud-toolkit"
     },
     "registry": {
-      "type": "string",
+      "type": "string",      
+      "defaultValue": "docker.io",
       "metadata": {
         "description": "Name of the Registry."
       }
@@ -35,21 +36,21 @@
       }
     },
     "rpsImageName": {
-      "defaultValue": "rps:latest",
+      "defaultValue": "intel/oact-rps:latest",
       "type": "string",
       "metadata": {
         "description": "Name of the RPS image to deploy from specified registry"
       }
     },
     "mpsImageName": {
-      "defaultValue": "mps:latest",
+      "defaultValue": "intel/oact-mps:latest",
       "type": "string",
       "metadata": {
         "description": "Name of the MPS image to deploy from specified registry"
       }
     },
     "sampleWebUIImageName": {
-      "defaultValue": "webui:latest",
+      "defaultValue": "intel/oact-webui:latest",
       "type": "string",
       "metadata": {
         "description": "Name of the Sample WebUI image to deploy from specified registry"
@@ -307,7 +308,7 @@
           {
             "name": "db",
             "properties": {
-              "image": "postgres:latest",
+              "image": "postgres:14",
               "ports": [
                 {
                   "port": 5432
@@ -352,7 +353,6 @@
           }
         ],
         "ipAddress": {
-          "ip": "168.61.3.88",
           "dnsNameLabel": "[parameters('fqdn')]",
           "type": "Public",
           "ports": [
