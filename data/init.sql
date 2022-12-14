@@ -50,6 +50,7 @@ CREATE TABLE IF NOT EXISTS profiles(
   ider_enabled BOOLEAN NULL,
   kvm_enabled BOOLEAN NULL,
   sol_enabled BOOLEAN NULL,
+  tls_use_self_signed BOOLEAN NULL,
   PRIMARY KEY (profile_name, tenant_id)
 );
 CREATE TABLE IF NOT EXISTS profiles_wirelessconfigs(
