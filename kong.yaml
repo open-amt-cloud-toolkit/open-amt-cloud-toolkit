@@ -82,6 +82,18 @@ services:
     paths:
     - /activate
 
+- name: rps-ea
+  host: rps
+  port: 8082
+  tags:
+  - rps
+  routes:
+  - name: rps-enterprise-assistant-route
+    strip_path: true
+    paths:
+    - /enterprise
+
+
 - name: vault-api
   host: vault
   port: 8200 
