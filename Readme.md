@@ -1,5 +1,7 @@
 # Open AMT Cloud Toolkit
 
+[![Discord Shield](https://discordapp.com/api/guilds/1063200098680582154/widget.png?style=shield)](https://discord.gg/yrcMp2kDWh)
+
 > Disclaimer: Production viable releases are tagged and listed under 'Releases'. All other check-ins should be considered 'in-development' and should not be used in production
 
 Open Active Management Technology Cloud Toolkit (Open AMT Cloud Toolkit) provides open-source, modular microservices and libraries for integration of Intel® Active Management Technology (Intel® AMT). As an open source implementation, the toolkit makes it easier for IT departments and independent software vendors (ISVs) to adopt, integrate, and customize Out-of-band Management (OOB Management) solutions for Intel vPro® Platforms.
@@ -12,7 +14,7 @@ Open Active Management Technology Cloud Toolkit (Open AMT Cloud Toolkit) provide
 
 ## Clone
 
-**Important!** Make sure you clone with this repo with the `--recursive` flag since it uses git submodules.
+**Important!** Make sure you clone this repo with the `--recursive` flag since it uses git submodules.
 ```
 git clone --recursive https://github.com/open-amt-cloud-toolkit/open-amt-cloud-toolkit.git
 ```
@@ -41,3 +43,17 @@ Optionally, deploy from AzureCLI using the following commands:
 az group create --name openamt --location eastus
 az deployment group create --resource-group openamt --template-file azureDeploy.json
 ```
+
+Additional deployments, such as Kubernetes via Azure (AKS) or AWS (EKS), can be found in our [Documentation Site](https://open-amt-cloud-toolkit.github.io/docs/).
+
+<br>
+
+## Additional Resources
+
+- For detailed documentation and Getting Started, [visit the docs site](https://open-amt-cloud-toolkit.github.io/docs).
+
+- Find a bug? Or have ideas for new features? [Open a new Issue](https://github.com/open-amt-cloud-toolkit/open-amt-cloud-toolkit/issues).
+
+- Need additional support or want to get the latest news and events about Open AMT? Connect with the team directly through Discord.
+
+    [![Discord Banner 1](https://discordapp.com/api/guilds/1063200098680582154/widget.png?style=banner2)](https://discord.gg/yrcMp2kDWh)
