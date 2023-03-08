@@ -173,4 +173,4 @@ metadata:
   name: admin-acl
 plugin: acl
 config:
-  whitelist: ["open-amt-admin"]
+  allow: ["open-amt-admin"]
