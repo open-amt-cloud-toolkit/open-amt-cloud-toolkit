@@ -79,7 +79,7 @@ services:
     networks:
       - openamtnetwork
   db:
-    image: postgres:14
+    image: postgres:15
     build:
       context: ./pg
       dockerfile: ./Dockerfile
