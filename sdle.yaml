@@ -1,0 +1,19 @@
+#  The following represents a list of the projects to process, the Jenkins pipeline will execute
+#  each independently in an isolated workspace and in parallel.
+#
+#  The following attributes are required for each project:
+#      sdle_project_id : the id of project in sdle
+#      name: the name of project in sdle
+#      owner: the account owner of the GitHub repository
+#      repo: the name of the GitHub repository
+#      branch: the name of the branch within the repo that contains the workflow artifact to download
+#      artifacts: a comma-delimited string of artifact names to download
+#      folders: a comma-delimited string of folder names that the respective artifact should be downloaded to
+#
+- sdle_project_id: 17178
+  name: RPS 2023
+  owner: open-amt-cloud-toolkit
+  repo: rps
+  branch: codeql_report
+  artifacts: report
+  folders: artifacts/CodeQL
