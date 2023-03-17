@@ -112,7 +112,7 @@ services:
     cap_add: 
       - IPC_LOCK
   kong:
-    image: kong:2.3
+    image: kong:3.1
     healthcheck:
       test:
         - CMD
