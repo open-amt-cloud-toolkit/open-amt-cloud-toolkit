@@ -117,7 +117,7 @@ services:
       - IPC_LOCK
   kong:
     restart: always
-    image: kong:2.3
+    image: kong:3.1
     healthcheck:
       test:
         - CMD
