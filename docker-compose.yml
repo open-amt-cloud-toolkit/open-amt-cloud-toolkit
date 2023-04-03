@@ -5,6 +5,7 @@
 version: '3.3'
 services: 
   webui:
+    restart: always
     image: intel/oact-webui:latest
     networks:
       - openamtnetwork
@@ -18,6 +19,7 @@ services:
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf  
   rps:
+    restart: always
     image: intel/oact-rps:latest
     networks:
       - openamtnetwork
@@ -38,13 +40,13 @@ services:
       RPS_VAULT_ADDRESS: ${VAULT_ADDRESS}
       RPS_CONNECTION_STRING: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/rpsdb?sslmode=disable
   mps:
+    restart: always
     image: intel/oact-mps:latest
     networks:
       - openamtnetwork
     build:
       context: ./mps
       dockerfile: ./Dockerfile
-    restart: always
     ports:
       - "${MPSPORT}:4433"
     env_file:
@@ -63,6 +65,7 @@ services:
     volumes:
       - private-volume:/mps-microservice/private
   mpsrouter:
+    restart: always
     image: intel/oact-mpsrouter:latest
     environment:
       MPS_CONNECTION_STRING: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/mpsdb?sslmode=disable
@@ -79,6 +82,7 @@ services:
     networks:
       - openamtnetwork
   db:
+    restart: always
     image: postgres:15
     build:
       context: ./pg
@@ -86,7 +90,6 @@ services:
     # command: -c ssl=on -c ssl_cert_file=/var/lib/postgresql/server.crt -c ssl_key_file=/var/lib/postgresql/server.key
     networks:
       - openamtnetwork
-    restart: always
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U rpsdb"]
       interval: 2s
@@ -101,6 +104,7 @@ services:
     volumes: 
       - ./data:/docker-entrypoint-initdb.d
   vault:
+    restart: always
     image: "vault"
     networks:
       - openamtnetwork
@@ -112,6 +116,7 @@ services:
     cap_add: 
       - IPC_LOCK
   kong:
+    restart: always
     image: kong:3.1
     healthcheck:
       test:
@@ -145,8 +150,8 @@ services:
     ports:
       - 443:8443
       - 8001:8001
-    restart: always
   mosquitto:
+    restart: always
     image: eclipse-mosquitto
     ports:
       - 8883:8883
