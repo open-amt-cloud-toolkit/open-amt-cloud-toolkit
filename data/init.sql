@@ -18,6 +18,20 @@ CREATE TABLE IF NOT EXISTS ciraconfigs(
   tenant_id varchar(36) NOT NULL,
   PRIMARY KEY (cira_config_name, tenant_id)
 );
+CREATE TABLE IF NOT EXISTS ieee8021xconfigs(
+    profile_name citext,
+    auth_protocol integer,
+    servername VARCHAR(255),
+    domain VARCHAR(255),
+    username VARCHAR(255),
+    password VARCHAR(255),
+    roaming_identity VARCHAR(255),
+    active_in_s0 BOOLEAN,
+    pxe_timeout integer,
+    wired_interface BOOLEAN NOT NULL,
+    tenant_id varchar(36) NOT NULL,
+    PRIMARY KEY (profile_name, tenant_id)
+);
 CREATE TABLE IF NOT EXISTS wirelessconfigs(
   wireless_profile_name citext NOT NULL,
   authentication_method integer,
@@ -28,7 +42,9 @@ CREATE TABLE IF NOT EXISTS wirelessconfigs(
   link_policy int[],
   creation_date timestamp,
   created_by varchar(40),
-  tenant_id varchar(36) NOT NULL,
+  tenant_id varchar(36) NOT NULL, 
+  ieee8021x_profile_name citext,
+  FOREIGN KEY (ieee8021x_profile_name,tenant_id)  REFERENCES ieee8021xconfigs(profile_name,tenant_id),
   PRIMARY KEY (wireless_profile_name, tenant_id)
 );
 CREATE TABLE IF NOT EXISTS ieee8021xconfigs(
