@@ -13,9 +13,9 @@ CREATE TABLE IF NOT EXISTS devices(
       mpsinstance text, 
       connectionstatus boolean,
       mpsusername text,
-      tenantid varchar(36),
+      tenantid varchar(36) NOT NULL,
       friendlyname varchar(256),
       dnssuffix varchar(256),
       CONSTRAINT device_guid UNIQUE(guid),
-      PRIMARY KEY (guid,tenantid)
+      PRIMARY KEY (guid, tenantid)
     ); 
