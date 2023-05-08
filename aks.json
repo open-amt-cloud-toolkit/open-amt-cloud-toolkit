@@ -40,6 +40,19 @@
         "description": "The size of the Virtual Machine."
       }
     },
+    "networkPlugin": {
+      "type": "string",
+      "defaultValue": "azure",
+      "metadata": {
+        "description": "network plugin."
+      }
+    },
+    "vnetSubnetId": {
+      "type": "string",
+      "metadata": {
+        "description": "subnet ID."
+      }
+    },
     "linuxAdminUsername": {
       "type": "string",
       "metadata": {
@@ -55,9 +68,7 @@
     "osType": {
       "type": "string",
       "defaultValue": "Linux",
-      "allowedValues": [
-        "Linux"
-      ],
+      "allowedValues": ["Linux"],
       "metadata": {
         "description": "The type of operating system."
       }
@@ -136,9 +147,13 @@
             "type": "VirtualMachineScaleSets",
             "storageProfile": "ManagedDisks",
             "enableNodePublicIP": true,
+            "vnetSubnetID": "[parameters('vnetSubnetId')]",
             "mode": "System"
           }
         ],
+        "networkProfile": {
+          "networkPlugin": "[parameters('networkPlugin')]"
+        },
         "linuxProfile": {
           "adminUsername": "[parameters('linuxAdminUsername')]",
           "ssh": {
