@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS wirelessconfigs(
   link_policy int[],
   creation_date timestamp,
   created_by varchar(40),
-  tenant_id varchar(36) NOT NULL, 
+  tenant_id varchar(36) NOT NULL,
   ieee8021x_profile_name citext,
   FOREIGN KEY (ieee8021x_profile_name,tenant_id)  REFERENCES ieee8021xconfigs(profile_name,tenant_id),
   PRIMARY KEY (wireless_profile_name, tenant_id)
@@ -60,6 +60,7 @@ CREATE TABLE IF NOT EXISTS profiles(
   generate_random_mebx_password BOOLEAN NOT NULL,
   tags text[],
   dhcp_enabled BOOLEAN,
+  ip_sync_enabled BOOLEAN NULL,
   tenant_id varchar(36) NOT NULL,
   tls_mode integer NULL,
   user_consent varchar(7) NULL,
