@@ -1,0 +1,401 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]"
+    },
+    "containerStackName": {
+      "type": "string",
+      "defaultValue": "open-amt-cloud-toolkit"
+    },
+    "imageType": {
+      "type": "string",
+      "defaultValue": "Public"
+    },
+    "vaultToken": {
+      "type": "securestring",
+      "defaultValue": "myroot",
+      "metadata": {
+        "description": "Specifies the root token to use for Vault in DEV mode"
+      }
+    },
+    "rpsImageName": {
+      "defaultValue": "intel/oact-rps:latest",
+      "type": "string",
+      "metadata": {
+        "description": "Name of the RPS image to deploy from specified registry"
+      }
+    },
+    "mpsImageName": {
+      "defaultValue": "intel/oact-mps:latest",
+      "type": "string",
+      "metadata": {
+        "description": "Name of the MPS image to deploy from specified registry"
+      }
+    },
+    "sampleWebUIImageName": {
+      "defaultValue": "intel/oact-webui:latest",
+      "type": "string",
+      "metadata": {
+        "description": "Name of the Sample WebUI image to deploy from specified registry"
+      }
+    },
+    "fqdn": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the FQDN you wish to use to access this deployment (i.e. \"sample\" will result in an FQDN of sample.westus.azurecontainer.io)"
+      }
+    },
+    "useAllowlist": {
+      "defaultValue": "false",
+      "type": "string",
+      "metadata": {
+        "description": "For details on this property view the configuration documentation located under \"Microservices\" in the Open AMT Cloud Toolkit documentation on https://open-amt-cloud-toolkit.github.io/docs/"
+      }
+    },
+    "dbAdminUsername": {
+      "type": "securestring",
+      "defaultValue": "postgresadmin",
+      "metadata": {
+        "description": "For details on this property view the configuration documentation located under \"Microservices\" in the Open AMT Cloud Toolkit documentation on https://open-amt-cloud-toolkit.github.io/docs/"
+      }
+    },
+    "dbAdminPassword": {
+      "type": "securestring",
+      "defaultValue": "Password123!",
+      "metadata": {
+        "description": "For details on this property view the configuration documentation located under \"Microservices\" in the Open AMT Cloud Toolkit documentation on https://open-amt-cloud-toolkit.github.io/docs/"
+      }
+    },
+    "mpsAdminUsername": {
+      "type": "securestring",
+      "defaultValue": "admin",
+      "metadata": {
+        "description": "For details on this property view the configuration documentation located under \"Microservices\" in the Open AMT Cloud Toolkit documentation on https://open-amt-cloud-toolkit.github.io/docs/"
+      }
+    },
+    "mpsAdminPassword": {
+      "type": "securestring",
+      "defaultValue": "P@ssw0rd",
+      "metadata": {
+        "description": "For details on this property view the configuration documentation located under \"Microservices\" in the Open AMT Cloud Toolkit documentation on https://open-amt-cloud-toolkit.github.io/docs/"
+      }
+    },
+    "tokenExpiration": {
+      "defaultValue": "1440",
+      "type": "string",
+      "metadata": {
+        "description": "Specifies the duration (in minutes) that a token will be valid for"
+      }
+    }
+  },
+  "variables": {
+    "postgresServerName": "[concat(parameters('containerStackName'),'-sql')]",
+    "registry": "docker.io"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.ContainerInstance/containerGroups",
+      "apiVersion": "2019-12-01",
+      "name": "[parameters('containerStackName')]",
+      "location": "[parameters('location')]",
+      "properties": {
+        "sku": "Standard",
+        "containers": [
+          {
+            "name": "rps",
+            "properties": {
+              "image": "[concat(variables('registry'), '/', parameters('rpsImageName'))]",
+              "ports": [
+                {
+                  "port": 8080
+                },
+                {
+                  "port": 8081
+                }
+              ],
+              "environmentVariables": [
+                {
+                  "name": "RPS_VAULT_TOKEN",
+                  "value": "[parameters('vaultToken')]"
+                },
+                {
+                  "name": "RPS_CONNECTION_STRING",
+                  "value": "[concat('postgresql://',parameters('dbAdminUsername'),'@',variables('postgresServerName'),':',parameters('dbAdminPassword'),'@',variables('postgresServerName'),'.postgres.database.azure.com:5432/rpsdb?sslmode=require')]"
+                }         
+              ],
+              "resources": {
+                "requests": {
+                  "cpu": 0.5,
+                  "memoryInGb": 1.0
+                }
+              }
+            }
+          },
+          {
+            "name": "mps",
+            "properties": {
+              "image": "[concat(variables('registry'), '/', parameters('mpsImageName'))]",
+              "resources": {
+                "requests": {
+                  "cpu": 0.5,
+                  "memoryInGb": 1.0
+                }
+              },
+              "environmentVariables": [
+                {
+                  "name": "MPS_COMMON_NAME",
+                  "value": "[concat(parameters('fqdn'), '.', parameters('location'),'.azurecontainer.io')]"
+                },
+                {
+                  "name": "MPS_WEB_ADMIN_USER",
+                  "value": "[parameters('mpsAdminUsername')]"
+                },
+                {
+                  "name": "MPS_WEB_ADMIN_PASSWORD",
+                  "value": "[parameters('mpsAdminPassword')]"
+                },
+                {
+                  "name": "MPS_JWT_EXPIRATION",
+                  "value": "[parameters('tokenExpiration')]"
+                },
+                {
+                  "name": "MPS_JWT_SECRET",
+                  "value": "supersecret"
+                },
+                {
+                  "name": "MPS_VAULT_TOKEN",
+                  "value": "[parameters('vaultToken')]"
+                },
+                {
+                  "name": "MPS_CONNECTION_STRING",
+                  "value": "[concat('postgresql://',parameters('dbAdminUsername'),'@',variables('postgresServerName'),':',parameters('dbAdminPassword'),'@',variables('postgresServerName'),'.postgres.database.azure.com:5432/mpsdb?sslmode=require')]"
+                }
+              ],
+              "ports": [
+                {
+                  "port": 4433
+                },
+                {
+                  "port": 3000
+                }
+              ]
+            }
+          },
+          {
+            "name": "webui",
+            "properties": {
+              "image": "[concat(variables('registry'), '/', parameters('sampleWebUIImageName'))]",
+              "ports": [
+                {
+                  "port": 80
+                }
+              ],
+              "environmentVariables": [
+                {
+                  "name": "MPS_SERVER",
+                  "value": "[concat('https://',parameters('fqdn'), '.', parameters('location'), '.azurecontainer.io:8443/mps')]"
+                },
+                {
+                  "name": "RPS_SERVER",
+                  "value": "[concat('https://',parameters('fqdn'), '.', parameters('location'), '.azurecontainer.io:8443/rps')]"
+                }
+              ],
+              "volumeMounts": [
+                {
+                  "name": "nginx-config",
+                  "mountPath": "/etc/nginx/conf.d"
+                }
+              ],
+              "resources": {
+                "requests": {
+                  "cpu": 0.5,
+                  "memoryInGb": 1.0
+                }
+              }
+            }
+          },
+          {
+            "name": "vault",
+            "properties": {
+              "image": "vault:latest",
+              "environmentVariables": [
+                {
+                  "name": "VAULT_DEV_ROOT_TOKEN_ID",
+                  "value": "[parameters('vaultToken')]"
+                },
+                {
+                  "name": "VAULT_DEV_LISTEN_ADDRESS",
+                  "value": "0.0.0.0:8200"
+                }
+              ],
+              "volumesMounts": [
+                {
+                  "name": "vaultFileShareVolume",
+                  "mountPath": "/vault/data/"
+                },
+                {
+                  "name": "vault-config",
+                  "mountPath": "/vault/config/"
+                }
+              ],
+              "resources": {
+                "requests": {
+                  "cpu": 0.5,
+                  "memoryInGb": 1.0
+                }
+              }
+            }
+          },
+          {
+            "name": "kong",
+            "properties": {
+              "image": "kong:2.3",
+              "ports": [
+                {
+                  "port": 8443
+                }
+              ],
+              "command": [
+                "kong",
+                "start",
+                "--vv"
+              ],
+              "environmentVariables": [
+                {
+                  "name": "KONG_DATABASE",
+                  "value": "off"
+                },
+                {
+                  "name": "KONG_CASSANDRA_CONTACT_POINTS",
+                  "value": "kong-database"
+                },
+                {
+                  "name": "KONG_ADMIN_LISTEN",
+                  "value": "0.0.0.0:8001"
+                },
+                {
+                  "name": "KONG_ADMIN_LISTEN_SSL",
+                  "value": "0.0.0.0:8444"
+                },
+                {
+                  "name": "KONG_NGINX_DAEMON",
+                  "value": "off"
+                },
+                {
+                  "name": "KONG_DECLARATIVE_CONFIG",
+                  "value": "/home/kong/kong.yaml"
+                },
+                {
+                  "name": "KONG_LOG_LEVEL",
+                  "value": "debug"
+                }
+              ],
+              "volumeMounts": [
+                {
+                  "name": "kong-config",
+                  "mountPath": "/home/kong/"
+                }
+              ],
+              "resources": {
+                "requests": {
+                  "cpu": 0.5,
+                  "memoryInGb": 1.0
+                }
+              }
+            }
+          }
+        ],
+        "osType": "Linux",
+        "restartPolicy": "OnFailure",
+        "ipAddress": {
+          "dnsNameLabel": "[parameters('fqdn')]",
+          "type": "Public",
+          "ports": [
+            {
+              "protocol": "tcp",
+              "port": 4433
+            },
+            {
+              "protocol": "tcp",
+              "port": 8443
+            }
+          ]
+        },
+        "volumes": [
+          {
+            "name": "nginx-config",
+            "secret": {
+              "nginx.conf": "c2VydmVyIHsNCiAgICBsaXN0ZW4gODAgZGVmYXVsdF9zZXJ2ZXI7DQogICAgbGlzdGVuIFs6Ol06ODAgZGVmYXVsdF9zZXJ2ZXI7DQogICAgc2VydmVyX25hbWUgXzsNCiANCg0KICAgIGxvY2F0aW9uIC8gew0KICAgICAgICByb290ICAgL3Vzci9zaGFyZS9uZ2lueC9odG1sOw0KICAgICAgICBpbmRleCAgaW5kZXguaHRtbCBpbmRleC5odG07DQogICAgfQ0KDQogICAgZXJyb3JfcGFnZSAgNDA0ICAgICAgICAgICAgICAvaW5kZXguaHRtbDsNCg0KICAgICMgcmVkaXJlY3Qgc2VydmVyIGVycm9yIHBhZ2VzIHRvIHRoZSBzdGF0aWMgcGFnZSAvNTB4Lmh0bWwNCiAgICAjDQogICAgZXJyb3JfcGFnZSAgIDUwMCA1MDIgNTAzIDUwNCAgLzUweC5odG1sOw0KICAgIGxvY2F0aW9uID0gLzUweC5odG1sIHsNCiAgICAgICAgcm9vdCAgIC91c3Ivc2hhcmUvbmdpbngvaHRtbDsNCiAgICB9DQp9DQoNCg=="
+            }
+          },
+          {
+            "name": "kong-config",
+            "secret": {
+              "kong.yaml": "IyBDb3B5cmlnaHQgKGMpIEludGVsIENvcnBvcmF0aW9uIDIwMTgtMjAxOQ0KIyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogQXBhY2hlLTIuMA0KDQpfZm9ybWF0X3ZlcnNpb246ICIyLjEiDQpfdHJhbnNmb3JtOiB0cnVlDQoNCnNlcnZpY2VzOg0KLSBuYW1lOiBtcHMtcmVzdA0KICBob3N0OiAxMjcuMC4wLjENCiAgcG9ydDogMzAwMA0KICB0YWdzOg0KICAtIG1wcw0KICByb3V0ZXM6DQogIC0gbmFtZTogbXBzLXJvdXRlDQogICAgc3RyaXBfcGF0aDogdHJ1ZQ0KICAgIHBhdGhzOg0KICAgIC0gL21wcw0KDQotIG5hbWU6IG1wcy1yZXN0LXYyDQogIGhvc3Q6IDEyNy4wLjAuMQ0KICBwb3J0OiAzMDAwDQogIHBhdGg6IC9hcGkvdjEvYXV0aG9yaXplDQogIHRhZ3M6DQogIC0gbXBzDQogIHJvdXRlczoNCiAgLSBuYW1lOiBtcHMtbG9naW4tcm91dGUNCiAgICBzdHJpcF9wYXRoOiB0cnVlDQogICAgcGF0aHM6DQogICAgLSAvbXBzL2xvZ2luL2FwaS92MS9hdXRob3JpemUNCg0KLSBuYW1lOiBtcHMtcmVkaXJlY3Rpb24NCiAgaG9zdDogMTI3LjAuMC4xDQogIHBvcnQ6IDMwMDANCiAgcGF0aDogL3JlbGF5DQogIHRhZ3M6DQogIC0gbXBzDQogIHJvdXRlczoNCiAgLSBuYW1lOiBtcHMtcmVkaXJlY3Rpb24tcm91dGUNCiAgICBzdHJpcF9wYXRoOiB0cnVlDQogICAgcGF0aHM6DQogICAgLSAvbXBzL3dzL3JlbGF5DQoNCi0gbmFtZTogcnBzLXJlc3QNCiAgaG9zdDogMTI3LjAuMC4xDQogIHBvcnQ6IDgwODEgIA0KICB0YWdzOg0KICAtIHJwcw0KICByb3V0ZXM6DQogIC0gbmFtZTogcnBzLXJvdXRlDQogICAgc3RyaXBfcGF0aDogdHJ1ZQ0KICAgIHBhdGhzOg0KICAgIC0gL3Jwcw0KDQotIG5hbWU6IHJwcy13cw0KICBob3N0OiAxMjcuMC4wLjENCiAgcG9ydDogODA4MA0KICB0YWdzOg0KICAtIHJwcw0KICByb3V0ZXM6DQogIC0gbmFtZTogcnBzLWFjdGl2YXRlLXJvdXRlDQogICAgc3RyaXBfcGF0aDogdHJ1ZQ0KICAgIHBhdGhzOg0KICAgIC0gL2FjdGl2YXRlDQoNCi0gbmFtZTogdmF1bHQtYXBpDQogIGhvc3Q6IDEyNy4wLjAuMQ0KICBwb3J0OiA4MjAwIA0KICB0YWdzOg0KICAtIHZhdWx0DQogIHJvdXRlczoNCiAgLSBuYW1lOiB2YXVsdC1yb3V0ZQ0KICAgIHN0cmlwX3BhdGg6IHRydWUNCiAgICBwYXRoczoNCiAgICAtIC92YXVsdA0KDQotIG5hbWU6IG1vc3F1aXR0by13cw0KICBob3N0OiAxMjcuMC4wLjENCiAgcG9ydDogOTAwMQ0KICB0YWdzOg0KICAtIG1vc3F1aXR0bw0KICByb3V0ZXM6DQogIC0gbmFtZTogbW9zcXVpdHRvLXJvdXRlDQogICAgc3RyaXBfcGF0aDogdHJ1ZQ0KICAgIHBhdGhzOg0KICAgIC0gL21vc3F1aXR0bw0KDQotIG5hbWU6IHdlYg0KICBob3N0OiAxMjcuMC4wLjENCiAgcG9ydDogODANCiAgdGFnczoNCiAgLSB3ZWINCiAgcm91dGVzOg0KICAtIG5hbWU6IHdlYi1yb3V0ZQ0KICAgIHBhdGhzOg0KICAgIC0gLw0KDQpwbHVnaW5zOg0KLSBuYW1lOiBjb3JzIA0KLSBuYW1lOiBqd3QNCiAgcm91dGU6IHJwcy1yb3V0ZQ0KICBjb25maWc6DQogICAgY2xhaW1zX3RvX3ZlcmlmeToNCiAgICAtIGV4cA0KLSBuYW1lOiBqd3QNCiAgcm91dGU6IG1wcy1yb3V0ZQ0KICBjb25maWc6DQogICAgY2xhaW1zX3RvX3ZlcmlmeToNCiAgICAtIGV4cA0KDQpjb25zdW1lcnM6DQogIC0gdXNlcm5hbWU6IGFkbWluDQpqd3Rfc2VjcmV0czoNCiAgLSBjb25zdW1lcjogYWRtaW4NCiAgICBrZXk6IDlFbVJKVGJJaUliNGJJZVNzbWdjV0lqclI2SHlFVHFjICNzYW1wbGUga2V5DQogICAgc2VjcmV0OiAic3VwZXJzZWNyZXQiDQo="
+            }
+          },
+          {
+            "name": "vault-config",
+            "secret": {
+              "kong.yaml": "ew0KICAgICJzdG9yYWdlIjp7DQogICAgICAgICJhenVyZSI6ew0KICAgICAgICAgICAgImFjY291bnROYW1lIjogIiIsDQogICAgICAgICAgICAiYWNjb3VudEtleSI6ICIiLA0KICAgICAgICAgICAgImNvbnRhaW5lciI6ICIiDQogICAgICAgIH0NCiAgICB9LA0KICAgICJsaXN0ZW5lciI6ew0KICAgICAgICAidGNwIjp7DQogICAgICAgICAgICAiYWRkcmVzcyI6IjAuMC4wLjA6ODIwMCIsDQogICAgICAgICAgICAidGxzX2Rpc2FibGUiOiAidHJ1ZSINCiAgICAgICAgfQ0KICAgIH0sDQogICAgImRlZmF1bHRfbGVhc2VfdHRsIjoiMTY4aCIsDQogICAgIm1heF9sZWFzZV90dGwiOiIwaCIsDQogICAgInVpIjp0cnVlLA0KICAgICJsb2dfbGV2ZWwiOiJEZWJ1ZyINCn0="
+            }
+          },
+          {
+            "name": "vaultFileShareVolume",
+            "azureFile": {
+                "shareName": "vault",
+                "storageAccountName": "",
+                "storageAccountKey": ""
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "Microsoft.DBforPostgreSQL/servers",
+      "apiVersion": "2017-12-01",
+      "name": "[variables('postgresServerName')]",
+      "location": "[parameters('location')]",
+      "sku": {
+        "name": "B_Gen5_2",
+        "tier": "Basic",
+        "capacity": 2,
+        "size": 51200,
+        "family": "Gen5"
+      },
+      "properties": {
+        "createMode": "Default",
+        "version": "11",
+        "administratorLogin": "[parameters('dbAdminUsername')]",
+        "administratorLoginPassword": "[parameters('dbAdminPassword')]",
+        "storageProfile": {
+          "storageMB": 51200,
+          "backupRetentionDays": 7,
+          "geoRedundantBackup": "Disabled"
+        }
+      }
+    },
+    {
+      "type": "Microsoft.DBforPostgreSQL/servers/firewallRules",
+      "apiVersion": "2017-12-01",
+      "name": "[concat(variables('postgresServerName'),'/','fwrules')]",
+      "location": "[parameters('location')]",
+      "copy": {
+        "name": "firewallRulesCopy",
+        "mode": "Serial",
+        "batchSize": 1,
+        "count": 1
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.DBforPostgreSQL/servers/', variables('postgresServerName'))]"
+      ],
+      "properties": {
+        "startIpAddress": "0.0.0.0",
+        "endIpAddress": "0.0.0.0"
+      }
+    }
+  ]
+}
