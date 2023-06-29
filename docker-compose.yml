@@ -105,7 +105,7 @@ services:
       - ./data:/docker-entrypoint-initdb.d
   vault:
     restart: always
-    image: "vault"
+    image: hashicorp/vault
     networks:
       - openamtnetwork
     ports: 
