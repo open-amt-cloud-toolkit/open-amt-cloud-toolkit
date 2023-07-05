@@ -1,0 +1,37 @@
+version: '3.3'
+services:
+  db:
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+  vault:
+    volumes:
+      - vault-data:/vault/data:rw
+      - ./vault/config.json:/vault/config.json:ro
+    environment:
+      VAULT_DEV_ROOT_TOKEN_ID:
+      VAULT_DEV_LISTEN_ADDRESS:
+    entrypoint: vault server -config=/vault/config.json
+  vault-init:
+    image: "vault-init"
+    build: ./vault
+    depends_on:
+      - vault
+    volumes:
+      - './vault:/vault'
+    networks:
+      - openamtnetwork
+  vault-unseal:
+    image: "curlimages/curl"
+    depends_on:
+      - vault
+    volumes:
+      - './local-dev/unseal-payload.json:/unseal-payload.json:ro'
+    command:
+      - '--data'
+      - '@/unseal-payload.json'
+      - 'http://vault:8200/v1/sys/unseal'
+    networks:
+      - openamtnetwork
+volumes:
+  postgres-data:
+  vault-data:
