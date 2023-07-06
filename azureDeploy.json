@@ -228,7 +228,7 @@
           {
             "name": "vault",
             "properties": {
-              "image": "vault:latest",
+              "image": "hashicorp/vault:latest",
               "environmentVariables": [
                 {
                   "name": "VAULT_DEV_ROOT_TOKEN_ID",
