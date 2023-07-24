@@ -1,5 +1,5 @@
 {
-  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
     "location": {
@@ -10,13 +10,20 @@
       "type": "string",
       "defaultValue": "open-amt-cloud-toolkit"
     },
-    "imageType": {
+    "storageAccountName": {
       "type": "string",
-      "defaultValue": "Public"
+      "metadata": {
+        "description": "Name of the storage account to persist vault data"
+      }
+    },
+    "storageAccountKey": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Key of the specified storage account to persist vault data"
+      }
     },
     "vaultToken": {
       "type": "securestring",
-      "defaultValue": "myroot",
       "metadata": {
         "description": "Specifies the root token to use for Vault in DEV mode"
       }
@@ -46,13 +53,6 @@
       "type": "string",
       "metadata": {
         "description": "Name of the FQDN you wish to use to access this deployment (i.e. \"sample\" will result in an FQDN of sample.westus.azurecontainer.io)"
-      }
-    },
-    "useAllowlist": {
-      "defaultValue": "false",
-      "type": "string",
-      "metadata": {
-        "description": "For details on this property view the configuration documentation located under \"Microservices\" in the Open AMT Cloud Toolkit documentation on https://open-amt-cloud-toolkit.github.io/docs/"
       }
     },
     "dbAdminUsername": {
@@ -124,7 +124,7 @@
                 {
                   "name": "RPS_CONNECTION_STRING",
                   "value": "[concat('postgresql://',parameters('dbAdminUsername'),'@',variables('postgresServerName'),':',parameters('dbAdminPassword'),'@',variables('postgresServerName'),'.postgres.database.azure.com:5432/rpsdb?sslmode=require')]"
-                }         
+                }
               ],
               "resources": {
                 "requests": {
@@ -220,20 +220,20 @@
           {
             "name": "vault",
             "properties": {
-              "image": "vault:latest",
-              "environmentVariables": [
+              "image": "hashicorp/vault:latest",
+              "ports": [
                 {
-                  "name": "VAULT_DEV_ROOT_TOKEN_ID",
-                  "value": "[parameters('vaultToken')]"
-                },
-                {
-                  "name": "VAULT_DEV_LISTEN_ADDRESS",
-                  "value": "0.0.0.0:8200"
+                  "port": 8200
                 }
               ],
-              "volumesMounts": [
+              "command": [
+                "vault",
+                "server",
+                "-config=/vault/config/vault.json"
+              ],
+              "volumeMounts": [
                 {
-                  "name": "vaultFileShareVolume",
+                  "name": "vault-store",
                   "mountPath": "/vault/data/"
                 },
                 {
@@ -321,6 +321,10 @@
             {
               "protocol": "tcp",
               "port": 8443
+            },
+            {
+              "protocol": "tcp",
+              "port": 8200
             }
           ]
         },
@@ -340,15 +344,25 @@
           {
             "name": "vault-config",
             "secret": {
-              "kong.yaml": "ew0KICAgICJzdG9yYWdlIjp7DQogICAgICAgICJhenVyZSI6ew0KICAgICAgICAgICAgImFjY291bnROYW1lIjogIiIsDQogICAgICAgICAgICAiYWNjb3VudEtleSI6ICIiLA0KICAgICAgICAgICAgImNvbnRhaW5lciI6ICIiDQogICAgICAgIH0NCiAgICB9LA0KICAgICJsaXN0ZW5lciI6ew0KICAgICAgICAidGNwIjp7DQogICAgICAgICAgICAiYWRkcmVzcyI6IjAuMC4wLjA6ODIwMCIsDQogICAgICAgICAgICAidGxzX2Rpc2FibGUiOiAidHJ1ZSINCiAgICAgICAgfQ0KICAgIH0sDQogICAgImRlZmF1bHRfbGVhc2VfdHRsIjoiMTY4aCIsDQogICAgIm1heF9sZWFzZV90dGwiOiIwaCIsDQogICAgInVpIjp0cnVlLA0KICAgICJsb2dfbGV2ZWwiOiJEZWJ1ZyINCn0="
+              "vault.json": "ew0KICAgICJzdG9yYWdlIjogew0KICAgICAgICAiZmlsZSI6IHsNCiAgICAgICAgICAgICJwYXRoIjogIi92YXVsdC9kYXRhIg0KICAgICAgICB9DQogICAgfSwNCiAgICAibGlzdGVuZXIiOiB7DQogICAgICAgICJ0Y3AiOiB7DQogICAgICAgICAgICAiYWRkcmVzcyI6ICIwLjAuMC4wOjgyMDAiLA0KICAgICAgICAgICAgInRsc19kaXNhYmxlIjogInRydWUiDQogICAgICAgIH0NCiAgICB9LA0KICAgICJkZWZhdWx0X2xlYXNlX3R0bCI6ICIxNjhoIiwNCiAgICAibWF4X2xlYXNlX3R0bCI6ICIwaCIsDQogICAgInVpIjogdHJ1ZSwNCiAgICAibG9nX2xldmVsIjogIkRlYnVnIiwNCiAgICAiZGlzYWJsZV9tbG9jayI6IHRydWUNCn0="
             }
           },
           {
-            "name": "vaultFileShareVolume",
+            "name": "vault-store",
             "azureFile": {
-                "shareName": "vault",
-                "storageAccountName": "",
-                "storageAccountKey": ""
+              "readOnly": false,
+              "shareName": "vault",
+              "storageAccountName": "[parameters('storageAccountName')]",
+              "storageAccountKey": "[parameters('storageAccountKey')]"
+            }
+          },
+          {
+            "name": "db-store",
+            "azureFile": {
+              "readOnly": false,
+              "shareName": "database",
+              "storageAccountName": "[parameters('storageAccountName')]",
+              "storageAccountKey": "[parameters('storageAccountKey')]"
             }
           }
         ]
