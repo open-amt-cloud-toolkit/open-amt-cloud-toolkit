@@ -184,6 +184,8 @@ services:
       - ./mosquitto.conf:/mosquitto/config/mosquitto.conf
     networks:
       - openamtnetwork
+    profiles:
+      - "mqtt"
 volumes:
     app-volume:
     private-volume:
