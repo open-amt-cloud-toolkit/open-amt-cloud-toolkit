@@ -2,7 +2,7 @@
 # Copyright (c) Intel Corporation 2020
 # SPDX-License-Identifier: Apache-2.0
 #**********************************************************************/
-version: '3.3'
+version: '3'
 services: 
   webui:
     restart: always
@@ -38,7 +38,10 @@ services:
       RPS_SECRETS_PATH: ${SECRETS_PATH}
       RPS_VAULT_TOKEN: ${VAULT_TOKEN}
       RPS_VAULT_ADDRESS: ${VAULT_ADDRESS}
-      RPS_CONNECTION_STRING: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/rpsdb?sslmode=disable
+      RPS_CONNECTION_STRING: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/rpsdb
+      RPS_CONSUL_ENABLED: ${CONSUL_ENABLED}
+      RPS_CONSUL_HOST: ${CONSUL_HOST}
+      RPS_CONSUL_PORT: ${CONSUL_PORT}      
   mps:
     restart: always
     image: intel/oact-mps:latest
@@ -61,7 +64,10 @@ services:
       MPS_SECRETS_PATH: ${SECRETS_PATH}
       MPS_VAULT_TOKEN: ${VAULT_TOKEN}
       MPS_VAULT_ADDRESS: ${VAULT_ADDRESS}
-      MPS_CONNECTION_STRING: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/mpsdb?sslmode=disable
+      MPS_CONNECTION_STRING: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/mpsdb
+      MPS_CONSUL_ENABLED: ${CONSUL_ENABLED}
+      MPS_CONSUL_HOST: ${CONSUL_HOST} 
+      MPS_CONSUL_PORT: ${CONSUL_PORT}      
     volumes:
       - private-volume:/mps-microservice/private
   mpsrouter:
@@ -115,6 +121,25 @@ services:
       VAULT_DEV_LISTEN_ADDRESS: 0.0.0.0:8200
     cap_add: 
       - IPC_LOCK
+  consul:
+    restart: always
+    image: hashicorp/consul
+    networks:
+      - openamtnetwork
+    ports: 
+      - 8500:8500
+    profiles:
+      - consul
+    volumes: 
+       - type: volume 
+         source: consul-config 
+         target: /consul/config 
+         volume: {} 
+       - type: volume 
+         source: consul-data 
+         target: /consul/data 
+         volume: {}    
+    command: "agent -server -ui -node=OACT-1 -bootstrap-expect=1 -client=0.0.0.0"
   kong:
     restart: always
     image: kong:3.1
@@ -159,9 +184,13 @@ services:
       - ./mosquitto.conf:/mosquitto/config/mosquitto.conf
     networks:
       - openamtnetwork
+    profiles:
+      - "mqtt"
 volumes:
     app-volume:
     private-volume:
+    consul-config:
+    consul-data:
 networks: 
   openamtnetwork:
     driver: "bridge"
