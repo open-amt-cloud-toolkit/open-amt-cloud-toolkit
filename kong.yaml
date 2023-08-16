@@ -81,6 +81,10 @@ services:
     strip_path: true
     paths:
     - /activate
+  - name: rps-deactivate-route
+    strip_path: true
+    paths:
+    - /deactivate
 
 # uncomment to use with enterprise assistant
 # - name: rps-ea
