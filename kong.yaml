@@ -34,6 +34,15 @@ services:
     strip_path: true
     paths:
     - /mps
+  - name: device-power-state-route
+    strip_path: true
+    paths:
+    - /device/power/state/(?<id>[a-fA-F0-9\-]+)
+  - name: device-power-action-route
+    strip_path: true
+    paths:
+    - /device/power/action/(?<id>[a-fA-F0-9\-]+)
+
 
 - name: mps-redirection
   host: mps
@@ -142,17 +151,28 @@ plugins:
     claims_to_verify:
     - exp
 - name: jwt
-  route: mps-route
+  service: mps-rest
   config:
     claims_to_verify:
     - exp
+
+- name: request-transformer
+  route: device-power-state-route
+  config:
+    replace:
+      uri: "/api/v1/amt/power/state/$(uri_captures['id'])"
+- name: request-transformer
+  route: device-power-action-route
+  config:
+    replace:
+      uri: "/api/v1/amt/power/action/$(uri_captures['id'])"
 
 consumers:
   - username: admin
 jwt_secrets:
   - consumer: admin
     key: 9EmRJTbIiIb4bIeSsmgcWIjrR6HyETqc #sample key
-    secret: ""
+    secret: 
 
 
 
