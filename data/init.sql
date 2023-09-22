@@ -92,7 +92,8 @@ CREATE TABLE IF NOT EXISTS domains(
   creation_date timestamp,
   created_by varchar(40),
   tenant_id varchar(36) NOT NULL,
-  CONSTRAINT domainsuffix UNIQUE(domain_suffix,tenant_id),
-  PRIMARY KEY (name, tenant_id)
+  CONSTRAINT domainname UNIQUE (name, tenant_id),
+  CONSTRAINT domainsuffix UNIQUE (domain_suffix, tenant_id),
+  PRIMARY KEY (name, domain_suffix, tenant_id)
 );
-CREATE UNIQUE INDEX lower_name_suffix_idx ON domains ((lower(name)), (lower(domain_suffix)));
+
