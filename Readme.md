@@ -4,7 +4,7 @@
 
 > Disclaimer: Production viable releases are tagged and listed under 'Releases'. All other check-ins should be considered 'in-development' and should not be used in production
 
-Open AMT Cloud Toolkit offers open-source microservices and libraries to streamline Intel AMT integration, simplifying out-of-band management solutions for Intel vPro Platforms.
+Open Active Management Technology Cloud Toolkit (Open AMT Cloud Toolkit) offers open-source microservices and libraries to streamline Intel AMT integration, simplifying out-of-band management solutions for Intel vPro Platforms.
 
 <br>
 
