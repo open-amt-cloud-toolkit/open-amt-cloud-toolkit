@@ -16,6 +16,7 @@ CREATE TABLE IF NOT EXISTS devices(
       tenantid varchar(36) NOT NULL,
       friendlyname varchar(256),
       dnssuffix varchar(256),
+      deviceinfo JSON,
       CONSTRAINT device_guid UNIQUE(guid),
       PRIMARY KEY (guid, tenantid)
     ); 
