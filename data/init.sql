@@ -90,6 +90,7 @@ CREATE TABLE IF NOT EXISTS domains(
   provisioning_cert_storage_format varchar(40),
   provisioning_cert_key text,
   creation_date timestamp,
+  expiration_date timestamp,
   created_by varchar(40),
   tenant_id varchar(36) NOT NULL,
   CONSTRAINT domainname UNIQUE (name, tenant_id),
