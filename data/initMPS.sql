@@ -16,6 +16,9 @@ CREATE TABLE IF NOT EXISTS devices(
       tenantid varchar(36) NOT NULL,
       friendlyname varchar(256),
       dnssuffix varchar(256),
+      lastconnected timestamp with time zone,
+      lastseen timestamp with time zone,
+      lastdisconnected timestamp with time zone,
       deviceinfo JSON,
       CONSTRAINT device_guid UNIQUE(guid),
       PRIMARY KEY (guid, tenantid)
