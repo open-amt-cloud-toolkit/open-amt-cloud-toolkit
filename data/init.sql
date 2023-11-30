@@ -61,6 +61,7 @@ CREATE TABLE IF NOT EXISTS profiles(
   tags text[],
   dhcp_enabled BOOLEAN,
   ip_sync_enabled BOOLEAN NULL,
+  local_wifi_sync_enabled BOOLEAN NULL,
   tenant_id varchar(36) NOT NULL,
   tls_mode integer NULL,
   user_consent varchar(7) NULL,
