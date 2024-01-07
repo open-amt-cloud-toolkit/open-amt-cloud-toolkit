@@ -172,7 +172,7 @@ consumers:
 jwt_secrets:
   - consumer: admin
     key: 9EmRJTbIiIb4bIeSsmgcWIjrR6HyETqc #sample key
-    secret: 
+    secret: Yq3t6w9z6CbE3HRMcQfTjWnZr4u7x6AJ
 
 
 
