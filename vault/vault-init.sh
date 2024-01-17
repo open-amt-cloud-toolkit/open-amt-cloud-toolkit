@@ -2,7 +2,35 @@
 set -eu
 umask 077
 export VAULT_ADDR="http://127.0.0.1:8200"
-sleep 3
+# wait for vault to be ready.
+# see https://developer.hashicorp.com/vault/api-docs/system/health
+VAULT_HEALTH_CHECK_URL="$VAULT_ADDR/v1/sys/health"
+while true; do
+    status_code="$(
+        (wget \
+            -qO- \
+            --server-response \
+            --spider \
+            --tries=1 \
+            "$VAULT_HEALTH_CHECK_URL" \
+            2>&1 || true) \
+            | awk '/^  HTTP/{print $2}')"
+    case "$status_code" in
+        # vault is sealed. break the loop, and unseal it.
+        503)
+            break
+            ;;
+        # for some odd reason vault is already unsealed. anyways, its
+        # ready and unsealed, so exit this script.
+        200)
+            exit 0
+            ;;
+        # otherwise, wait a bit, then retry the health check.
+        *)
+            sleep 5
+            ;;
+    esac
+done
 cd /vault/file
 if [ ! -d .vault-init ]; then
     install -d -m 700 .vault-init
