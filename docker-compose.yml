@@ -1,5 +1,5 @@
 #/*********************************************************************
-# Copyright (c) Intel Corporation 2024
+# Copyright (c) Intel Corporation 2020
 # SPDX-License-Identifier: Apache-2.0
 #**********************************************************************/
 version: '3'
@@ -32,7 +32,7 @@ services:
       interval: 12s 
       timeout: 12s
       retries: 3 
-      test: ["CMD", "node", "dist/Healthcheck.js"]
+      test: ["CMD", "node", "rps/dist/Healthcheck.js"]
     environment: 
       RPS_MPS_SERVER: http://mps:3000
       RPS_SECRETS_PATH: ${SECRETS_PATH}
