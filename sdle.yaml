@@ -3,17 +3,69 @@
 #
 #  The following attributes are required for each project:
 #      sdle_project_id : the id of project in sdle
-#      name: the name of project in sdle
 #      owner: the account owner of the GitHub repository
 #      repo: the name of the GitHub repository
 #      branch: the name of the branch within the repo that contains the workflow artifact to download
 #      artifacts: a comma-delimited string of artifact names to download
 #      folders: a comma-delimited string of folder names that the respective artifact should be downloaded to
 #
-- sdle_project_id: 17178
-  name: RPS 2023
+- sdle_project_id: 20340
   owner: open-amt-cloud-toolkit
   repo: rps
-  branch: codeql_report
+  branch: main
+  artifacts: report
+  folders: artifacts/CodeQL
+- sdle_project_id: 20340
+  owner: open-amt-cloud-toolkit
+  repo: ui-toolkit
+  branch: main
+  artifacts: report
+  folders: artifacts/CodeQL
+- sdle_project_id: 20340
+  owner: open-amt-cloud-toolkit
+  repo: mps
+  branch: main
+  artifacts: report
+  folders: artifacts/CodeQL
+- sdle_project_id: 20340
+  owner: open-amt-cloud-toolkit
+  repo: sample-web-ui
+  branch: main
+  artifacts: report
+  folders: artifacts/CodeQL
+- sdle_project_id: 20340
+  owner: open-amt-cloud-toolkit
+  repo: mps-router
+  branch: main
+  artifacts: report
+  folders: artifacts/CodeQL
+- sdle_project_id: 20340
+  owner: open-amt-cloud-toolkit
+  repo: ui-toolkit-angular
+  branch: main
+  artifacts: report
+  folders: artifacts/CodeQL
+- sdle_project_id: 20340
+  owner: open-amt-cloud-toolkit
+  repo: ui-toolkit-react
+  branch: main
+  artifacts: report
+  folders: artifacts/CodeQL
+- sdle_project_id: 20340
+  owner: open-amt-cloud-toolkit
+  repo: rpc-go
+  branch: main
+  artifacts: report
+  folders: artifacts/CodeQL
+- sdle_project_id: 20340
+  owner: open-amt-cloud-toolkit
+  repo: wsman-messages
+  branch: main
+  artifacts: report
+  folders: artifacts/CodeQL
+- sdle_project_id: 20340
+  owner: open-amt-cloud-toolkit
+  repo: go-wsman-messages
+  branch: main
   artifacts: report
   folders: artifacts/CodeQL
