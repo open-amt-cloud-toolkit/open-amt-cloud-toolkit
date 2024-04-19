@@ -144,12 +144,9 @@ services:
     restart: always
     image: kong:3.1
     healthcheck:
-      test:
-        - CMD
-        - nc
-        - -z
-        - localhost
-        - "8443"
+      test: ["CMD", "kong", "health"]
+      interval: 10s
+      timeout: 10s
       retries: 10
     command:
       - "kong"
