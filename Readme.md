@@ -1,6 +1,6 @@
 # Open AMT Cloud Toolkit
 
-[![Discord](https://img.shields.io/discord/1063200098680582154?style=for-the-badge&label=Discord&logo=discord&logoColor=white&labelColor=%235865F2&link=https%3A%2F%2Fdiscord.gg%2FqmTWWFyA)](https://discord.gg/qmTWWFyA)
+[![Discord](https://img.shields.io/discord/1063200098680582154?style=for-the-badge&label=Discord&logo=discord&logoColor=white&labelColor=%235865F2&link=https%3A%2F%2Fdiscord.gg%2FDKHeUNEWVH)](https://discord.gg/DKHeUNEWVH)
 
 > Disclaimer: Production viable releases are tagged and listed under 'Releases'. All other check-ins should be considered 'in-development' and should not be used in production
 
@@ -61,4 +61,4 @@ Additional deployments, such as Kubernetes via Azure (AKS) or AWS (EKS), can be 
 
 - Need additional support or want to get the latest news and events about Open AMT? Connect with the team directly through Discord.
 
-    [![Discord Banner 1](https://discordapp.com/api/guilds/1063200098680582154/widget.png?style=banner2)](https://discord.gg/yrcMp2kDWh)
+    [![Discord Banner 1](https://discordapp.com/api/guilds/1063200098680582154/widget.png?style=banner2)](https://discord.gg/DKHeUNEWVH)
