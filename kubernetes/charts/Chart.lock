@@ -1,9 +1,9 @@
 dependencies:
 - name: vault
   repository: https://helm.releases.hashicorp.com
-  version: 0.27.0
+  version: 0.28.0
 - name: kong
   repository: https://charts.konghq.com
-  version: 2.38.0
-digest: sha256:60393b4862e6d270196f789ebe7c05cef8259116397785153f4318c3d0a6b32e
-generated: "2024-03-12T12:47:42.7363661-07:00"
+  version: 2.39.3
+digest: sha256:07824e8583d5b834eec0615f81623c27bd598f77b036401158020136f5fbd8f6
+generated: "2024-07-10T13:06:41.2849165-07:00"
