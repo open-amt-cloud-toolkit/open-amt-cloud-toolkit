@@ -145,7 +145,7 @@
         "tier": "Burstable"
       },
       "properties": {
-        "version": "14",
+        "version": "16",
         "administratorLogin": "[parameters('DBadministratorLogin')]",
         "administratorLoginPassword": "[parameters('DBadministratorLoginPassword')]",
         "network": {

@@ -2,9 +2,12 @@
 * Copyright (c) Intel Corporation 2020
 * SPDX-License-Identifier: Apache-2.0
 **********************************************************************/
-CREATE EXTENSION IF NOT EXISTS citext;
-CREATE USER rpsdb;
 SELECT 'CREATE DATABASE rpsdb' WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'rpsdb')\gexec
+
+\connect rpsdb
+
+CREATE EXTENSION IF NOT EXISTS citext;
+
 CREATE TABLE IF NOT EXISTS ciraconfigs(
   cira_config_name citext NOT NULL,
   mps_server_address varchar(256),
