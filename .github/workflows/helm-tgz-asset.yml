@@ -8,8 +8,13 @@ jobs:
     name: create release artifacts 
     runs-on: ubuntu-latest
     steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@17d0e2bd7d51742c71671bd19fa12bdc9d40a3d6 # v2.8.1
+        with:
+          egress-policy: audit
+
       - name: clone open amt examples repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3.6.0
         with:
           ref: ${{ github.ref }}
 
@@ -22,7 +27,7 @@ jobs:
           (cd $GITHUB_WORKSPACE/kubernetes && tar -czvf open-amt-toolkit-helm.tar.gz charts)
 
       - name: upload helm tarball release artifact 
-        uses: svenstaro/upload-release-action@v2 
+        uses: svenstaro/upload-release-action@04733e069f2d7f7f0b4aebc4fbdbce8613b03ccd # v2 
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: ${{ github.workspace}}/kubernetes/open-amt-toolkit-helm.tar.gz
