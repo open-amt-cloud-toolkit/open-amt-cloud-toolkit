@@ -8,6 +8,9 @@ on:
       - synchronize
 jobs:
   main:
+    permissions:
+      contents: read # for actions/checkout to fetch code
+      pull-requests: read # for wagoid/commitlint-github-action to get commits in PR
     name: Validate PR and Commits
     runs-on: ubuntu-latest
     steps:
