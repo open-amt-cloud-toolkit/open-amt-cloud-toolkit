@@ -1,7 +1,7 @@
 name: "Semantic Pull Request"
 
 on:
-  pull_request_target:
+  pull_request:
     types:
       - opened
       - edited
@@ -22,12 +22,11 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: amannn/action-semantic-pull-request@0723387faaf9b38adef4775cd42cfd5155ed6017 # v5.5.3
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
-        with:
-          fetch-depth: 0
       - uses: wagoid/commitlint-github-action@7f0a61df502599e1f1f50880aaa7ec1e2c0592f2 # v6.0.1
         with:
-          configFile: .github/commitlint.config.js
+          configFile: ./.github/commitlint.config.cjs
+      - name: Install Dependencies
+        run: npm install @commitlint/config-conventional@18.5
+      - uses: JulienKode/pull-request-name-linter-action@8c05fb989d9f156ce61e33754f9802c9d3cffa58 # v0.5.0
+        with:
+          configuration-path: ./.github/commitlint.config.cjs
