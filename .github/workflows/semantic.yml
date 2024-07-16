@@ -28,6 +28,6 @@ jobs:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
         with:
           fetch-depth: 0
-      - uses: wagoid/commitlint-github-action@416045160973f9fff174ac6698412cfe7181c3f3 # v4.1.15
+      - uses: wagoid/commitlint-github-action@7f0a61df502599e1f1f50880aaa7ec1e2c0592f2 # v6.0.1
         with:
           configFile: .github/commitlint.config.js
