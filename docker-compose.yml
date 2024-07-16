@@ -32,7 +32,7 @@ services:
       interval: 12s 
       timeout: 12s
       retries: 3 
-      test: ["CMD", "node", "dist/Healthcheck.js"]
+      test: ["CMD", "node", "rps/dist/Healthcheck.js"]
     environment: 
       RPS_MPS_SERVER: http://mps:3000
       RPS_SECRETS_PATH: ${SECRETS_PATH}
@@ -58,7 +58,7 @@ services:
       interval: 12s 
       timeout: 12s
       retries: 3 
-      test: ["CMD", "node", "dist/Healthcheck.js"]
+      test: ["CMD", "node", "mps/dist/Healthcheck.js"]
     environment: 
       MPS_INSTANCE_NAME: '{{.Task.Name}}'
       MPS_SECRETS_PATH: ${SECRETS_PATH}
@@ -144,12 +144,9 @@ services:
     restart: always
     image: kong:3.1
     healthcheck:
-      test:
-        - CMD
-        - nc
-        - -z
-        - localhost
-        - "8443"
+      test: ["CMD", "kong", "health"]
+      interval: 10s
+      timeout: 10s
       retries: 10
     command:
       - "kong"

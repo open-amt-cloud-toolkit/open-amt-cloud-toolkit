@@ -1,16 +1,22 @@
 name: Adds all issues to project board
-
 on:
   issues:
     types:
       - opened
+permissions:
+  contents: read
 
 jobs:
   add-to-project:
     name: Add issue to project
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/add-to-project@v0.3.0
+      - name: Harden Runner
+        uses: step-security/harden-runner@17d0e2bd7d51742c71671bd19fa12bdc9d40a3d6 # v2.8.1
         with:
-          project-url: https://github.com/orgs/open-amt-cloud-toolkit/projects/5
+          egress-policy: audit
+
+      - uses: actions/add-to-project@244f685bbc3b7adfa8466e08b698b5577571133e # v1.0.2
+        with:
+          project-url: https://github.com/orgs/open-amt-cloud-toolkit/projects/10
           github-token: ${{ secrets.PROJECTS_PAT }}

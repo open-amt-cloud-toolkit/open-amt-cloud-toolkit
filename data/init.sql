@@ -4,6 +4,7 @@
 **********************************************************************/
 CREATE EXTENSION IF NOT EXISTS citext;
 CREATE USER rpsdb;
+SELECT 'CREATE DATABASE rpsdb' WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'rpsdb')\gexec
 CREATE TABLE IF NOT EXISTS ciraconfigs(
   cira_config_name citext NOT NULL,
   mps_server_address varchar(256),
@@ -61,6 +62,7 @@ CREATE TABLE IF NOT EXISTS profiles(
   tags text[],
   dhcp_enabled BOOLEAN,
   ip_sync_enabled BOOLEAN NULL,
+  local_wifi_sync_enabled BOOLEAN NULL,
   tenant_id varchar(36) NOT NULL,
   tls_mode integer NULL,
   user_consent varchar(7) NULL,
