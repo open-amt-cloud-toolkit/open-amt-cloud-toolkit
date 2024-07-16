@@ -1,11 +1,13 @@
 on:
   push:
     tags:
-      - '*'
+      - "*"
 name: Build and release on push
+permissions:
+  contents: read
 jobs:
   release:
-    name: create release artifacts 
+    name: create release artifacts
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
@@ -19,15 +21,15 @@ jobs:
           ref: ${{ github.ref }}
 
       - name: Print github workspace
-        run: echo $GITHUB_WORKSPACE && pwd && echo ${{ github.workspace }} 
+        run: echo $GITHUB_WORKSPACE && pwd && echo ${{ github.workspace }}
 
       - name: tar zip helm directory
         shell: bash
         run: |
           (cd $GITHUB_WORKSPACE/kubernetes && tar -czvf open-amt-toolkit-helm.tar.gz charts)
 
-      - name: upload helm tarball release artifact 
-        uses: svenstaro/upload-release-action@04733e069f2d7f7f0b4aebc4fbdbce8613b03ccd # v2 
+      - name: upload helm tarball release artifact
+        uses: svenstaro/upload-release-action@04733e069f2d7f7f0b4aebc4fbdbce8613b03ccd # v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: ${{ github.workspace}}/kubernetes/open-amt-toolkit-helm.tar.gz
