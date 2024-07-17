@@ -76,40 +76,21 @@
         "description": "Database administrator password"
       }
     },
-    "virtualNetworkName": {
+    "availabilityZone": {
       "type": "string",
-      "defaultValue": "azure_postgresql_vnet",
-      "metadata": {
-        "description": "Virtual Network Name"
-      }
+      "defaultValue": ""
+    },
+    "virtualNetworkExternalId": {
+      "type": "string",
+      "defaultValue": ""
     },
     "subnetName": {
       "type": "string",
-      "defaultValue": "azure_postgresql_subnet",
-      "metadata": {
-        "description": "Subnet Name"
-      }
+      "defaultValue": ""
     },
-    "virtualNetworkRuleName": {
+    "privateDnsZoneArmResourceId": {
       "type": "string",
-      "defaultValue": "AllowSubnet",
-      "metadata": {
-        "description": "Virtual Network RuleName"
-      }
-    },
-    "vnetAddressPrefix": {
-      "type": "string",
-      "defaultValue": "10.0.0.0/16",
-      "metadata": {
-        "description": "Virtual Network Address Prefix"
-      }
-    },
-    "subnetPrefix": {
-      "type": "string",
-      "defaultValue": "10.0.0.0/16",
-      "metadata": {
-        "description": "Subnet Address Prefix"
-      }
+      "defaultValue": ""
     }
   },
   "variables": {
@@ -122,7 +103,7 @@
       "name": "[parameters('clusterName')]",
       "location": "[parameters('location')]",
       "dependsOn": [
-        "[resourceId('Microsoft.DBforPostgreSQL/servers/', variables('postgresServerName'))]"
+        "[resourceId('Microsoft.DBforPostgreSQL/flexibleServers/', variables('postgresServerName'))]"
       ],
       "properties": {
         "dnsPrefix": "[parameters('clusterName')]",
@@ -155,48 +136,47 @@
       }
     },
     {
-      "type": "Microsoft.DBforPostgreSQL/servers",
-      "apiVersion": "2017-12-01",
+      "type": "Microsoft.DBforPostgreSQL/flexibleServers",
+      "apiVersion": "2021-06-01",
       "name": "[variables('postgresServerName')]",
       "location": "[parameters('location')]",
       "sku": {
-        "name": "B_Gen5_2",
-        "tier": "Basic",
-        "capacity": 2,
-        "size": 51200,
-        "family": "Gen5"
+        "name": "Standard_B2s",
+        "tier": "Burstable"
       },
       "properties": {
-        "createMode": "Default",
-        "version": "11",
+        "version": "16",
         "administratorLogin": "[parameters('DBadministratorLogin')]",
         "administratorLoginPassword": "[parameters('DBadministratorLoginPassword')]",
-        "storageProfile": {
-          "storageMB": 51200,
+        "network": {
+          "delegatedSubnetResourceId": "[if(empty(parameters('virtualNetworkExternalId')), json('null'), json(format('{0}/subnets/{1}', parameters('virtualNetworkExternalId'), parameters('subnetName'))))]",
+          "privateDnsZoneArmResourceId": "[if(empty(parameters('virtualNetworkExternalId')), json('null'), parameters('privateDnsZoneArmResourceId'))]"
+        },
+        "highAvailability": {
+          "mode": "Disabled"
+        },
+        "storage": {
+          "storageSizeGB": 32
+        },
+        "backup": {
           "backupRetentionDays": 7,
           "geoRedundantBackup": "Disabled"
-        }
+        },
+        "availabilityZone": "[parameters('availabilityZone')]"
       }
     },
     {
-      "type": "Microsoft.DBforPostgreSQL/servers/firewallRules",
-      "apiVersion": "2017-12-01",
-      "name": "[concat(variables('postgresServerName'),'/','fwrules')]",
-      "location": "[parameters('location')]",
-      "copy": {
-        "name": "firewallRulesCopy",
-        "mode": "Serial",
-        "batchSize": 1,
-        "count": 1
-      },
+      "type": "Microsoft.DBforPostgreSQL/flexibleServers/configurations",
+      "apiVersion": "2021-06-01",
+      "name": "[concat(variables('postgresServerName'), '/azure.extensions')]",
       "dependsOn": [
-        "[resourceId('Microsoft.DBforPostgreSQL/servers/', variables('postgresServerName'))]"
+          "[resourceId('Microsoft.DBforPostgreSQL/flexibleServers', variables('postgresServerName'))]"
       ],
       "properties": {
-        "startIpAddress": "0.0.0.0",
-        "endIpAddress": "0.0.0.0"
+          "value": "CITEXT",
+          "source": "user-override"
       }
-    }
+  }
   ],
   "outputs": {
     "MPSDatabaseConnectionString": {

@@ -2,7 +2,7 @@
 * Copyright (c) Intel Corporation 2021
 * SPDX-License-Identifier: Apache-2.0
 **********************************************************************/
-CREATE DATABASE mpsdb;
+SELECT 'CREATE DATABASE mpsdb' WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'mpsdb')\gexec
 
 \connect mpsdb
 
