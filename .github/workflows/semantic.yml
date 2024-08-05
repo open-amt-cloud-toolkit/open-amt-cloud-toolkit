@@ -22,9 +22,9 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: wagoid/commitlint-github-action@7f0a61df502599e1f1f50880aaa7ec1e2c0592f2 # v6.0.1
+      - uses: wagoid/commitlint-github-action@baa1b236f990293a1b2d94c19e41c2313a85e749 # v6.0.2
         with:
-          configFile: ./.github/commitlint.config.cjs
+          configFile: .github/commitlint.config.cjs
       - name: Install Dependencies
         run: npm install @commitlint/config-conventional@18.5
       - uses: JulienKode/pull-request-name-linter-action@8c05fb989d9f156ce61e33754f9802c9d3cffa58 # v0.5.0
